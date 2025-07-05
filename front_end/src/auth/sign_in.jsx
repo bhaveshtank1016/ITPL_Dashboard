@@ -17,7 +17,7 @@ const Sign_in = () => {
           <div className="  container px-2  bg-neutral-900  lg:pl-33 w-full mx-0 sm:py-32 py-2 rounded-4xl  ">
             <div className="px-1 container mx-auto ">
               <div id="logo" className=" mx-10 w-32 h-32 rounded-md  pt-4 ">
-                <img src="../"></img>
+                <img src="./logo.png" />
               </div>
 
               <div className="pt-5">

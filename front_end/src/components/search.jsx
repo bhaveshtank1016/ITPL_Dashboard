@@ -22,7 +22,7 @@ const Search = () => {
   }, []);
 
   return (
-    <div  className="w-full flex items-center justify-between px-6 py-4 rounded-md bg-gradient-to-r from-neutral-900 to-blue-900 text-white shadow-md container mx-auto mb-6">
+    <div  className="w-full flex items-center justify-between px-6 py-4 rounded-md bg-gradient-to-r from-neutral-900 to-blue-700 text-white shadow-md container mx-auto mb-6">
       {/* Breadcrumb */}
       <div className="text-xl font-semibold pl-4">
         

@@ -4,7 +4,7 @@ import Sign_in from "./auth/sign_in";
 import ProfileForm from "./pages/user/profile/profile";
 import UserPage from "./pages/user/userPage";
 import Layout from "./layout/layout";
-import Dashboard from "./deshboard/dashboard";
+import Dashboard from "./dashboard/dashboard";
 import Profile_info from "./pages/user/profile/profile_infos";
 import DSR_List from "./pages/dsrListReport/DSR_List";
 import Add_Dsr_Report from "./pages/dsrListReport/Add_Dsr_Report";
