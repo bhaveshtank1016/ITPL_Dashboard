@@ -54,7 +54,7 @@ const handleSubmit = async (e) => {
 
       <form
         onSubmit={handleSubmit}
-        className="bg-neutral-800 rounded-lg p-10 space-y-6 w-full mx-auto"
+        className="bg-gradient-to-r from-neutral-900 to-blue-900 rounded-lg p-10 space-y-6 w-full mx-auto"
       >
         {/* Email & Date */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

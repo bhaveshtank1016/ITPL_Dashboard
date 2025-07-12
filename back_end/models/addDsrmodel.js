@@ -9,5 +9,5 @@ const dsrSchema = new mongoose.Schema({
   todoTasks: [String]
 }, { timestamps: true });
 
-module.exports = mongoose.model("AddDsr", dsrSchema);
+module.exports = mongoose.model("dsr", dsrSchema);
 

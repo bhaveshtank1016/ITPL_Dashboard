@@ -33,16 +33,16 @@ const Holiday = () => {
         All Official Holidays
       </h2>
 
-      <div className="flex sm:text-base rounded-md justify-between p-5 bg-neutral-900">
+      <div className="flex sm:text-base rounded-md justify-between p-5 bg-gradient-to-r from-neutral-900 to-blue-900 ">
         <input
-          className="border rounded-md mb-5 px-3 h-13 font-bold text-xl py-2"
+          className="border rounded-md mb-5 px-3 bg-neutral-800 h-13 font-bold text-xl py-2"
           type="text"
           value={"2025"}
           readOnly
         />
         <div className="flex flex-col">
           <button
-            className="border rounded-md mb-5 px-3 font-bold text-start text-xl py-2"
+            className="border rounded-md bg-neutral-800 mb-5 px-3 font-bold text-start text-xl py-2"
             type="button"
             onClick={() => {
               setIsEdit(false);
@@ -53,7 +53,7 @@ const Holiday = () => {
             Add Holiday
           </button>
           <input
-            className="border rounded-md mb-5 px-3 font-bold text-xl py-2"
+            className="border rounded-md bg-neutral-800 mb-5 px-3 font-bold text-xl py-2"
             type="text"
             value={"Search"}
             readOnly
@@ -73,25 +73,25 @@ const Holiday = () => {
         </div>
       </div>
 
-      <div className="overflow-x-auto p-5 bg-neutral-900">
-        <table className="table-auto w-full border-collapse border border-gray-700">
-          <thead>
-            <tr>
-              <th className="border border-gray-700 px-4 py-2">Sr.No</th>
-              <th className="border border-gray-700 px-4 py-2">Holiday Name</th>
-              <th className="border border-gray-700 px-4 py-2">Date</th>
-              <th className="border border-gray-700 px-4 py-2">Weekday</th>
-              <th className="border border-gray-700 px-4 py-2">Action</th>
+      <div className="overflow-x-auto p-5 bg-gradient-to-r from-neutral-900 to-blue-900">
+        <table className="min-w-full border rounded-md border-gray-300 text-md">
+          <thead className="bg-neutral-950">
+            <tr className="text-center">
+              <th className="border px-6 py-4">Sr.No</th>
+              <th className="border px-6 py-4">Holiday Name</th>
+              <th className="border px-6 py-4">Date</th>
+              <th className="border px-6 py-4">Weekday</th>
+              <th className="border px-6 py-4">Action</th>
             </tr>
           </thead>
           <tbody>
             {holidays.map((holiday, index) => (
-              <tr className="text-center" key={holiday._id}>
-                <td className="border border-gray-700 px-4 py-2">{index + 1}</td>
-                <td className="border border-gray-700 px-4 py-2">{holiday.name}</td>
-                <td className="border border-gray-700 px-4 py-2">{holiday.date}</td>
-                <td className="border border-gray-700 px-4 py-2">{holiday.weekday}</td>
-                <td className="border border-gray-700 px-4 py-2">
+              <tr className="hover:bg-gray-500 text-center" key={holiday._id}>
+                <td className="border px-4 py-2">{index + 1}</td>
+                <td className="border px-4 py-2">{holiday.name}</td>
+                <td className="border px-4 py-2">{holiday.date}</td>
+                <td className="border px-4 py-2">{holiday.weekday}</td>
+                <td className="border px-4 py-2">
                   <button
                     className="px-2 py-1 bg-blue-600 rounded"
                     onClick={() => handleEdit(holiday)}

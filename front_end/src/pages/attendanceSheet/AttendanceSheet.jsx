@@ -17,7 +17,7 @@ function Punch_Details() {
   return (
     <div className="bg-black text-white min-h-screen rounded-md mx-auto p-5">
       <h1 className="text-2xl p-3 rounded-md">Attendance List</h1>
-      <div className="mt-3 p-3 rounded-md bg-neutral-900">
+      <div className="mt-3 p-3 rounded-md bg-gradient-to-r from-neutral-900 to-blue-900">
         <div className="flex items-center gap-5 flex-wrap">
           <input type="text" value="May" readOnly className="border rounded-md text-white p-2 bg-neutral-800" />
           <input type="text" value="2025" readOnly className="border rounded-md text-white p-2 bg-neutral-800" />
@@ -30,11 +30,11 @@ function Punch_Details() {
             </span>
           </div>
         </div>
-        <div className="text-end my-4">
+        <div className="text-end my-4 ">
           <label className="text-lg font-bold mr-2">Search:</label>
           <input type="text" className="border p-2 rounded-md bg-neutral-800 text-white" />
         </div>
-        <table className="bg-neutral-800  w-full border-collapse border rounded-md">
+        <table className="bg-gradient-to-r from-neutral-900 to-blue-900 w-full border-collapse border rounded-md">
           <thead className="bg-neutral-950 text-xl">
             <tr>
               <th className="border px-2 py-1">No.</th>
