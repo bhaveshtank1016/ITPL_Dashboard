@@ -1,0 +1,181 @@
+const User = require("../models/AddUserSchema"); 
+const Role = require("../models/Role");
+
+const getUserProfile = async (req, res) => {
+  try {
+    const user = req.user; // Provided by protect middleware
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "User profile fetched successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        gender: user.gender,
+        dob: user.dob,
+        joiningDate: user.joiningDate,
+        department: user.department,
+        address: user.address,
+        salary: user.salary,
+        role: user.role,
+        position: user.position,
+        status: user.status
+      }
+    });
+  } catch (err) {
+    console.error("Error fetching user profile:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// Create new user
+const createUser = async (req, res) => {
+  try {
+    const {
+      name,
+      email,
+      password,
+      phone,
+      gender,
+      dob,
+      address,
+      joiningDate,
+      position,
+      department,
+      salary,
+      role,
+      status,
+    } = req.body;
+
+    // Validate required fields
+    if (
+      !name || !email || !password || !phone || !gender ||
+      !dob || !address || !joiningDate || !position || !department || !role
+    ) {
+      return res.status(400).json({ message: "All required fields must be filled." });
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User with this email already exists." });
+    }
+
+    // Check if role exists
+    const existingRole = await Role.findById(role);
+    if (!existingRole) {
+      return res.status(400).json({ message: "Invalid role selected." });
+    }
+
+    // Create user (employeeId will be auto-generated in schema)
+    const newUser = new User({
+      name,
+      email,
+      password,
+      phone,
+      gender,
+      dob,
+      address,
+      joiningDate,
+      position,
+      department,
+      salary,
+      role,
+      status,
+    });
+
+    await newUser.save();
+
+    res.status(201).json({
+      success: true,
+      message: "User created successfully",
+    });
+  } catch (err) {
+    console.error("Error creating user:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+
+const updateUserProfile = async (req, res) => {
+  try {
+    const user = req.user; 
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const {
+      name,
+      phone,
+      gender,
+      dob,
+      address,
+      position,
+      department,
+      salary,
+      profilePhoto,
+      status
+    } = req.body;
+
+    // Update fields only if provided
+    if (name) user.name = name;
+    if (phone) user.phone = phone;
+    if (gender) user.gender = gender;
+    if (dob) user.dob = dob;
+    if (address) user.address = address;
+    if (position) user.position = position;
+    if (department) user.department = department;
+    if (salary) user.salary = salary;
+    if (profilePhoto) user.profilePhoto = profilePhoto;
+    if (status) user.status = status;
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: {
+        id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role,
+        position: updatedUser.position,
+        status: updatedUser.status,
+      },
+    });
+  } catch (err) {
+    console.error("Error updating profile:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+const deleteUserProfile = async (req, res) => {
+  try {
+    const user = req.user; // comes from protect middleware
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await User.findByIdAndDelete(user._id);
+
+    res.status(200).json({
+      success: true,
+      message: "User profile deleted successfully",
+    });
+  } catch (err) {
+    console.error("Error deleting profile:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+
+
+module.exports = { getUserProfile, createUser, updateUserProfile, deleteUserProfile };
