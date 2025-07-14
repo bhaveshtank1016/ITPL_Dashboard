@@ -28,7 +28,7 @@ app.use("/api", dsrRoute);
 app.use("/api", holidayRoute);
 app.use("/api", resignRouter);
 app.use("/api", leaveRouter);
-app.use("/api", userRouter);
+app.use("/api/user", userRouter);
 app.use("/api/", signRouter);
 app.use("/api", signRouter);
 app.use("/api", attendanceRouter);

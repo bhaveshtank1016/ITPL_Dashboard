@@ -1,32 +1,69 @@
 const User = require("../models/AddUserSchema");
 
-exports.createUser = async(req,res) =>{
-    const{name,email,position,role,complete,status,date} = req.body;
-    if(!name || !email || !position || !role || !complete || !status || !date){
-        return res.status(400).json({error: "All fields are required."});
-    }
-    try{
-        const newUser = new User({
-            name,email,position,role,complete,status,date
-        });
-        await newUser.save();
-        res.status(201).json({message:"Saved Successfully"});
-    } catch(err){
-        console.error("Error Occured While saving user",err);
-        res.status(500).json({error: "Failed to save user"});
-    }
+exports.createUser = async (req, res) => {
+  const {
+    first_name,
+    last_name,
+    email,
+    dob,
+    gender,
+    phone,
+    position,
+    role,
+    complete,
+    status,
+    department
+  } = req.body;
 
+  // Validate required fields
+  if (
+    !first_name ||
+    !last_name ||
+    !email ||
+    !dob ||
+    !gender ||
+    !phone ||
+    !position ||
+    !role ||
+    complete === undefined || 
+    !status ||
+    !department
+    
+  ) {
+    return res.status(400).json({ error: "All fields are required." });
+  }
+
+  try {
+    const newUser = new User({
+      first_name,
+      last_name,
+      email,
+      dob,
+      gender,
+      phone,
+      position,
+      role,
+      complete,
+      status,
+      department
+    });
+
+    await newUser.save();
+    res.status(201).json({ message: "User saved successfully." });
+  } catch (err) {
+    console.error("Error occurred while saving user:", err);
+    res.status(500).json({ error: "Failed to save user." });
+  }
 };
 
-
-exports.getUser = async(req,res) =>{
-    try{
-        const users = await User.find().sort({createdAt: -1});
-        res.status(200).json(users);
-    } catch(err){
-        console.error("Error fetching user",err);
-        res.status(500).json({error : "Failed to save."});
-    }
+exports.getUser = async (req, res) => {
+  try {
+    const users = await User.find().sort({ createdAt: -1 });
+    res.status(200).json(users);
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    res.status(500).json({ error: "Failed to fetch users." });
+  }
 };
 
 exports.deleteUser = async (req, res) => {
