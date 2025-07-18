@@ -58,7 +58,7 @@ const Sidebar = () => {
           setOpenResignMenu(false);
         }}
         className={`fixed top-0 left-0 bg-gradient-to-r from-neutral-900 to-blue-900 border border-r-2 rounded-md border-white text-white z-50 transform duration-300 ease-in-out min-h-screen 
-        ${expanded ? "w-64" : "w-26"}
+        ${expanded ? "w-64" : "w-20"}
         ${mobileOpen ? "translate-x-0" : "-translate-x-full"} 
         lg:translate-x-0 lg:static`}
       >
@@ -88,19 +88,22 @@ const Sidebar = () => {
             current={location.pathname}
             expanded={expanded}
           />
-          <SidebarLink
-            to="/profile"
-            icon={<FontAwesomeIcon icon={faUser} />}
-            label="Profile"
-            current={location.pathname}
-            expanded={expanded}
-          />
+          
 
           {user && user.role && user.role.name?.toLowerCase() === "admin" && (
             <SidebarLink
               to="/users"
               icon={<FontAwesomeIcon icon={faUserPlus} />}
               label="Add User"
+              current={location.pathname}
+              expanded={expanded}
+            />
+          )}
+          {user && user.role && user.role.name?.toLowerCase() === "admin" && (
+            <SidebarLink
+              to="/role"
+              icon={<FontAwesomeIcon icon={faUser} />}
+              label="Role"
               current={location.pathname}
               expanded={expanded}
             />
@@ -123,6 +126,7 @@ const Sidebar = () => {
             to="/attendanceSheet"
             icon={<FaPersonChalkboard size={22} />}
             label="Attendance Sheet"
+            className="shrink-0"
             current={location.pathname}
             expanded={expanded}
           />

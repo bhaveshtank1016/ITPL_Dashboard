@@ -28,6 +28,7 @@ import AddResign from "./pages/resign/AddResign";
 import ResignList from "./pages/resign/ResignList";
 import AddLeave from "./pages/leave/AddLeave";
 import LeaveList from "./pages/leave/LeaveList";
+import Role from "./pages/user/role";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -69,6 +70,7 @@ function App() {
                     <Route path="/info" element={<Profile_info />} />
                     <Route path="/addLeave" element={<AddLeave />} />
                     <Route path="/leaveList" element={<LeaveList />} />
+                    <Route path="/role" element = {< Role/>} />
                   </Routes>
                 </Layout>
               </ProtectedRoute>
