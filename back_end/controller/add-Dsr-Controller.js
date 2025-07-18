@@ -3,7 +3,6 @@ const nodemailer = require("nodemailer");
 
 const addDsr = async (req, res) => {
   try {
-    console.log("Received data:", req.body);
     const { email } = req.body;
 
     //  Save the DSR to the database
