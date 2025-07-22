@@ -15,7 +15,7 @@ A streamlined system for managing daily employee operations like attendance, lea
 
 This project is a comprehensive internal tool designed to centralize and simplify core HR and operational tasks. It provides a clear and efficient interface for both employees and administrators to manage daily activities, reducing manual overhead and improving transparency within the organization.
 
-![Project Screenshot]((https://drive.google.com/file/d/1kKj50cJQSR1L-pwSv3vju4Jcq3SjCgBI/view?usp=drive_link)>
+<img src = "https://drive.google.com/file/d/1kKj50cJQSR1L-pwSv3vju4Jcq3SjCgBI/view?usp=drive_link">
 )
 ## ✨ Core Features
 
