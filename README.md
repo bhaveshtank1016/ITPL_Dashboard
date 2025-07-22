@@ -7,8 +7,6 @@ A streamlined system for managing daily employee operations like attendance, lea
 
 <p align="center">
   <img src="https://img.shields.io/badge/status-in%20development-blue" alt="Status">
-  <img src="https://img.shields.io/github/license/https://github.com/bhaveshtank1016/ITPL_Dashboard/" alt="License">
-  <img src="https://img.shields.io/github/last-commit/https://github.com/bhaveshtank1016/ITPL_Dashboard/" alt="Last Commit">
 </p>
 
 ---
@@ -17,7 +15,7 @@ A streamlined system for managing daily employee operations like attendance, lea
 
 This project is a comprehensive internal tool designed to centralize and simplify core HR and operational tasks. It provides a clear and efficient interface for both employees and administrators to manage daily activities, reducing manual overhead and improving transparency within the organization.
 
-![Project Screenshot](<img width="1908" height="751" alt="image" src="https://github.com/user-attachments/assets/1df46339-20ea-4001-bc50-18fee8ddc42b" />
+![Project Screenshot]((https://drive.google.com/file/d/1kKj50cJQSR1L-pwSv3vju4Jcq3SjCgBI/view?usp=drive_link)>
 )
 ## ✨ Core Features
 
