@@ -4,7 +4,7 @@ import { FaUser, FaSignOutAlt, FaLock } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const Search = () => {
+const Header = () => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter(Boolean);
   const navigate = useNavigate();
@@ -88,4 +88,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default Header;

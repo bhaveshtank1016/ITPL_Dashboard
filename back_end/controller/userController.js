@@ -50,7 +50,7 @@ const getUserProfile = async (req, res) => {
 };
 
 
-// Create new user
+// Create new user (signup/admin ke through add krna )
 const createUser = async (req, res) => {
   try {
     const {
@@ -67,6 +67,7 @@ const createUser = async (req, res) => {
       salary,
       role,
       status,
+       profilePhoto,
     } = req.body;
 
     // Validate required fields
@@ -85,7 +86,7 @@ const createUser = async (req, res) => {
       return res.status(400).json({ message: "User with this email already exists." });
     }
 
-    // Check if role exists
+    // Check if role exists -- role id sahi h ya nhi .
     const existingRole = await Role.findById(role);
     if (!existingRole) {
       return res.status(400).json({ message: "Invalid role selected." });
@@ -106,6 +107,7 @@ const createUser = async (req, res) => {
       salary,
       role,
       status,
+       profilePhoto, 
     });
 
     await newUser.save();
@@ -116,7 +118,7 @@ const createUser = async (req, res) => {
        user: newUser //
     });
   } catch (err) {
-    console.error("Error creating user:", err);
+    console.error("Create user error:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -135,7 +137,8 @@ const updateUserProfile = async (req, res) => {
       department,
       salary,
       profilePhoto,
-      status
+      status,
+    
     } = req.body;
 
     const user = await User.findById(_id);
@@ -154,6 +157,8 @@ const updateUserProfile = async (req, res) => {
     user.profilePhoto = profilePhoto || user.profilePhoto;
     user.status = status || user.status;
 
+    //ager ui se new data nhi aaye to putana hi rahne do " || user.status;"
+
     const updatedUser = await user.save();
 
     res.status(200).json(updatedUser); // 👈 Send updated user back
@@ -163,9 +168,9 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-
+//params.id ---ye url se user ki id get krta h than user ko db se delete krta h 
 const deleteUserProfile = async (req, res) => {
-  try {
+  try {  
     const userId = req.params.id; // ✅ Use params instead of body
     console.log("Backend received _id:", userId);
 

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
+  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -20,7 +22,7 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
     status: "Active", //set Default Active status
     joiningDate: new Date().toISOString().substr(0, 10),
   });
-
+// Existing User Fill Karne ke liye 
   useEffect(() => {
     if (existingUser) {
       const [firstName, lastName = ""] = existingUser.name.split(" ");
@@ -33,6 +35,7 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
     }
   }, [existingUser]);
 
+// input ke change pr value form object me update karta hai. 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -77,6 +80,20 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
     }
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setForm((prev) => ({
+          ...prev,
+          profilePhoto: reader.result, // base64 string
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
       <form
@@ -87,24 +104,25 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
           {existingUser ? "Edit User" : "Add New User"}
         </h2>
         {/* Profile Photo */}
-        <div className="mb-4 text-center">
-          <img
-            src={
-              form.profilePhoto ||
-              "https://images.indianexpress.com/2023/05/Shahid-Kapoor.jpg"
-            }
-            alt="Profile"
-            className="w-24 h-24 rounded-full mx-auto object-cover border"
-          />
+        <div className="mb-4">
+          <label className="block mb-1 text-sm font-medium">
+            Profile Image
+          </label>
           <input
-            type="text"
-            name="profilePhoto"
-            placeholder="Profile Image URL"
-            value={form.profilePhoto}
-            onChange={handleChange}
-            className="border w-full mt-2 p-2 text-sm text-black"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="block w-full text-sm text-white bg-gray-800 border border-gray-600 rounded cursor-pointer focus:outline-none"
           />
         </div>
+
+        {form.profilePhoto && (
+          <img
+            src={form.profilePhoto}
+            alt="Preview"
+            className="w-16 h-16 mt-2 rounded-full object-cover"
+          />
+        )}
 
         {/* Name */}
         <div className="flex gap-2 mb-3">
@@ -138,15 +156,23 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
             className="border w-full mb-2 p-2 text-black"
           />
           {!existingUser && (
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={form.password}
-              autoComplete="new-password"
-              onChange={handleChange}
-              className="border w-full mb-2 p-2 text-black"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                value={form.password}
+                autoComplete="new-password"
+                onChange={handleChange}
+                className="border w-full mb-2 p-2 text-black pr-10"
+              />
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-600"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            </div>
           )}
         </div>
 
@@ -268,7 +294,7 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
           className="border p-2 w-full mb-3 text-black"
         />
 
-        {/* Buttons */}
+        {/* Buttons submit or update cancel */}
         <div className="flex gap-2 mt-4">
           <button
             type="submit"
