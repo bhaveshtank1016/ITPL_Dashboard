@@ -119,17 +119,6 @@ function LeaveList() {
               ))}
           </tbody>
         </table>
-
-        {/* Edit Form will go here
-        {editId && (
-          <EditForm
-            formData={formData}
-            setFormData={setFormData}
-            setEditId={setEditId}
-            editId={editId}
-            setLeave={setLeave}
-          />
-        )} */}
       </div>
     </div>
   );

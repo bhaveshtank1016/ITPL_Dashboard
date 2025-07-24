@@ -86,7 +86,7 @@ const userSchema = new mongoose.Schema({
 // Pre-save hook to hash password and generate employeeId
 userSchema.pre("save", async function (next) {
   try {
-    // Hash password if modified
+    // Hash password if modified 
     if (this.isModified("password")) {
       const salt = await bcrypt.genSalt(10);
       this.password = await bcrypt.hash(this.password, salt);
@@ -110,7 +110,7 @@ userSchema.pre("save", async function (next) {
 
     next();
   } catch (error) {
-    next(error);
+    next(error);  
   }
 });
 

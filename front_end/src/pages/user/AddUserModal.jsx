@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -19,10 +21,11 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
     role: "",
     complete: 0,
     profilePhoto: "",
-    status: "Active", //set Default Active status
+    status: "Active",
     joiningDate: new Date().toISOString().substr(0, 10),
   });
-// Existing User Fill Karne ke liye 
+
+  // Fill existing user data
   useEffect(() => {
     if (existingUser) {
       const [firstName, lastName = ""] = existingUser.name.split(" ");
@@ -30,55 +33,13 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
         ...existingUser,
         firstName,
         lastName,
-        password: "", // leave password blank on edit
+        password: "", // Leave password blank on edit
       });
     }
   }, [existingUser]);
 
-// input ke change pr value form object me update karta hai. 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const fullName = `${form.firstName} ${form.lastName}`.trim();
-    const token = localStorage.getItem("token"); // ✅ Move this up
-
-    const url = existingUser
-      ? `http://localhost:8001/api/user/update`
-      : `http://localhost:8001/api/user/create`;
-    const method = existingUser ? "PUT" : "POST";
-
-    const payload = {
-      ...form,
-      name: fullName,
-      complete: Number(form.complete) || 0,
-    };
-
-    const res = await fetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`, // ✅ token now declared earlier
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      existingUser ? onUserUpdated(data) : onUserAdded(data);
-      close();
-      Swal.fire({
-        icon: "success",
-        title: existingUser ? "User Updated" : "User Created",
-        timer: 1500,
-        showConfirmButton: false,
-      });
-    } else {
-      Swal.fire("Error", data.message || "Something went wrong", "error");
-    }
-  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -87,10 +48,60 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
       reader.onloadend = () => {
         setForm((prev) => ({
           ...prev,
-          profilePhoto: reader.result, // base64 string
+          profilePhoto: reader.result,
         }));
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const onUserSaved = existingUser ? onUserUpdated : onUserAdded;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const fullName = `${form.firstName} ${form.lastName}`.trim();
+
+    const url = existingUser
+      ? "http://localhost:8001/api/user/update"
+      : "http://localhost:8001/api/user/create";
+    const method = existingUser ? "PUT" : "POST";
+
+    const payload = {
+      ...form,
+      name: fullName,
+      complete: Number(form.complete) || 0,
+    };
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        Swal.fire({
+          icon: "success",
+          title: existingUser ? "User Updated" : "User Created",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+
+        setTimeout(() => {
+          onUserSaved?.(data);
+          navigate("/users");
+          close?.();
+        }, 1500);
+      } else {
+        Swal.fire("Error", data.message || "Something went wrong", "error");
+      }
+    } catch (error) {
+      Swal.fire("Error", error.message || "Something went wrong", "error");
     }
   };
 
@@ -100,31 +111,29 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
         onSubmit={handleSubmit}
         className="bg-white/50 backdrop-blur-md text-white p-8 rounded-2xl shadow-2xl w-11/12 md:w-4/5 lg:w-3/5 max-h-[90vh] overflow-y-auto border border-white/20"
       >
-        <h2 className="text-3xl font-bold mb-6 text-center text-white drop-shadow">
+        <h2 className="text-3xl font-bold mb-6 text-center drop-shadow">
           {existingUser ? "Edit User" : "Add New User"}
         </h2>
-        {/* Profile Photo */}
+
+        {/* Profile Image */}
         <div className="mb-4">
-          <label className="block mb-1 text-sm font-medium">
-            Profile Image
-          </label>
+          <label className="block mb-1 text-sm font-medium">Profile Image</label>
           <input
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className="block w-full text-sm text-white bg-gray-800 border border-gray-600 rounded cursor-pointer focus:outline-none"
+            className="block w-full text-sm bg-gray-800 border border-gray-600 rounded cursor-pointer"
           />
+          {form.profilePhoto && (
+            <img
+              src={form.profilePhoto}
+              alt="Preview"
+              className="w-16 h-16 mt-2 rounded-full object-cover"
+            />
+          )}
         </div>
 
-        {form.profilePhoto && (
-          <img
-            src={form.profilePhoto}
-            alt="Preview"
-            className="w-16 h-16 mt-2 rounded-full object-cover"
-          />
-        )}
-
-        {/* Name */}
+        {/* Name Fields */}
         <div className="flex gap-2 mb-3">
           <input
             type="text"
@@ -150,7 +159,6 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
             type="email"
             name="email"
             placeholder="Email"
-            autoComplete="off"
             value={form.email}
             onChange={handleChange}
             className="border w-full mb-2 p-2 text-black"
@@ -162,7 +170,6 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
                 name="password"
                 placeholder="Password"
                 value={form.password}
-                autoComplete="new-password"
                 onChange={handleChange}
                 className="border w-full mb-2 p-2 text-black pr-10"
               />
@@ -207,7 +214,7 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
                   value={g}
                   checked={form.gender === g}
                   onChange={handleChange}
-                />
+                />{" "}
                 {g}
               </label>
             ))}
@@ -294,7 +301,7 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
           className="border p-2 w-full mb-3 text-black"
         />
 
-        {/* Buttons submit or update cancel */}
+        {/* Buttons */}
         <div className="flex gap-2 mt-4">
           <button
             type="submit"
@@ -304,7 +311,8 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
           </button>
           <button
             type="button"
-            onClick={close}
+            // onClick={close}
+            onClick={() => navigate("/users")}
             className="bg-gray-300 text-black px-4 py-2 rounded w-full"
           >
             Cancel
