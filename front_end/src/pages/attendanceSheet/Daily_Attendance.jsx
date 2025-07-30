@@ -23,7 +23,7 @@ export default function Daily_Attendance() {
   return (
     <div className="min-h-screen text-white rounded-md p-5 bg-black">
         <h2 className="text-2xl font-bold  mb-4">Employee Attendance Records</h2>
-      <div className="shadow-md  bg-neutral-800 mx-auto rounded-md p-4">
+      <div className="shadow-md bg-gradient-to-r from-neutral-900 to-blue-900 mx-auto rounded-md p-4">
 
         {/* Filter Section */}
         <div className="flex  flex-wrap items-center gap-4 mb-4">

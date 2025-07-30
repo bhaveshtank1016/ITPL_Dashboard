@@ -95,7 +95,6 @@ userSchema.pre("save", async function (next) {
     // Auto-generate employeeId if not provided
     if (!this.employeeId) {
       const lastUser = await this.constructor.findOne().sort({ createdAt: -1 });
-
       let lastId = 0;
       if (lastUser && lastUser.employeeId) {
         const match = lastUser.employeeId.match(/EMP(\d+)/);

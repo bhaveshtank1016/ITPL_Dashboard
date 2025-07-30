@@ -28,6 +28,8 @@ import AddResign from "./pages/resign/AddResign";
 import ResignList from "./pages/resign/ResignList";
 import AddLeave from "./pages/leave/AddLeave";
 import LeaveList from "./pages/leave/LeaveList";
+import AddUserPage from "./pages/user/AddUserPage";
+import AddUserForm from "./pages/user/AddUserForm";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
