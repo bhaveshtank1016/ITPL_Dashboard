@@ -1,51 +1,127 @@
-const Dsr = require("../models/addDsrmodel");
-const nodemailer = require("nodemailer");
+const Dsr = require("../models/addDsrmodel"); // Adjust the path to your model file
 
-const addDsr = async (req, res) => {
+/**
+ * @desc    Create a new DSR
+ * @route   POST /api/dsr
+ * @access  Public // Change to Private if you have auth
+ */
+const createDsr = async (req, res) => {
   try {
-    const { email } = req.body;
+    const {
+      email,
+      date,
+      attachment,
+      projectName,
+      projectDescription,
+      todoTasks,
+    } = req.body;
 
-    //  Save the DSR to the database
-    const newDsr = new Dsr(req.body);
-    await newDsr.save();
+    // Basic validation
+    if (
+      !email ||
+      !date ||
+      !attachment ||
+      !projectName ||
+      !projectDescription ||
+      !todoTasks
+    ) {
+      return res.status(400).json({ message: "Please fill all required fields." });
+    }
 
-    //  Set up Nodemailer transporter (use Gmail, Mailtrap, etc.)
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER, // e.g., your Gmail
-        pass: process.env.EMAIL_PASS, // app password, not your Gmail password
-      },
+    const newDsr = await Dsr.create({
+      email,
+      date,
+      attachment,
+      projectName,
+      projectDescription,
+      todoTasks,
     });
 
-    //  Email content
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "DSR Form Submitted",
-      html: `<h3>Hello,</h3><p>Dear user,</p><p>Your DSR form has been submitted successfully!</p>`,
-    };
-
-    //  Send the email
-    await transporter.sendMail(mailOptions);
-
-    res.status(201).json({ message: "DSR submitted and email sent!" });
+    res.status(201).json(newDsr);
   } catch (error) {
-    console.error("Error submitting DSR:", error.message);
-    res
-      .status(500)
-      .json({ message: "Something went wrong", error: error.message });
+    res.status(500).json({ message: "Server Error: " + error.message });
   }
 };
 
-// GET - Get all DSRs
-const getDsr = async (req, res) => {
+/**
+ * @desc    Get all DSRs
+ * @route   GET /api/dsr
+ * @access  Public
+ */
+const getAllDsrs = async (req, res) => {
   try {
-    const dsrs = await Dsr.find().sort({ createdAt: -1 });
-    res.json(dsrs);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const dsrs = await Dsr.find({}).sort({ createdAt: -1 }); // Get all, sorted by creation date
+    res.status(200).json(dsrs);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error: " + error.message });
   }
 };
 
-module.exports = { addDsr, getDsr };
+/**
+ * @desc    Get a single DSR by ID
+ * @route   GET /api/dsr/:id
+ * @access  Public
+ */
+const getDsrById = async (req, res) => {
+  try {
+    const dsr = await Dsr.findById(req.params.id);
+
+    if (!dsr) {
+      return res.status(404).json({ message: "DSR not found." });
+    }
+
+    res.status(200).json(dsr);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error: " + error.message });
+  }
+};
+
+/**
+   Update a DSR
+   PUT /api/dsr/:id
+  Public
+ */
+const updateDsr = async (req, res) => {
+  try {
+    const dsr = await Dsr.findById(req.params.id);
+
+    if (!dsr) {
+      return res.status(404).json({ message: "DSR not found." });
+    }
+
+    const updatedDsr = await Dsr.findByIdAndUpdate(req.params.id, req.body, {
+      new: true, // Return the updated document
+      runValidators: true, // Ensure the update respects schema validation
+    });
+
+    res.status(200).json(updatedDsr);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error: " + error.message });
+  }
+};
+
+
+const deleteDsr = async (req, res) => {
+  try {
+    const dsr = await Dsr.findById(req.params.id);
+
+    if (!dsr) {
+      return res.status(404).json({ message: "DSR not found." });
+    }
+
+    await Dsr.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({ message: "DSR deleted successfully.", id: req.params.id });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error: " + error.message });
+  }
+};
+
+
+module.exports = {
+  createDsr,
+  getAllDsrs,
+  getDsrById,
+  updateDsr,
+  deleteDsr,
+};

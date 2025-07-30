@@ -7,14 +7,22 @@ const Role = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 1. State for the "Add Role" modal and form
+  // State for the "Add Role" modal and form
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newRoleName, setNewRoleName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [addError, setAddError] = useState(null);
 
+  // State for the "Delete Role" confirmation modal
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [roleToDelete, setRoleToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
+
+
   // Use useCallback to memoize the fetch function
   const fetchRoles = useCallback(async () => {
+    // setLoading(true); // Optional: show loader on refresh
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -43,15 +51,15 @@ const Role = () => {
     } finally {
       setLoading(false);
     }
-  }, []); // Empty dependency array as it doesn't depend on props or state
+  }, []); // Empty dependency array
 
   useEffect(() => {
     fetchRoles();
   }, [fetchRoles]); // Depend on the memoized fetchRoles function
 
-  // 2. Handler function for submitting the new role
+  // Handler function for submitting the new role
   const handleAddRole = async (event) => {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault();
     setIsSubmitting(true);
     setAddError(null);
 
@@ -61,25 +69,22 @@ const Role = () => {
         throw new Error('Authentication required.');
       }
 
-      // Assume your API endpoint for adding a role is 'addRole'
       const response = await fetch(`${API_URL}addRole`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json', // Important for sending JSON
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ name: newRoleName }) // Send the new role name in the body
+        body: JSON.stringify({ name: newRoleName })
       });
 
       if (!response.ok) {
-        // You can add more specific error handling here based on API responses
         throw new Error('Failed to add the new role.');
       }
       
-      // If successful:
-      setIsModalOpen(false);  // Close the modal
-      setNewRoleName('');     // Clear the input field
-      await fetchRoles();       // Refresh the roles list to show the new role
+      setIsModalOpen(false);
+      setNewRoleName('');
+      await fetchRoles(); // Refresh the roles list
       
     } catch (err) {
       setAddError(err.message);
@@ -87,6 +92,54 @@ const Role = () => {
       setIsSubmitting(false);
     }
   };
+
+  // Handler functions for deleting a role
+  const handleOpenDeleteModal = (role) => {
+    setRoleToDelete(role);
+    setIsDeleteModalOpen(true);
+    setDeleteError(null); // Clear previous errors
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setRoleToDelete(null);
+  };
+
+  const handleDeleteRole = async () => {
+  if (!roleToDelete) return;
+
+  setIsDeleting(true);
+  setDeleteError(null);
+
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Authentication required.');
+    }
+
+    // CORRECTED URL: The placeholder ":id" is removed.
+    const response = await fetch(`${API_URL}roleDelete/${roleToDelete._id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      // You could add more specific error handling here
+      const errorData = await response.json().catch(() => ({ message: 'Failed to delete the role.' }));
+      throw new Error(errorData.message);
+    }
+
+    handleCloseDeleteModal();
+    await fetchRoles();
+
+  } catch (err) {
+    setDeleteError(err.message);
+  } finally {
+    setIsDeleting(false);
+  }
+};
 
 
   if (loading) {
@@ -100,9 +153,8 @@ const Role = () => {
   return (
     <>
       <div className='bg-neutral-900 p-4 rounded-xl shadow-md mx-auto container text-sm'>
-        <div className='flex justify-between'>
+        <div className='flex justify-between items-center'>
           <h2 className='text-white text-xl mb-4 font-bold'>Manage Roles</h2>
-          {/* 3. Button to open the modal */}
           <button 
             onClick={() => setIsModalOpen(true)}
             className='bg-blue-500 px-3 rounded-md hover:rounded-xl hover:bg-blue-600 duration-300 h-10'
@@ -116,6 +168,7 @@ const Role = () => {
               <tr className='bg-neutral-800'>
                 <th className='p-3 text-white'>S. No.</th>
                 <th className='p-3 text-white'>Role Name</th>
+                <th className='p-3 text-white text-center'>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -124,11 +177,25 @@ const Role = () => {
                   <tr key={role._id} className='border-b border-neutral-700'>
                     <td className='p-3 text-white'>{index + 1}</td>
                     <td className='p-3 text-white'>{role.name}</td>
+                    <td className='p-3 text-white text-center'>
+                      {/* MODIFIED: Conditionally render the delete button */}
+                      {role.name.toLowerCase() !== 'admin' && (
+                        <button 
+                          onClick={() => handleOpenDeleteModal(role)}
+                          className="text-red-500 hover:text-red-700 transition-colors duration-200"
+                          title="Delete Role"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      )}
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="2" className="p-3 text-center text-neutral-400">
+                  <td colSpan="3" className="p-3 text-center text-neutral-400">
                     No roles found.
                   </td>
                 </tr>
@@ -138,7 +205,7 @@ const Role = () => {
         </div>
       </div>
 
-      {/* 4. The Modal for adding a new role */}
+      {/* Add Role Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-neutral-800 p-6 rounded-lg shadow-xl w-full max-w-md">
@@ -173,10 +240,41 @@ const Role = () => {
           </div>
         </div>
       )}
+
+      {/* Delete Role Modal */}
+      {isDeleteModalOpen && roleToDelete && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-neutral-800 p-6 rounded-lg shadow-xl w-full max-w-md">
+            <h3 className="text-white text-lg font-bold mb-4">Confirm Deletion</h3>
+            <p className="text-neutral-300 mb-6">
+              Are you sure you want to delete the role: <strong className="text-white">"{roleToDelete.name}"</strong>? This action cannot be undone.
+            </p>
+            {deleteError && <p className="text-red-500 text-sm mb-4">{deleteError}</p>}
+            <div className="flex justify-end space-x-4">
+              <button 
+                type="button"
+                onClick={handleCloseDeleteModal}
+                className="bg-neutral-600 text-white px-4 py-2 rounded hover:bg-neutral-500"
+              >
+                Cancel
+              </button>
+              <button 
+                type="button"
+                onClick={handleDeleteRole}
+                disabled={isDeleting}
+                className="bg-red-600 text-white px-4 py-2 rounded disabled:bg-red-500 disabled:cursor-not-allowed hover:bg-red-700"
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
 
-export default Role;//authentication
+export default Role;
+//authentication
 //authrization
 // 

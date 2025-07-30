@@ -213,3 +213,4 @@ const DropdownMenu = ({ expanded, isOpen, toggle, icon, title, links }) => (
 );
 
 export default Sidebar;
+
