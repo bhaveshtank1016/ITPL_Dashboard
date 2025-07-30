@@ -1,5 +1,5 @@
 import React from "react";
-import AddUserForm from "../user/AddUserModal";
+import AddUserForm from "./AddUserForm";
 import { useNavigate } from "react-router-dom";
 
 const AddUserPage = () => {

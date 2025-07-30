@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
-  const [showPassword, setShowPassword] = useState(false);
+const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
   const navigate = useNavigate();
+  const { id } = useParams(); // for edit mode
+  const [showPassword, setShowPassword] = useState(false);
+  const [existingUser, setExistingUser] = useState(null);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -25,18 +27,27 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
     joiningDate: new Date().toISOString().substr(0, 10),
   });
 
-  // Fill existing user data
+  // Fetch existing user data if editing
   useEffect(() => {
-    if (existingUser) {
-      const [firstName, lastName = ""] = existingUser.name.split(" ");
-      setForm({
-        ...existingUser,
-        firstName,
-        lastName,
-        password: "", // Leave password blank on edit
-      });
+    if (id) {
+      fetch(`http://localhost:8001/api/user/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const [firstName, lastName = ""] = data.name.split(" ");
+          setExistingUser(data);
+          setForm({
+            ...data,
+            firstName,
+            lastName,
+            password: "",
+          });
+        });
     }
-  }, [existingUser]);
+  }, [id]);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -95,7 +106,6 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
         setTimeout(() => {
           onUserSaved?.(data);
           navigate("/users");
-          close?.();
         }, 1500);
       } else {
         Swal.fire("Error", data.message || "Something went wrong", "error");
@@ -106,10 +116,10 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+    <div className="p-6 w-full bg-black rounded-xl mx-auto">
       <form
         onSubmit={handleSubmit}
-        className="bg-white/50 backdrop-blur-md text-white p-8 rounded-2xl shadow-2xl w-11/12 md:w-4/5 lg:w-3/5 max-h-[90vh] overflow-y-auto border border-white/20"
+        className="bg-white/50 backdrop-blur-md text-white p-8 rounded-2xl shadow-2xl w-full border border-white/20"
       >
         <h2 className="text-3xl font-bold mb-6 text-center drop-shadow">
           {existingUser ? "Edit User" : "Add New User"}
@@ -133,7 +143,7 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
           )}
         </div>
 
-        {/* Name Fields */}
+        {/* First + Last Name */}
         <div className="flex gap-2 mb-3">
           <input
             type="text"
@@ -311,7 +321,6 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
           </button>
           <button
             type="button"
-            // onClick={close}
             onClick={() => navigate("/users")}
             className="bg-gray-300 text-black px-4 py-2 rounded w-full"
           >
@@ -323,4 +332,4 @@ const AddUserModal = ({ close, onUserAdded, onUserUpdated, existingUser }) => {
   );
 };
 
-export default AddUserModal;
+export default AddUserForm;

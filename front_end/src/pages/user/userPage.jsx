@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import AddUserModal from "./AddUserModal";
+import AddUserModal from "./AddUserForm";
 import { useNavigate } from "react-router-dom";
 
 const UserPage = () => {
@@ -59,12 +59,7 @@ const UserPage = () => {
     <div className="bg-black min-h-screen text-white p-6 rounded-xl">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">Users</h2>
-        {/* <button
-          onClick={() => setShowModal(true)}
-          className="bg-blue-600 px-4 py-2 rounded text-white hover:bg-blue-700"
-        >
-          + Add User
-        </button> */}
+       
 
         <button
           onClick={() => navigate("/add-user")}
