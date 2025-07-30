@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { API_URL } from "../../../config";
+
 
 const Profile_info = () => {
   const [formData, setFormData] = useState({
@@ -23,7 +26,7 @@ const Profile_info = () => {
       const token = localStorage.getItem("token");
 
       try {
-        const res = await fetch("http://localhost:8001/api/user/profile", {
+        const res = await fetch(`${API_URL}/user/profile`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -60,7 +63,7 @@ const Profile_info = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await fetch("http://localhost:8001/api/user/update", {
+      const res = await fetch(`${API_URL}/user/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -71,13 +74,13 @@ const Profile_info = () => {
 
       const data = await res.json();
       if (res.ok) {
-        alert("Profile updated successfully");
+        toast.success("Profile updated successfully");
       } else {
-        alert(data.message || "Failed to update profile");
+        toast.error(data.message || "Failed to update profile");
       }
     } catch (err) {
       console.error("Update error:", err.message);
-      alert("Server error");
+      toast.error("Server error");
     }
   };
 

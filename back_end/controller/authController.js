@@ -9,13 +9,12 @@ const loginUser = async (req, res) => {
 
   try {
     const user = await User.findOne({ email }).populate("role");
-    if (!user || !(await user.matchPassword(password))) //There is a method to get the password from bcrypt
+    if (!user || !(await user.matchPassword(password)))
       return res.status(401).json({ message: "Invalid credentials" });
 
-// create a token containing the user's id and role 
     const token = jwt.sign(
       { id: user._id, role: user.role },
-      process.env.JWT_SECRET, 
+      process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRE }
     );
 
@@ -40,5 +39,3 @@ const loginUser = async (req, res) => {
 
 
 module.exports = { loginUser };
-
-

@@ -71,9 +71,9 @@ const userSchema = new mongoose.Schema({
     default: ""
   },
   complete: {
-  type: Number,
-  default: 0
-},
+    type: Number,
+    default: 0
+  },
   date: {
     type: Date,
     default: Date.now
@@ -86,7 +86,7 @@ const userSchema = new mongoose.Schema({
 // Pre-save hook to hash password and generate employeeId
 userSchema.pre("save", async function (next) {
   try {
-    // Hash password if modified 
+    // Hash password if modified
     if (this.isModified("password")) {
       const salt = await bcrypt.genSalt(10);
       this.password = await bcrypt.hash(this.password, salt);
@@ -95,7 +95,6 @@ userSchema.pre("save", async function (next) {
     // Auto-generate employeeId if not provided
     if (!this.employeeId) {
       const lastUser = await this.constructor.findOne().sort({ createdAt: -1 });
-      
       let lastId = 0;
       if (lastUser && lastUser.employeeId) {
         const match = lastUser.employeeId.match(/EMP(\d+)/);
@@ -110,7 +109,7 @@ userSchema.pre("save", async function (next) {
 
     next();
   } catch (error) {
-    next(error);  
+    next(error);
   }
 });
 

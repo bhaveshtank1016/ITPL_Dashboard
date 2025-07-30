@@ -88,7 +88,13 @@ const Sidebar = () => {
             current={location.pathname}
             expanded={expanded}
           />
-         
+          <SidebarLink
+            to="/profile"
+            icon={<FontAwesomeIcon icon={faUser} />}
+            label="Profile"
+            current={location.pathname}
+            expanded={expanded}
+          />
 
           {user && user.role && user.role.name?.toLowerCase() === "admin" && (
             <SidebarLink

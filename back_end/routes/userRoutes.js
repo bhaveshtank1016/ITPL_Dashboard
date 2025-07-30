@@ -1,30 +1,21 @@
 const express = require("express");
 const router = express.Router();
 
-const {
-  getUserProfile,
-  createUser,
-  updateUserProfile,
-  getAllUsers,
-  deleteUserProfile,
-} = require("../controller/userController");
+const { getUserProfile, createUser, updateUserProfile, deleteUserProfile } = require("../controller/userController");
+const { protect } = require("../middleware/authMiddleware");
 
-const { protect, isAdmin } = require("../middleware/authMiddleware");
-
-// ✅ Get all users (optional: only admins)
-router.get("/", protect, getAllUsers);
-
-// ✅ Get own profile
+// Route to get user profile
 router.get("/profile", protect, getUserProfile);
 
-// ✅ Create new user (admin-only or protected)
+// Add new user (Protected)
 router.post("/create", protect, createUser);
 
-// ✅ Update existing user (authenticated)
+// Update user profile (Protected)
 router.put("/update", protect, updateUserProfile);
 
-// ✅ Delete user by ID
-router.delete("/delete/:id", protect, deleteUserProfile);
+// Delete user profile (Protected)
+router.delete("/delete", protect, deleteUserProfile);
+
+
 
 module.exports = router;
-
