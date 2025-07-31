@@ -108,6 +108,8 @@ const Sidebar = () => {
               expanded={expanded}
             />
           )}
+
+          {/* SHow dsr list */}
           <SidebarLink
             to="/dsr_list"
             icon={<IoMdList size={19} />}
