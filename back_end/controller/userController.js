@@ -177,5 +177,15 @@ const deleteUserProfile = async (req, res) => {
 };
 
 
+// ✅ Get all users
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().populate("role"); // Adjust fields as needed
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch users" });
+  }
+};
 
-module.exports = { getUserProfile, createUser, updateUserProfile, deleteUserProfile };
+
+module.exports = { getUserProfile, createUser, updateUserProfile, deleteUserProfile ,getAllUsers};
