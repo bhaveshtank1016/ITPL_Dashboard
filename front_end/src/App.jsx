@@ -59,13 +59,35 @@ function App() {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/profile" element={<ProfileForm />} />
                     <Route path="/users" element={<UserPage />} />
-                    <Route path="/holidayCalender" element={<HolidayCalender />} />
+                    <Route path="/add-user" element={<AddUserForm />} />
+                    <Route path="/user/:id?" element={<AddUserPage />} />
+                    <Route path="/add-user" element={<AddUserPage />} />
+                    <Route path="/add-user/:id" element={<AddUserPage />} />
+                    <Route
+                      path="/holidayCalender"
+                      element={<HolidayCalender />}
+                    />
                     <Route path="/dsr_list" element={<DSR_List />} />
-                    <Route path="/add_Dsr_Report" element={<Add_Dsr_Report />} />
-                    <Route path="/attendanceSheet" element={<AttendanceSheet />} />
-                    <Route path="/daily_Attendance" element={<Daily_Attendance />} />
-                    <Route path="/addEmpReference" element={<AddEmpReference />} />
-                    <Route path="/empReferenceListing" element={<EmpReferenceListing />} />
+                    <Route
+                      path="/add_Dsr_Report"
+                      element={<Add_Dsr_Report />}
+                    />
+                    <Route
+                      path="/attendanceSheet"
+                      element={<AttendanceSheet />}
+                    />
+                    <Route
+                      path="/daily_Attendance"
+                      element={<Daily_Attendance />}
+                    />
+                    <Route
+                      path="/addEmpReference"
+                      element={<AddEmpReference />}
+                    />
+                    <Route
+                      path="/empReferenceListing"
+                      element={<EmpReferenceListing />}
+                    />
                     <Route path="/addResign" element={<AddResign />} />
                     <Route path="/resignList" element={<ResignList />} />
                     <Route path="/info" element={<Profile_info />} />

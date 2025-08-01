@@ -1,4 +1,4 @@
-const User = require("../models/AddUserSchema"); 
+const User = require("../models/AddUserSchema");
 const Role = require("../models/Role");
 
 const getUserProfile = async (req, res) => {
@@ -8,7 +8,7 @@ const getUserProfile = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-// success 
+    // success
     res.status(200).json({
       success: true,
       message: "User profile fetched successfully",
@@ -25,8 +25,8 @@ const getUserProfile = async (req, res) => {
         salary: user.salary,
         role: user.role,
         position: user.position,
-        status: user.status
-      }
+        status: user.status,
+      },
     });
   } catch (err) {
     console.error("Error fetching user profile:", err);
@@ -55,16 +55,29 @@ const createUser = async (req, res) => {
 
     // Validate required fields
     if (
-      !name || !email || !password || !phone || !gender ||
-      !dob || !address || !joiningDate || !position || !department || !role
+      !name ||
+      !email ||
+      !password ||
+      !phone ||
+      !gender ||
+      !dob ||
+      !address ||
+      !joiningDate ||
+      !position ||
+      !department ||
+      !role
     ) {
-      return res.status(400).json({ message: "All required fields must be filled." });
+      return res
+        .status(400)
+        .json({ message: "All required fields must be filled." });
     }
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User with this email already exists." });
+      return res
+        .status(400)
+        .json({ message: "User with this email already exists." });
     }
 
     // Check if role exists
@@ -102,11 +115,11 @@ const createUser = async (req, res) => {
   }
 };
 
-
 const updateUserProfile = async (req, res) => {
   try {
-    const user = req.user; 
+    const userId = req.body.id || req.params.id;
 
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -121,10 +134,11 @@ const updateUserProfile = async (req, res) => {
       department,
       salary,
       profilePhoto,
-      status
+      status,
+      role,
+      joiningDate,
     } = req.body;
 
-    // Update fields only if provided
     if (name) user.name = name;
     if (phone) user.phone = phone;
     if (gender) user.gender = gender;
@@ -135,20 +149,15 @@ const updateUserProfile = async (req, res) => {
     if (salary) user.salary = salary;
     if (profilePhoto) user.profilePhoto = profilePhoto;
     if (status) user.status = status;
+    if (role) user.role = role;
+    if (joiningDate) user.joiningDate = joiningDate;
 
     const updatedUser = await user.save();
 
     res.status(200).json({
       success: true,
       message: "Profile updated successfully",
-      user: {
-        id: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        role: updatedUser.role,
-        position: updatedUser.position,
-        status: updatedUser.status,
-      },
+      user: updatedUser,
     });
   } catch (err) {
     console.error("Error updating profile:", err);
@@ -158,20 +167,21 @@ const updateUserProfile = async (req, res) => {
 
 const deleteUserProfile = async (req, res) => {
   try {
-    const user = req.user; // comes from protect middleware
+    const userId = req.params.id;
 
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    await User.findByIdAndDelete(user._id);
+    await User.findByIdAndDelete(userId);
 
     res.status(200).json({
       success: true,
-      message: "User profile deleted successfully",
+      message: "User deleted successfully",
     });
   } catch (err) {
-    console.error("Error deleting profile:", err);
+    console.error("Error deleting user:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -188,4 +198,27 @@ const getAllUsers = async (req, res) => {
 };
 
 
-module.exports = { getUserProfile, createUser, updateUserProfile, deleteUserProfile ,getAllUsers};
+
+const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).populate("role");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    console.error("Error fetching user:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+
+module.exports = {
+  getUserProfile,
+  createUser,
+  updateUserProfile,
+  deleteUserProfile,
+  getAllUsers,
+  getUserById,
+};

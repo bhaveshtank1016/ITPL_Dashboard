@@ -30,7 +30,7 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
   // Fetch existing user data if editing
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:8001/api/user/${id}`, {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/api/user/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -73,8 +73,8 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
     const fullName = `${form.firstName} ${form.lastName}`.trim();
 
     const url = existingUser
-      ? "http://localhost:8001/api/user/update"
-      : "http://localhost:8001/api/user/create";
+      ? `${import.meta.env.VITE_API_BASE_URL}/api/user/update`
+      : `${import.meta.env.VITE_API_BASE_URL}/api/user/create`;
     const method = existingUser ? "PUT" : "POST";
 
     const payload = {
@@ -82,6 +82,10 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
       name: fullName,
       complete: Number(form.complete) || 0,
     };
+
+    if (existingUser) {
+      payload.id = id;
+    }
 
     try {
       const res = await fetch(url, {
@@ -116,23 +120,25 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
   };
 
   return (
-    <div className="p-6 w-full bg-black rounded-xl mx-auto">
+    <div className="p-4 md:p-6 w-full min-h-screen rounded-2xl bg-neutral-900 text-white flex items-center justify-center overflow-auto">
       <form
         onSubmit={handleSubmit}
-        className="bg-white/50 backdrop-blur-md text-white p-8 rounded-2xl shadow-2xl w-full border border-white/20"
+        className=" bg-neutral-950 backdrop-blur-md text-white p-8 rounded-2xl shadow-2xl w-full  border border-white/20"
       >
         <h2 className="text-3xl font-bold mb-6 text-center drop-shadow">
-          {existingUser ? "Edit User" : "Add New User"}
+          {existingUser ? "Update User" : "Add New User"}
         </h2>
 
         {/* Profile Image */}
         <div className="mb-4">
-          <label className="block mb-1 text-sm font-medium">Profile Image</label>
+          <label className="block mb-1 text-sm font-medium">
+            Profile Image 
+          </label>
           <input
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className="block w-full text-sm bg-gray-800 border border-gray-600 rounded cursor-pointer"
+            className="block w-full text-sm  bg-neutral-800  h-10  rounded-md cursor-pointer"
           />
           {form.profilePhoto && (
             <img
@@ -144,6 +150,7 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
         </div>
 
         {/* First + Last Name */}
+        <label className="block mb-1 text-sm font-medium">Full Name <span className="text-red-600 text-lg">*</span></label>
         <div className="flex gap-2 mb-3">
           <input
             type="text"
@@ -151,19 +158,21 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
             placeholder="First Name"
             value={form.firstName}
             onChange={handleChange}
-            className="border p-2 w-1/2 text-black"
+            className=" p-2 w-1/2 rounded-md bg-neutral-800"
           />
+          <label className="block mb-1 text-sm font-medium"></label>
           <input
             type="text"
             name="lastName"
             placeholder="Last Name"
             value={form.lastName}
             onChange={handleChange}
-            className="border p-2 w-1/2 text-black"
+            className=" p-2 w-1/2 rounded-md bg-neutral-800 "
           />
         </div>
 
         {/* Email + Password */}
+        <label className="block mb-1 text-sm font-medium">Email <span className="text-red-600 text-lg">*</span></label>
         <div className="mb-3">
           <input
             type="email"
@@ -171,8 +180,9 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
             placeholder="Email"
             value={form.email}
             onChange={handleChange}
-            className="border w-full mb-2 p-2 text-black"
+            className=" w-full mb-2 p-2 bg-neutral-800"
           />
+          <label className="block mb-1 text-sm font-medium">Password<span className="text-red-600 text-lg">*</span></label>
           {!existingUser && (
             <div className="relative">
               <input
@@ -181,11 +191,11 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
                 placeholder="Password"
                 value={form.password}
                 onChange={handleChange}
-                className="border w-full mb-2 p-2 text-black pr-10"
+                className="rounded-md w-full mb-2 p-2 bg-neutral-800 pr-10"
               />
               <span
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-600"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-blue-600"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
@@ -194,28 +204,33 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
         </div>
 
         {/* Phone + DOB */}
-        <div className="mb-3">
+        <label className="block mb-1 text-sm font-medium">
+          Phone & Date of Birth<span className="text-red-600 text-lg">*</span>
+        </label>
+
+        <div className="flex gap-2 mb-3">
           <input
             type="text"
             name="phone"
             placeholder="Phone"
             value={form.phone}
             onChange={handleChange}
-            className="border w-full mb-2 p-2 text-black"
+            className=" p-2 w-1/2 rounded-md bg-neutral-800 "
           />
           <input
             type="date"
             name="dob"
             value={form.dob}
             onChange={handleChange}
-            className="border p-2 w-full text-black"
+            className=" p-2 w-1/2 rounded-md bg-neutral-800 "
           />
         </div>
 
         {/* Gender */}
+
         <div className="mb-3">
-          <label className="block mb-1 text-sm">Gender</label>
-          <div className="flex gap-4 text-black">
+          <label className="block mb-1 text-sm font-medium">Gender<span className="text-red-600 text-lg">*</span> </label>
+          <div className="flex gap-15 pl-5 rounded-md bg-neutral-800 h-10 items-center ">
             {["Male", "Female", "Other"].map((g) => (
               <label key={g}>
                 <input
@@ -224,7 +239,7 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
                   value={g}
                   checked={form.gender === g}
                   onChange={handleChange}
-                />{" "}
+                />
                 {g}
               </label>
             ))}
@@ -232,24 +247,29 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
         </div>
 
         {/* Address */}
+        <label className="block mb-1 text-sm font-medium">Address<span className="text-red-600 text-lg">*</span> </label>
         <input
           type="text"
           name="address"
           placeholder="Address"
           value={form.address}
           onChange={handleChange}
-          className="border p-2 w-full mb-3 text-black"
+          className="rounded-md p-2 w-full mb-3 bg-neutral-800"
         />
 
         {/* Department + Position */}
-        <div className="mb-3">
+        <label className="block mb-1 text-sm font-medium">
+          Department + Position<span className="text-red-600 text-lg">*</span>
+        </label>
+
+        <div className="flex gap-2 mb-3">
           <input
             type="text"
             name="department"
             placeholder="Department"
             value={form.department}
             onChange={handleChange}
-            className="border w-full mb-2 p-2 text-black"
+            className=" p-2 w-1/2 rounded-md bg-neutral-800 "
           />
           <input
             type="text"
@@ -257,29 +277,32 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
             placeholder="Position"
             value={form.position}
             onChange={handleChange}
-            className="border w-full p-2 text-black"
+            className=" p-2 w-1/2 rounded-md bg-neutral-800 "
           />
         </div>
 
         {/* Salary + Role */}
-        <input
-          type="number"
-          name="salary"
-          placeholder="Salary"
-          value={form.salary}
-          onChange={handleChange}
-          className="border p-2 w-full mb-3 text-black"
-        />
-        <select
-          name="role"
-          value={form.role}
-          onChange={handleChange}
-          className="border p-2 w-full mb-3 text-black"
-        >
-          <option value="">Select Role</option>
-          <option value="6878b8c8a3c5b809cb6b919a">Admin</option>
-          <option value="6878e57467972bbaadc73bf8">Employee</option>
-        </select>
+        <label className="block mb-1 text-sm font-medium">Salary + Role<span className="text-red-600 text-lg">*</span></label>
+        <div className="flex gap-2 mb-3">
+          <input
+            type="number"
+            name="salary"
+            placeholder="Salary"
+            value={form.salary}
+            onChange={handleChange}
+            className=" p-2 w-full mb-3 rounded-md bg-neutral-800 "
+          />
+          <select
+            name="role"
+            value={form.role}
+            onChange={handleChange}
+            className=" p-2 w-full mb-3 rounded-md bg-neutral-800 "
+          >
+            <option value="">Select Role</option>
+            <option value="6878b8c8a3c5b809cb6b919a">Admin</option>
+            <option value="6878e57467972bbaadc73bf8">Employee</option>
+          </select>
+        </div>
 
         {/* Completion */}
         <label className="text-sm">Profile Completion %</label>
@@ -288,41 +311,44 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
           name="complete"
           value={form.complete}
           onChange={handleChange}
-          className="border p-2 w-full mb-3 text-black"
+          className=" p-2 w-full mb-3 rounded-md bg-neutral-800 "
         />
 
         {/* Status */}
-        <select
-          name="status"
-          value={form.status}
-          onChange={handleChange}
-          className="border p-2 w-full mb-3 text-black"
-        >
-          <option value="Active">Active</option>
-          <option value="Inactive">Inactive</option>
-        </select>
+        <label className="block mb-1 text-sm font-medium">status<span className="text-red-600 text-lg">*</span></label>
+        <div className="flex gap-2 mb-3">
+          <select
+            name="status"
+            value={form.status}
+            onChange={handleChange}
+            className=" p-2 w-full mb-3 rounded-md bg-neutral-800 "
+          >
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
 
-        {/* Joining Date */}
-        <input
-          type="date"
-          name="joiningDate"
-          value={form.joiningDate}
-          onChange={handleChange}
-          className="border p-2 w-full mb-3 text-black"
-        />
+          {/* Joining Date */}
+          <input
+            type="date"
+            name="joiningDate"
+            value={form.joiningDate}
+            onChange={handleChange}
+            className=" p-2 w-full mb-3 rounded-md bg-neutral-800 "
+          />
+        </div>
 
         {/* Buttons */}
         <div className="flex gap-2 mt-4">
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700"
+            className="bg-blue-900 text-white px-4 py-2 rounded w-full hover:bg-blue-700"
           >
             {existingUser ? "Update" : "Add User"}
           </button>
           <button
             type="button"
             onClick={() => navigate("/users")}
-            className="bg-gray-300 text-black px-4 py-2 rounded w-full"
+            className="bg-blue-900 text-white px-4 py-2 rounded w-full hover:bg-blue-700"
           >
             Cancel
           </button>

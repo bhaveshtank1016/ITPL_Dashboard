@@ -12,7 +12,7 @@ const UserPage = () => {
   const fetchUsers = () => {
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:8001/api/user", {
+  fetch(`${import.meta.env.VITE_API_BASE_URL}/api/user`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -129,10 +129,7 @@ const UserPage = () => {
               </td>
               <td className="flex gap-2 mt-2">
                 <button
-                  onClick={() => {
-                    setEditUser(user);
-                    setShowModal(true);
-                  }}
+                 onClick={() => navigate(`/add-user/${user._id}`)}
                   className="text-yellow-400 underline"
                 >
                   Edit
