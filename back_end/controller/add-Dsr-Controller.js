@@ -1,27 +1,46 @@
-const Dsr = require("../models/addDsrModel");
+const Dsr = require("../models/addDsrmodel");
 const nodemailer = require("nodemailer");
 
 const addDsr = async (req, res) => {
   try {
-    const { email, date, attachment, projects,  todoTasks,  } = req.body;
+    const {
+      email,
+      date,
+      attachment,
+      projectName,
+      projectDescription,
+      todoTasks,
+      role,
+      user,
+    } = req.body;
 
-    if (!email) {
-      console.error("❌ Missing email in request body");
-      return res.status(400).json({ message: "Email is required" });
-    }
+    // 1️⃣ Basic validation
+    if (!email?.trim())
+      return res.status(400).json({ error: "Email is required" });
+    if (!date?.trim())
+      return res.status(400).json({ error: "Date is required" });
+    if (!projectName?.trim())
+      return res.status(400).json({ error: "Project name is required" });
+    if (!Array.isArray(todoTasks))
+      return res.status(400).json({ error: "Todo tasks must be an array" });
+    if (!role) return res.status(400).json({ error: "Role is required" });
+    if (!user) return res.status(400).json({ error: "User is required" });
 
-    // 🔧 Fix: Define new DSR instance
     const newDsr = new Dsr({
       email,
       date,
       attachment,
-      projects,
+      projectName,
+      projectDescription,
+      todoTasks,
+      role,
+      user,
     });
 
-    const savedDsr = await newDsr.save();
-    console.log("✅ Saved DSR from DB:", savedDsr);
+    // 3️⃣ Save to DB
+    await newDsr.save();
 
-    // ✅ Nodemailer setup
+    // 4️⃣ Send email
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -41,16 +60,22 @@ const addDsr = async (req, res) => {
 
     res.status(201).json({ message: "DSR submitted and email sent!" });
   } catch (error) {
-    console.error("❌ Error submitting DSR:", error.message);
-    res
-      .status(500)
-      .json({ message: "Something went wrong", error: error.message });
+    console.error("Error submitting DSR:", error.message);
+    res.status(500).json({
+      message: "Something went wrong",
+      error: error.message,
+    });
   }
 };
 
+// GET - fetch all DSRs
 const getDsr = async (req, res) => {
   try {
-    const dsrs = await Dsr.find().sort({ createdAt: -1 });
+    const dsrs = await Dsr.find()
+      .populate("role")
+      .populate("user")
+      .sort({ createdAt: -1 });
+
     res.json(dsrs);
   } catch (err) {
     res.status(500).json({ error: err.message });

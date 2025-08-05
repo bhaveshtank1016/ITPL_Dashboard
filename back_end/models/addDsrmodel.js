@@ -2,22 +2,24 @@ const mongoose = require("mongoose");
 
 const dsrSchema = new mongoose.Schema(
   {
-    email: { type: String, required: true },
-    date: { type: Date, required: true },
-    attachment: String,
-    todoTasks: {
-      type: [String],
-      default: [],
+    role: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Role",
+      required: true,
     },
-    projects: [
-      {
-        projectName: { type: String },
-        projectDescription: { type: String },
-        todoTask: { type: String },
-      }
-    ],
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", 
+      required: true,
+    },
+    email: String,
+    date: String,
+    attachment: String,
+    projectName: String,
+    projectDescription: String,
+    todoTasks: [String],
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Dsr", dsrSchema);
+module.exports = mongoose.model("dsr", dsrSchema);
