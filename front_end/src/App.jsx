@@ -28,7 +28,7 @@ import AddResign from "./pages/resign/AddResign";
 import ResignList from "./pages/resign/ResignList";
 import AddLeave from "./pages/leave/AddLeave";
 import LeaveList from "./pages/leave/LeaveList";
-
+import HRM from "./hr/hrm";
 import AddUserPage from "./pages/user/AddUserPage";
 import AddUserForm from "./pages/user/AddUserForm";
 import Role from "./pages/user/role";
@@ -98,6 +98,10 @@ function App() {
                     <Route path="/addLeave" element={<AddLeave />} />
                     <Route path="/leaveList" element={<LeaveList />} />
                     <Route path="/role" element = {< Role/>} />
+                    <Route
+                      path="/hrm"
+                      element={<HRM />}
+                    />
                   </Routes>
                 </Layout>
               </ProtectedRoute>

@@ -74,13 +74,13 @@ const Sign_in = () => {
                 <h1 className="text-xl mx-10 font-bold justify-start">
                   Sign In
                 </h1>
-                <p className="text-slate-600 mx-10">
+                {/* <p className="text-slate-600 mx-10">
                   Don't have an account?
-                  <a className="font-semibold text-white">&nbsp;Sign Up</a>
-                </p>
+                  <a classNamLoge="font-semibold text-white">&nbsp;Sign Up</a>
+                </p> */}
               </div>
 
-              {showNotification && (
+              {/* {showNotification && (
                 <div className="bg-neutral-800 text-sm p-4 rounded-md flex justify-between items-center mb-6 mt-3 ml-10 mr-8">
                   <span>
                     Welcome to Tailwise demo! Simply click Sign In to explore
@@ -93,7 +93,7 @@ const Sign_in = () => {
                     ✕
                   </button>
                 </div>
-              )}
+              )} */}
             </div>
 
             <form className="container px-10 mx-auto" onSubmit={handleLogin}>
