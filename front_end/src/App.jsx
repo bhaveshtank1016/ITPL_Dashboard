@@ -33,8 +33,6 @@ import AddUserPage from "./pages/user/AddUserPage";
 import AddUserForm from "./pages/user/AddUserForm";
 import Role from "./pages/user/role";
 
-
-
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
   const location = useLocation();
@@ -97,7 +95,7 @@ function App() {
                     <Route path="/info" element={<Profile_info />} />
                     <Route path="/addLeave" element={<AddLeave />} />
                     <Route path="/leaveList" element={<LeaveList />} />
-                    <Route path="/role" element = {< Role/>} />
+                    <Route path="/role" element={<Role />} />
                   </Routes>
                 </Layout>
               </ProtectedRoute>

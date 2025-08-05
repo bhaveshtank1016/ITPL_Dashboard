@@ -82,4 +82,23 @@ const getDsr = async (req, res) => {
   }
 };
 
-module.exports = { addDsr, getDsr };
+// delete project
+const deleteDsr = async (req, res) => {
+  try {
+    const deleted = await Dsr.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: "DSR not found" });
+    }
+    res.status(200).json({ message: "DSR deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error deleting DSR", error: error.message });
+  }
+};
+
+module.exports = {
+  addDsr,
+  getDsr,
+  deleteDsr,
+};

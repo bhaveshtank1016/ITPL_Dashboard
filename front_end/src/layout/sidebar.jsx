@@ -27,6 +27,10 @@ const Sidebar = () => {
 
   const { user } = useAuth();
   console.log("User from Sidebar:", user);
+  
+  const isAdmin = user?.role?.name?.toLowerCase() === "admin";
+  const isHR = user?.role?.name?.toLowerCase() === "hr";
+  const isAdminOrHR = isAdmin || isHR;
 
   const toggleLeaveMenu = () => setOpenLeaveMenu((prev) => !prev);
   const toggleMenu = () => setOpenResignMenu((prev) => !prev);
@@ -88,9 +92,27 @@ const Sidebar = () => {
             current={location.pathname}
             expanded={expanded}
           />
-         
 
-          {user && user.role && user.role.name?.toLowerCase() === "admin" && (
+          {/* {user && user.role && user.role.name?.toLowerCase() === "admin" && (
+            <SidebarLink
+              to="/users"
+              icon={<FontAwesomeIcon icon={faUserPlus} />}
+              label="Add User"
+              current={location.pathname}
+              expanded={expanded}
+            />
+          )} */}
+          {/* {user && user.role && user.role.name?.toLowerCase() === "admin" && (
+            <SidebarLink
+              to="/role"
+              icon={<FontAwesomeIcon icon={faUser} />}
+              label="Role"
+              current={location.pathname}
+              expanded={expanded}
+            />
+          )} */}
+
+          {isAdminOrHR && (
             <SidebarLink
               to="/users"
               icon={<FontAwesomeIcon icon={faUserPlus} />}
@@ -99,7 +121,8 @@ const Sidebar = () => {
               expanded={expanded}
             />
           )}
-          {user && user.role && user.role.name?.toLowerCase() === "admin" && (
+
+          {isAdminOrHR && (
             <SidebarLink
               to="/role"
               icon={<FontAwesomeIcon icon={faUser} />}
@@ -215,4 +238,3 @@ const DropdownMenu = ({ expanded, isOpen, toggle, icon, title, links }) => (
 );
 
 export default Sidebar;
-
