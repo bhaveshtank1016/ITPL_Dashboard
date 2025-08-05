@@ -1,62 +1,118 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function DSRList() {
   const [dsrs, setDsrs] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:8001/api/dsr").then((res) => setDsrs(res.data));
+    axios
+      .get("http://localhost:8001/api/dsr")
+      .then((res) => {
+        console.log("Fetched DSRs:", res.data); // ✅ Console check
+        setDsrs(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching DSRs:", err);
+      });
   }, []);
 
+  // handle delete 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8001/api/dsr/${id}`);
+      toast.success("DSR deleted successfully!");
+    } catch (err) {
+      toast.error("Failed to delete DSR");
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-neutral-950  text-white p-10">
-      <div className="">
-        <h1 className="text-2xl font-bold mb-4   ">DSR LIST</h1>
-       
-        <div className="flex md:items-center flex-wrap justify-between items-center mb-4 gap-4">
-           <div className="mb-5 ">
-          <label className="text-lg font-bold mr-2">Select Date</label>
-          <input type="date" className="border p-1 rounded" />
-        </div>
+    <div className="min-h-screen bg-neutral-950 rounded-xl text-white p-10">
+      <div>
+        <h1 className="text-2xl font-bold mb-4">DSR LIST</h1>
+
+        <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
+          <div className="mb-5">
+            <label className="text-lg font-bold mr-2">Select Date</label>
+            <input type="date" className="border p-1 rounded" />
+          </div>
           <div className="ml-auto">
             <label className="text-md font-medium mr-2">Search:</label>
             <input
               type="text"
-              placeholder="Search project..."
-              className="border p-1 rounded mb-5 lg:md:mb-0 "
+              placeholder="Search..."
+              className="border p-1 rounded mb-5 lg:md:mb-0"
             />
           </div>
         </div>
       </div>
 
-      {/* table  */}
-      <div className="w-full overflow-x-auto border rounded-md text-white  ">
-        <table className="min-w-full  shadow rounded-lg">
+      {/* table */}
+      <div className="w-full overflow-x-auto border  rounded-md text-white">
+        <table className="min-w-full shadow rounded-lg">
           <thead className="bg-neutral-800 ">
             <tr className="text-center text-sm  font-semibold">
               <th className="p-3">No.</th>
               <th className="p-3">Date</th>
-              <th className="p-3">Project Name</th>
-              <th className="p-3">Project Description</th>
-              <th className="p-3">To Do Task</th>
+              <th className="p-3">Email</th>
+              <th className="p-3">Attachment</th>
+              <th className="p-3">To Do Tasks</th>
+              <th className="p-3">Action</th>
             </tr>
           </thead>
           <tbody className="text-md bg-neutral-800 text-center">
             {dsrs.map((item, index) => (
               <tr key={item._id} className="border-t bg-neutral-800">
                 <td className="text-center">{index + 1}</td>
-                <td className="py-5 px-3">
-                  {" "}
-                  {new Date(item.date).toLocaleString()}
-                </td>
-                <td>{item.projectName}</td>
-                <td>{item.projectDescription}</td>
+                <td>{new Date(item.date).toLocaleDateString()}</td>
+                <td>{item.email}</td>
+                <td>{item.attachment || "No attachment"}</td>
                 <td>
-                  <ul className="list-disc ml-4">
-                    {item.todoTasks.map((task, idx) => (
-                      <li key={idx}>{task}</li>
-                    ))}
-                  </ul>
+                  <div className="flex flex-col items-start gap-2 px-2">
+                    {/* Project Data */}
+                    {item.projects && item.projects.length > 0 ? (
+                      item.projects.map((project, pIndex) => (
+                        <div
+                          key={pIndex}
+                          className="bg-neutral-900 text-left p-2 rounded w-full"
+                        >
+                          <p>
+                            <strong>Name:</strong> {project.projectName}
+                          </p>
+                          <p>
+                            <strong>Description:</strong>{" "}
+                            {project.projectDescription}
+                          </p>
+                          <p>
+                            <strong>To Do Task:</strong> {project.todoTask}
+                          </p>
+                        </div>
+                      ))
+                    ) : (
+                      <span>No projects available</span>
+                    )}
+
+                    {/* To Do Tasks (if any) */}
+                    {item.todoTasks && item.todoTasks.length > 0 && (
+                      <div className="mt-2 w-full bg-neutral-900 text-left p-2 rounded">
+                        <p className="font-semibold">Other Tasks:</p>
+                        <ul className="list-disc list-inside">
+                          {item.todoTasks.map((task, tIndex) => (
+                            <li key={tIndex}>{task}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </td>
+                <td>
+                  <button
+                    onClick={() => handleDelete(item._id)}
+                    className="bg-red-600 hover:bg-red-700 text-white py-4 px-2 rounded"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

@@ -1,13 +1,16 @@
 const express = require("express");
 const router = express.Router();
 
-// ✅ Correct destructuring import
-const { addDsr, getDsr } = require("../controller/add-Dsr-Controller");
+const {
+  addDsr,
+  getDsr,
+  deleteDsr,
+} = require("../controller/add-Dsr-Controller");
 
-// ✅ Route setup
-router.route("/dsr")
-  .post(addDsr)  // Must be a function
-  .get(getDsr);  // Must be a function
+// ✅ Correct route setup
+router.route("/dsr").post(addDsr).get(getDsr);
+
+// ✅ Define delete route separately
+router.delete("/dsr/:id", deleteDsr);
 
 module.exports = router;
-
