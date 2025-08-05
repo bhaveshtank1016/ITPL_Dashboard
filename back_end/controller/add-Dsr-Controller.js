@@ -1,44 +1,53 @@
-const Dsr = require("../models/addDsrmodel");
+const Dsr = require("../models/addDsrModel");
 const nodemailer = require("nodemailer");
 
 const addDsr = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, date, attachment, projects,  todoTasks,  } = req.body;
 
-    //  Save the DSR to the database
-    const newDsr = new Dsr(req.body);
-    await newDsr.save();
+    if (!email) {
+      console.error("❌ Missing email in request body");
+      return res.status(400).json({ message: "Email is required" });
+    }
 
-    //  Set up Nodemailer transporter (use Gmail, Mailtrap, etc.)
+    // 🔧 Fix: Define new DSR instance
+    const newDsr = new Dsr({
+      email,
+      date,
+      attachment,
+      projects,
+    });
+
+    const savedDsr = await newDsr.save();
+    console.log("✅ Saved DSR from DB:", savedDsr);
+
+    // ✅ Nodemailer setup
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER, // e.g., your Gmail
-        pass: process.env.EMAIL_PASS, // app password, not your Gmail password
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
-    //  Email content
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "DSR Form Submitted",
-      html: `<h3>Hello,</h3><p>Dear user,</p><p>Your DSR form has been submitted successfully!</p>`,
+      html: `<h3>Hello,</h3><p>Your DSR form has been submitted successfully!</p>`,
     };
 
-    //  Send the email
     await transporter.sendMail(mailOptions);
 
     res.status(201).json({ message: "DSR submitted and email sent!" });
   } catch (error) {
-    console.error("Error submitting DSR:", error.message);
+    console.error("❌ Error submitting DSR:", error.message);
     res
       .status(500)
       .json({ message: "Something went wrong", error: error.message });
   }
 };
 
-// GET - Get all DSRs
 const getDsr = async (req, res) => {
   try {
     const dsrs = await Dsr.find().sort({ createdAt: -1 });
@@ -48,4 +57,23 @@ const getDsr = async (req, res) => {
   }
 };
 
-module.exports = { addDsr, getDsr };
+// delete project
+const deleteDsr = async (req, res) => {
+  try {
+    const deleted = await Dsr.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: "DSR not found" });
+    }
+    res.status(200).json({ message: "DSR deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error deleting DSR", error: error.message });
+  }
+};
+
+module.exports = {
+  addDsr,
+  getDsr,
+  deleteDsr,
+};
