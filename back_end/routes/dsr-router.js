@@ -3,11 +3,14 @@ const router = express.Router();
 
 // ✅ Correct destructuring import
 const { addDsr, getDsr } = require("../controller/add-Dsr-Controller");
+const { protect } = require("../middleware/authMiddleware");
+
 
 // ✅ Route setup
-router.route("/dsr")
-  .post(addDsr)  // Must be a function
-  .get(getDsr);  // Must be a function
+
+router.post("/create", protect, addDsr);
+router.get("/getDsr", protect, getDsr);
+
 
 module.exports = router;
 
