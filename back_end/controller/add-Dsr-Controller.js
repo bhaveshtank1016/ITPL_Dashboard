@@ -1,4 +1,5 @@
-const Dsr = require("../models/addDsrModel");
+const Dsr = require("../models/addDsrmodel");
+
 const nodemailer = require("nodemailer");
 
 const addDsr = async (req, res) => {
@@ -50,7 +51,11 @@ const addDsr = async (req, res) => {
 
 const getDsr = async (req, res) => {
   try {
-    const dsrs = await Dsr.find().sort({ createdAt: -1 });
+    const dsrs = await Dsr.find()
+      .populate("role")
+      .populate("user")
+      .sort({ createdAt: -1 });
+
     res.json(dsrs);
   } catch (err) {
     res.status(500).json({ error: err.message });
