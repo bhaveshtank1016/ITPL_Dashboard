@@ -1,5 +1,5 @@
-const User = require("../models/AddUserSchema");
-const Role = require("../models/Role");
+const User = require("../models/user");
+const Role = require("../models/role");
 
 const getUserProfile = async (req, res) => {
   try {

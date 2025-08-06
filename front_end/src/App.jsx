@@ -31,7 +31,7 @@ import LeaveList from "./pages/leave/LeaveList";
 
 import AddUserPage from "./pages/user/AddUserPage";
 import AddUserForm from "./pages/user/AddUserForm";
-import Role from "./pages/user/role";
+import Role from "../src/pages/user/role/role";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");

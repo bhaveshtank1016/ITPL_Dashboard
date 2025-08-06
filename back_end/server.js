@@ -30,7 +30,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Routes
-app.use("/api/dsr", dsrRoute);
+app.use("/api", dsrRoute);
 app.use("/api", holidayRoute);
 app.use("/api", resignRouter);
 app.use("/api", leaveRouter);
