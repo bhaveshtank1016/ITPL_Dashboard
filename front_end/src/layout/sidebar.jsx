@@ -7,6 +7,7 @@ import {
   faBars,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
+import { FaUsers } from "react-icons/fa";
 import { ClipboardList } from "lucide-react";
 import { IoCalendarNumber } from "react-icons/io5";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
@@ -27,7 +28,7 @@ const Sidebar = () => {
 
   const { user } = useAuth();
   console.log("User from Sidebar:", user);
-  
+
   const isAdmin = user?.role?.name?.toLowerCase() === "admin";
   const isHR = user?.role?.name?.toLowerCase() === "hr";
   const isAdminOrHR = isAdmin || isHR;
@@ -93,30 +94,11 @@ const Sidebar = () => {
             expanded={expanded}
           />
 
-          {/* {user && user.role && user.role.name?.toLowerCase() === "admin" && (
-            <SidebarLink
-              to="/users"
-              icon={<FontAwesomeIcon icon={faUserPlus} />}
-              label="Add User"
-              current={location.pathname}
-              expanded={expanded}
-            />
-          )} */}
-          {/* {user && user.role && user.role.name?.toLowerCase() === "admin" && (
-            <SidebarLink
-              to="/role"
-              icon={<FontAwesomeIcon icon={faUser} />}
-              label="Role"
-              current={location.pathname}
-              expanded={expanded}
-            />
-          )} */}
-
           {isAdminOrHR && (
             <SidebarLink
               to="/users"
-              icon={<FontAwesomeIcon icon={faUserPlus} />}
-              label="Add User"
+              icon={<FaUsers  size={20}/>}
+              label="Users"
               current={location.pathname}
               expanded={expanded}
             />
@@ -140,13 +122,7 @@ const Sidebar = () => {
             current={location.pathname}
             expanded={expanded}
           />
-          <SidebarLink
-            to="/add_Dsr_Report"
-            icon={<MdOutlinePlaylistAdd size={25} />}
-            label="Add DSR Report"
-            current={location.pathname}
-            expanded={expanded}
-          />
+
           <SidebarLink
             to="/attendanceSheet"
             icon={<FaPersonChalkboard size={22} />}

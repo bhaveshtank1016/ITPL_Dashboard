@@ -72,8 +72,39 @@ const deleteDsr = async (req, res) => {
   }
 };
 
+// update 
+
+const updateDsr = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    const updatedDsr = await Dsr.findByIdAndUpdate(id, updateData, {
+      new: true,         // returns the updated document
+      runValidators: true // ensure validation is applied
+    });
+
+    if (!updatedDsr) {
+      return res.status(404).json({ message: "DSR not found" });
+    }
+
+    res.status(200).json({
+      message: "DSR updated successfully",
+      updatedDsr,
+    });
+  } catch (error) {
+    console.error("❌ Error updating DSR:", error.message);
+    res.status(500).json({
+      message: "Error updating DSR",
+      error: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   addDsr,
   getDsr,
   deleteDsr,
+  updateDsr,
 };

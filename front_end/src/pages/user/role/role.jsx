@@ -151,7 +151,7 @@ const Role = () => {
 
   return (
     <>
-      <div className="bg-neutral-900 p-4 rounded-xl shadow-md mx-auto container text-sm">
+      <div className="bg-neutral-900 h-screen p-6 rounded-xl shadow-md mx-auto container text-sm">
         <div className="flex justify-between items-center">
           <h2 className="text-white text-xl mb-4 font-bold">Manage Roles</h2>
           <button

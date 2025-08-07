@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 export default function DSRList() {
   const [dsrs, setDsrs] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     axios
       .get("http://localhost:8001/api/dsr")
@@ -17,7 +20,7 @@ export default function DSRList() {
       });
   }, []);
 
-  // handle delete 
+  // handle delete
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8001/api/dsr/${id}`);
@@ -28,15 +31,25 @@ export default function DSRList() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 rounded-xl text-white p-10">
-      <div>
+    <div className="min-h-screen bg-neutral-950 rounded-xl text-white p-6">
+   
+        <div className="flex justify-between items-center mb-4 ">
         <h1 className="text-2xl font-bold mb-4">DSR LIST</h1>
-
+          {/* ✅ Add Button */}
+          <button
+            onClick={() => navigate("/dsr/add")}
+            className="bg-blue-600 hover:bg-blue-700 mb-5 hover:scale-105 transition-transform duration-200 text-white font-semibold py-2 px-4 rounded"
+          >
+            + Add DSR
+          </button>
+        </div>
+   <div>
         <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
           <div className="mb-5">
             <label className="text-lg font-bold mr-2">Select Date</label>
             <input type="date" className="border p-1 rounded" />
           </div>
+
           <div className="ml-auto">
             <label className="text-md font-medium mr-2">Search:</label>
             <input
@@ -109,9 +122,16 @@ export default function DSRList() {
                 <td>
                   <button
                     onClick={() => handleDelete(item._id)}
-                    className="bg-red-600 hover:bg-red-700 text-white py-4 px-2 rounded"
+                    className="bg-red-600 hover:bg-red-700 text-white py-2 px-2 rounded mr-2"
                   >
-                    Delete
+                    <MdDelete />
+                  </button>
+
+                  <button
+                    onClick={() => navigate(`/dsr/edit/${item._id}`)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded"
+                  >
+                    <FaEdit />
                   </button>
                 </td>
               </tr>

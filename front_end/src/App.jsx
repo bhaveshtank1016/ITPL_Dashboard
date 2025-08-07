@@ -17,7 +17,7 @@ import Layout from "./layout/layout";
 import Dashboard from "./dashboard/dashboard";
 import Profile_info from "./pages/user/profile/profile_infos";
 import DSR_List from "./pages/dsrListReport/DSR_List";
-import Add_Dsr_Report from "./pages/dsrListReport/Add_Dsr_Report";
+import Dsr_Add from "./pages/dsrListReport/Dsr_Add";
 import AttendanceSheet from "./pages/attendanceSheet/AttendanceSheet";
 import Daily_Attendance from "./pages/attendanceSheet/Daily_Attendance";
 import "react-toastify/dist/ReactToastify.css";
@@ -32,6 +32,7 @@ import LeaveList from "./pages/leave/LeaveList";
 import AddUserPage from "./pages/user/AddUserPage";
 import AddUserForm from "./pages/user/AddUserForm";
 import Role from "../src/pages/user/role/role";
+import AddDSRForm from "./pages/dsrListReport/Dsr_Add";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -69,10 +70,13 @@ function App() {
                       path="/holidayCalender"
                       element={<HolidayCalender />}
                     />
+                    <Route path="/dsr/add" element={<Dsr_Add />} />
+                    <Route path="/dsr/edit/:id" element={<Dsr_Add />} />
                     <Route path="/dsr_list" element={<DSR_List />} />
+
                     <Route
                       path="/add_Dsr_Report"
-                      element={<Add_Dsr_Report />}
+                      element={<Dsr_Add />}
                     />
                     <Route
                       path="/attendanceSheet"

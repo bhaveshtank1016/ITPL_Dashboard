@@ -214,6 +214,26 @@ const getUserById = async (req, res) => {
 };
 
 
+
+// ✅ Get users with 'manager' role
+const getManagers = async (req, res) => {
+  try {
+    const managerRole = await Role.findOne({ name: 'manager' });
+
+    if (!managerRole) {
+      return res.status(404).json({ message: "Manager role not found" });
+    }
+
+    const managers = await User.find({ role: managerRole._id }).select("name email");
+
+    res.status(200).json(managers);
+  } catch (error) {
+    console.error("Error fetching managers:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
 module.exports = {
   getUserProfile,
   createUser,
@@ -221,4 +241,5 @@ module.exports = {
   deleteUserProfile,
   getAllUsers,
   getUserById,
+  getManagers,
 };
