@@ -224,7 +224,7 @@ const handleAddRole = async (event) => {
       
       {/* MODIFIED: Added an icon and improved typography */}
       <div className="flex items-center space-x-3 mb-6">
-        <PlusCircleIcon className="w-8 h-8 text-blue-400" />
+       
         <h3 className="text-white text-xl font-bold">Add a New Role</h3>
       </div>
       
