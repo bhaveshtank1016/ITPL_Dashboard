@@ -150,27 +150,42 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
         </div>
 
         {/* First + Last Name */}
-        <label className="block mb-1 text-sm font-medium">Full Name <span className="text-red-600 text-lg">*</span></label>
-        <div className="flex gap-2 mb-3">
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            value={form.firstName}
-            onChange={handleChange}
-            className=" p-2 w-1/2 rounded-md bg-neutral-800"
-          />
-          <label className="block mb-1 text-sm font-medium"></label>
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            value={form.lastName}
-            onChange={handleChange}
-            className=" p-2 w-1/2 rounded-md bg-neutral-800 "
-          />
-        </div>
+       <div>
+  {/* Main label for the entire group */}
+  
+  {/* Flex container for the inputs and the middle label */}
+  <div className="flex items-center gap-4 w-full">
+    {/* First Name Input */}
+    <div className="w-1/2">
+    <label className="block mb-2 text-sm font-medium">
+    First Name <span className="text-red-500">*</span>
+  </label>
 
+    <input
+      type="text"
+      name="firstName"
+      placeholder="First Name"
+      value={form.firstName}
+      onChange={handleChange}
+      className="p-2 w-full rounded-md bg-neutral-800"
+    />
+    </div>
+    <div className="w-1/2">
+    {/* Middle "Last Name" Label */}
+    <label className="block mb-2 text-sm font-medium">Last Name<span className="text-red-500">*</span></label>
+    
+    {/* Last Name Input */}
+    <input
+      type="text"
+      name="lastName"
+      placeholder="Last Name"
+      value={form.lastName}
+      onChange={handleChange}
+      className="p-2 w-full rounded-md bg-neutral-800"
+    />
+    </div>
+  </div>
+</div>
         {/* Email + Password */}
         <label className="block mb-1 text-sm font-medium">Email <span className="text-red-600 text-lg">*</span></label>
         <div className="mb-3">
@@ -204,27 +219,38 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
         </div>
 
         {/* Phone + DOB */}
-        <label className="block mb-1 text-sm font-medium">
-          Phone & Date of Birth<span className="text-red-600 text-lg">*</span>
-        </label>
+        
 
-        <div className="flex gap-2 mb-3">
-          <input
-            type="text"
-            name="phone"
-            placeholder="Phone"
-            value={form.phone}
-            onChange={handleChange}
-            className=" p-2 w-1/2 rounded-md bg-neutral-800 "
-          />
-          <input
-            type="date"
-            name="dob"
-            value={form.dob}
-            onChange={handleChange}
-            className=" p-2 w-1/2 rounded-md bg-neutral-800 "
-          />
-        </div>
+        <div className="flex items-center gap-4 w-full">
+  {/* Phone Input Field */}
+  <div className="w-1/2">
+    <label className="block mb-2 text-sm font-medium">
+      Phone <span className="text-red-500">*</span>
+    </label>
+    <input
+      type="text"
+      name="phone"
+      placeholder="Phone"
+      value={form.phone}
+      onChange={handleChange}
+      className="p-2 w-full rounded-md bg-neutral-800"
+    />
+  </div>
+
+  {/* Date of Birth Input Field */}
+  <div className="w-1/2">
+    <label className="block mb-2 text-sm font-medium">
+      Date of Birth <span className="text-red-500">*</span>
+    </label>
+    <input
+      type="date"
+      name="dob"
+      value={form.dob}
+      onChange={handleChange}
+      className="p-2 w-full rounded-md bg-neutral-800"
+    />
+  </div>
+</div>
 
         {/* Gender */}
 
@@ -258,67 +284,87 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
         />
 
         {/* Department + Position */}
-        <label className="block mb-1 text-sm font-medium">
-          Department + Position<span className="text-red-600 text-lg">*</span>
-        </label>
+       <div className="flex items-center gap-4 w-full">
+  {/* Department Field */}
+  <div className="w-1/2">
+    <label className="block mb-2 text-sm font-medium">
+      Department <span className="text-red-500">*</span>
+    </label>
+    <input
+      type="text"
+      name="department"
+      placeholder="Department"
+      value={form.department}
+      onChange={handleChange}
+      className="p-2 w-full rounded-md bg-neutral-800"
+    />
+  </div>
 
-        <div className="flex gap-2 mb-3">
-          <input
-            type="text"
-            name="department"
-            placeholder="Department"
-            value={form.department}
-            onChange={handleChange}
-            className=" p-2 w-1/2 rounded-md bg-neutral-800 "
-          />
-          <input
-            type="text"
-            name="position"
-            placeholder="Position"
-            value={form.position}
-            onChange={handleChange}
-            className=" p-2 w-1/2 rounded-md bg-neutral-800 "
-          />
-        </div>
-
+  {/* Position Field */}
+  <div className="w-1/2">
+    <label className="block mb-2 text-sm font-medium">
+      Position <span className="text-red-500">*</span>
+    </label>
+    <input
+      type="text"
+      name="position"
+      placeholder="Position"
+      value={form.position}
+      onChange={handleChange}
+      className="p-2 w-full rounded-md bg-neutral-800"
+    />
+  </div>
+</div>
         {/* Salary + Role */}
-        <label className="block mb-1 text-sm font-medium">Salary + Role<span className="text-red-600 text-lg">*</span></label>
-        <div className="flex gap-2 mb-3">
-          <input
-            type="number"
-            name="salary"
-            placeholder="Salary"
-            value={form.salary}
-            onChange={handleChange}
-            className=" p-2 w-full mb-3 rounded-md bg-neutral-800 "
-          />
-          <select
-            name="role"
-            value={form.role}
-            onChange={handleChange}
-            className=" p-2 w-full mb-3 rounded-md bg-neutral-800 "
-          >
-            <option value="">Select Role</option>
-            <option value="6878b8c8a3c5b809cb6b919a">Admin</option>
-            <option value="6878e57467972bbaadc73bf8">Employee</option>
-          </select>
-        </div>
+        <div className="flex items-center gap-4 w-full">
+  {/* Salary Field */}
+  <div className="w-1/2">
+    <label className="block mb-2 text-sm font-medium">
+      Salary <span className="text-red-500">*</span>
+    </label>
+    <input
+      type="number"
+      name="salary"
+      placeholder="Salary"
+      value={form.salary}
+      onChange={handleChange}
+      className="p-2 w-full rounded-md bg-neutral-800"
+    />
+  </div>
+
+  {/* Role Field */}
+  <div className="w-1/2">
+    <label className="block mb-2 text-sm font-medium">
+      Role <span className="text-red-500">*</span>
+    </label>
+    <select
+      name="role"
+      value={form.role}
+      onChange={handleChange}
+      className="p-2 w-full rounded-md bg-neutral-800"
+    >
+      <option value="">Select Role</option>
+      <option value="6878b8c8a3c5b809cb6b919a">Admin</option>
+      <option value="6878e57467972bbaadc73bf8">Employee</option>
+    </select>
+  </div>
+</div>
 
         {/* Completion */}
-        <label className="text-sm">Profile Completion %</label>
+        {/* <label className="text-sm">Profile Completion %</label>
         <input
           type="number"
           name="complete"
           value={form.complete}
           onChange={handleChange}
           className=" p-2 w-full mb-3 rounded-md bg-neutral-800 "
-        />
+        /> */}
 
         {/* Status */}
-        <label className="block mb-1 text-sm font-medium">status<span className="text-red-600 text-lg">*</span></label>
+        <label className="block mb-1 text-sm font-medium">Status<span className="text-red-600 text-lg">*</span></label>
         <div className="flex gap-2 mb-3">
           <select
-            name="status"
+            name="Status"
             value={form.status}
             onChange={handleChange}
             className=" p-2 w-full mb-3 rounded-md bg-neutral-800 "

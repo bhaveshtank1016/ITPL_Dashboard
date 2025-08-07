@@ -7,6 +7,7 @@ import {
   faBars,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
+import { FaAddressBook } from 'react-icons/fa';
 import { ClipboardList } from "lucide-react";
 import { IoCalendarNumber } from "react-icons/io5";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
@@ -171,6 +172,13 @@ const Sidebar = () => {
               { to: "/addResign", label: "Add Resign" },
               { to: "/resignList", label: "Resign Listing" },
             ]}
+          />
+          <SidebarLink
+            to="/hrm"
+            icon={<FaAddressBook size={19} />}
+            label="HRM"
+            current={location.pathname}
+            expanded={expanded}
           />
         </div>
       </div>

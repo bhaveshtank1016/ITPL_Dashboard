@@ -61,17 +61,33 @@ function AddLeave() {
       <h2 className="text-xl  mb-10 mt-10 pb-3 rounded-md sm:text-2xl font-semibold ">
         {editMode ? "Edit Leave" : "Add Leave"}
       </h2>
-<div className="bg-gradient-to-r from-neutral-900 to-blue-900 rounded-md p-5">
+<div className="bg-gradient-to-r from-neutral-900 to-blue-900 rounded-md p-5 pl-21">
   
       <form onSubmit={handleSubmit}>
-        <div>
-          <label className="text-xl font-bold">From</label>
+        <div className="grid grid-cols-2">
+        <div className="mt-4">
+          <label className="text-xl font-bold"> Leave From</label>
           <br />
           <input
-            type="text"
+            type="date"
             name="from"
             onChange={handleChange}
             value={leave.from}
+            required
+            placeholder="Leave From "
+            className="border mt-4 rounded-md bg-neutral-600 w-9/12 h-11"
+          />
+        </div>
+
+        <div className="mt-4">
+          <label className="text-xl font-bold">Leave To</label>
+          <br />
+          <input
+            type="date"
+            name="date"
+            onChange={handleChange}
+            value={leave.to}
+            
             required
             className="border mt-4 rounded-md bg-neutral-600 w-9/12 h-11"
           />
@@ -85,22 +101,26 @@ function AddLeave() {
             onChange={handleChange}
             value={leave.subject}
             required
+            placeholder="Write your Subject here"
             className="border mt-4 rounded-md bg-neutral-600 w-9/12 h-11"
           />
         </div>
         <div className="mt-4">
-          <label className="text-xl font-bold">Date</label>
+          <label className="text-xl font-bold">Persent Date </label>
           <br />
           <input
             type="date"
             name="date"
             onChange={handleChange}
             value={leave.date}
+            
             required
             className="border mt-4 rounded-md bg-neutral-600 w-9/12 h-11"
           />
         </div>
-        <div className="mt-4">
+        </div>
+        
+        <div className="mt-4 lg:pr-49 md:pr-4">
           <label className="text-xl font-bold">Message</label>
           <br />
           <textarea
@@ -108,7 +128,8 @@ function AddLeave() {
             onChange={handleChange}
             value={leave.message}
             required
-            className="border mt-4 rounded-md h-30 bg-neutral-600 w-9/12"
+            placeholder="Write your reason here" 
+            className="border mt-4 rounded-md h-30 bg-neutral-600 w-full "
           />
         </div>
 
