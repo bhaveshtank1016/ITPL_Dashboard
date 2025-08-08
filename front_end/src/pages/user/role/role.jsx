@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { API_URL } from "../../../../src/config";
+// import { PlusCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Role = () => {
   // State for the list
@@ -58,39 +62,42 @@ const Role = () => {
   }, [fetchRoles]); // Depend on the memoized fetchRoles function
 
   // Handler function for submitting the new role
-  const handleAddRole = async (event) => {
-    event.preventDefault();
-    setIsSubmitting(true);
-    setAddError(null);
+const handleAddRole = async (event) => {
+  event.preventDefault();
+  setIsSubmitting(true);
+  setAddError(null);
 
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("Authentication required.");
-      }
-
-      const response = await fetch(`${API_URL}addRole`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ name: newRoleName }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to add the new role.");
-      }
-
-      setIsModalOpen(false);
-      setNewRoleName("");
-      await fetchRoles(); // Refresh the roles list
-    } catch (err) {
-      setAddError(err.message);
-    } finally {
-      setIsSubmitting(false);
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Authentication required.');
     }
-  };
+
+    const response = await fetch(`${API_URL}addRole`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ name: newRoleName })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add the new role.');
+    }
+
+    toast.success('Role added'); // ✅ Toast on success
+
+    setIsModalOpen(false);
+    setNewRoleName('');
+    await fetchRoles(); // Refresh the roles list
+
+  } catch (err) {
+    setAddError(err.message);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   // Handler functions for deleting a role
   const handleOpenDeleteModal = (role) => {
@@ -104,42 +111,44 @@ const Role = () => {
     setRoleToDelete(null);
   };
 
-  const handleDeleteRole = async () => {
-    if (!roleToDelete) return;
+ const handleDeleteRole = async () => {
+  if (!roleToDelete) return;
 
-    setIsDeleting(true);
-    setDeleteError(null);
+  setIsDeleting(true);
+  setDeleteError(null);
 
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("Authentication required.");
-      }
-
-      // CORRECTED URL: The placeholder ":id" is removed.
-      const response = await fetch(`${API_URL}roleDelete/${roleToDelete._id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        // You could add more specific error handling here
-        const errorData = await response
-          .json()
-          .catch(() => ({ message: "Failed to delete the role." }));
-        throw new Error(errorData.message);
-      }
-
-      handleCloseDeleteModal();
-      await fetchRoles();
-    } catch (err) {
-      setDeleteError(err.message);
-    } finally {
-      setIsDeleting(false);
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("Authentication required.");
     }
-  };
+
+    const response = await fetch(`${API_URL}roleDelete/${roleToDelete._id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ message: 'Failed to delete the role.' }));
+      throw new Error(errorData.message);
+    }
+
+    toast.success("Role deleted"); // ✅ show toast after successful delete
+
+    handleCloseDeleteModal();
+    await fetchRoles(); // Refresh role list
+  } catch (err) {
+    setDeleteError(err.message);
+  } finally {
+    setIsDeleting(false);
+  }
+};
+
+
+
+
 
   if (loading) {
     return <div className="text-white p-4">Loading roles...</div>;
@@ -216,48 +225,60 @@ const Role = () => {
       </div>
 
       {/* Add Role Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-neutral-800 p-6 rounded-lg shadow-xl w-full max-w-md">
-            <h3 className="text-white text-lg font-bold mb-4">
-              Add a New Role
-            </h3>
-            <form onSubmit={handleAddRole}>
-              <input
-                type="text"
-                value={newRoleName}
-                onChange={(e) => setNewRoleName(e.target.value)}
-                placeholder="Enter role name"
-                className="w-full bg-neutral-700 text-white p-2 rounded mb-4"
-                required
-              />
-              {addError && (
-                <p className="text-red-500 text-sm mb-4">{addError}</p>
-              )}
-              <div className="flex justify-end space-x-4">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="bg-neutral-600 text-white px-4 py-2 rounded hover:bg-neutral-500"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-blue-400 disabled:cursor-not-allowed hover:bg-blue-600"
-                >
-                  {isSubmitting ? "Adding..." : "Add Role"}
-                </button>
-              </div>
-            </form>
-          </div>
+     {/* Add Role Modal - Refined Design */}
+{isModalOpen && (
+  // ADDED: Simple fade-in animation to the backdrop
+  <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50 transition-opacity duration-300">
+    
+    {/* MODIFIED: Added gradient, border, shadow, and entrance animation */}
+    <div className="bg-gradient-to-br from-neutral-800 to-neutral-900 p-8 rounded-xl shadow-2xl w-full max-w-md ring-1 ring-white/10
+                    transform transition-all duration-300 opacity-100 scale-100">
+      
+      {/* MODIFIED: Added an icon and improved typography */}
+      <div className="flex items-center space-x-3 mb-6">
+        {/* <PlusCircleIcon className="w-8 h-8 text-blue-400" /> */}
+        <h3 className="text-white text-xl font-bold">Add a New Role</h3>
+      </div>
+      
+      <form onSubmit={handleAddRole}>
+        <input
+          type="text"
+          value={newRoleName}
+          onChange={(e) => setNewRoleName(e.target.value)}
+          placeholder="Enter role name"
+          // MODIFIED: Enhanced input styling with better focus state
+          className="w-full bg-neutral-700/50 text-white p-3 rounded-lg border border-neutral-700 
+                     focus:ring-2 focus:ring-blue-500 focus:outline-none transition mb-4"
+          required
+        />
+        {addError && <p className="text-red-500 text-sm mb-4">{addError}</p>}
+        <div className="flex justify-end space-x-4 ">
+          {/* MODIFIED: "Ghost" button style for less emphasis */}
+          <button 
+            type="button"
+            onClick={() => setIsModalOpen(false)}
+            className=" text-neutral-400 px-4 py-2 rounded-lg bg-neutral-700 hover:bg-neutral-700/40 transition-colors"
+          >
+            Cancel
+          </button>
+          {/* MODIFIED: More prominent style with shadow on hover */}
+          <button 
+            type="submit"
+            disabled={isSubmitting}
+            className="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg disabled:bg-blue-500/50 
+                       disabled:cursor-not-allowed hover:bg-blue-700 transition-all shadow-md hover:shadow-lg hover:shadow-blue-600/20"
+          >
+            {isSubmitting ? 'Adding...' : 'Add Role'}
+          </button>
         </div>
-      )}
+      </form>
+    </div>
+  </div>
+)}
 
       {/* Delete Role Modal */}
       {isDeleteModalOpen && roleToDelete && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/10  backdrop-blur-sm flex justify-center items-center z-50">
           <div className="bg-neutral-800 p-6 rounded-lg shadow-xl w-full max-w-md">
             <h3 className="text-white text-lg font-bold mb-4">
               Confirm Deletion

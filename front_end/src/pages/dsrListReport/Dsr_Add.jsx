@@ -39,30 +39,38 @@ export default function AddDSRForm() {
     setProjects(newProjects);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const payload = {
-      ...form,
-      projects,
-    };
+  const userId = localStorage.getItem("userId"); // ✅ Get userId from localStorage
 
-    try {
-      if (isEdit) {
-        await axios.put(`http://localhost:8001/api/dsr/${id}`, payload);
-        toast.success("DSR updated successfully!");
-      } else {
-        await axios.post("http://localhost:8001/api/dsr", payload);
-        toast.success("DSR submitted successfully!");
-      }
+  if (!userId) {
+    toast.error("User ID not found. Please login again.");
+    return;
+  }
 
-      // ✅ This line redirects to DSR list
-      navigate("/dsr_list");
-    } catch (error) {
-      console.error("Submission failed:", error);
-      toast.error("Failed to submit DSR");
-    }
+  const payload = {
+    ...form,
+    userId, // ✅ Add userId to payload
+    projects,
   };
+
+  try {
+    if (isEdit) {
+      await axios.put(`http://localhost:8001/api/dsr/${id}`, payload);
+      toast.success("DSR updated successfully!");
+    } else {
+      await axios.post("http://localhost:8001/api/dsr", payload);
+      toast.success("DSR submitted successfully!");
+    }
+
+    navigate("/dsr_list");
+  } catch (error) {
+    console.error("Submission failed:", error);
+    toast.error("Failed to submit DSR");
+  }
+};
+
 
   // fetch for feild
   useEffect(() => {
@@ -83,12 +91,11 @@ export default function AddDSRForm() {
         .catch((err) => {
           console.error("Failed to fetch DSR:", err);
         });
+    } else {
+      // set today's date only when not editing
+      const today = new Date().toISOString().split("T")[0];
+      setForm((prev) => ({ ...prev, date: today }));
     }
-    else {
-    // set today's date only when not editing
-    const today = new Date().toISOString().split("T")[0];
-    setForm((prev) => ({ ...prev, date: today }));
-  }
   }, [id]);
 
   // fetch menager
@@ -160,79 +167,88 @@ export default function AddDSRForm() {
 
         {/* Projects */}
         <div className="space-y-6">
-  {projects.map((project, index) => (
-    <div
-      key={index}
-      className="relative bg-neutral-950 p-4 rounded-lg grid grid-cols-1 md:grid-cols-3 gap-4"
-    >
-      <div>
-        <label className="block mb-3 text-sm font-semibold">Project Name</label>
-        <input
-          type="text"
-          placeholder="Project Name"
-          className="w-full h-12 px-4 py-2 rounded-md border bg-neutral-800 text-white border-white"
-          value={project.projectName}
-          onChange={(e) =>
-            handleProjectChange(index, "projectName", e.target.value)
-          }
-          required
-        />
-      </div>
+          {projects.map((project, index) => (
+            <div
+              key={index}
+              className="relative bg-neutral-950 p-4 rounded-lg grid grid-cols-1 md:grid-cols-3 gap-4"
+            >
+              <div>
+                <label className="block mb-3 text-sm font-semibold">
+                  Project Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Project Name"
+                  className="w-full h-12 px-4 py-2 rounded-md border bg-neutral-800 text-white border-white"
+                  value={project.projectName}
+                  onChange={(e) =>
+                    handleProjectChange(index, "projectName", e.target.value)
+                  }
+                  required
+                />
+              </div>
 
-      <div>
-        <label className="block mb-3 text-sm font-semibold">Project Description</label>
-        <input
-          type="text"
-          placeholder="Description"
-          className="w-full h-12 px-4 py-2 rounded-md border bg-neutral-800 text-white border-white"
-          value={project.projectDescription}
-          onChange={(e) =>
-            handleProjectChange(index, "projectDescription", e.target.value)
-          }
-          required
-        />
-      </div>
+              <div>
+                <label className="block mb-3 text-sm font-semibold">
+                  Project Description
+                </label>
+                <input
+                  type="text"
+                  placeholder="Description"
+                  className="w-full h-12 px-4 py-2 rounded-md border bg-neutral-800 text-white border-white"
+                  value={project.projectDescription}
+                  onChange={(e) =>
+                    handleProjectChange(
+                      index,
+                      "projectDescription",
+                      e.target.value
+                    )
+                  }
+                  required
+                />
+              </div>
 
-      <div>
-        <label className="block mb-3 text-sm font-semibold">Todo Task</label>
-        <input
-          type="text"
-          placeholder="To Do Task"
-          className="w-full h-12 px-4 py-2 rounded-md border bg-neutral-800 text-white border-white"
-          value={project.todoTask}
-          onChange={(e) =>
-            handleProjectChange(index, "todoTask", e.target.value)
-          }
-        />
-      </div>
+              <div>
+                <label className="block mb-3 text-sm font-semibold">
+                  Todo Task
+                </label>
+                <input
+                  type="text"
+                  placeholder="To Do Task"
+                  className="w-full h-12 px-4 py-2 rounded-md border bg-neutral-800 text-white border-white"
+                  value={project.todoTask}
+                  onChange={(e) =>
+                    handleProjectChange(index, "todoTask", e.target.value)
+                  }
+                />
+              </div>
 
-      {/* Action buttons */}
-      <div className="absolute top-2 right-2 flex space-x-2">
-        {projects.length > 1 && (
-          <button
-            type="button"
-            onClick={() => handleRemoveProject(index)}
-            className="text-red-500 hover:text-red-700"
-            title="Remove Project"
-          >
-            <FaTrash size={15} />
-          </button>
-        )}
-        {index === projects.length - 1 && (
-          <button
-            type="button"
-            onClick={handleAddProject}
-            className="text-green-500 hover:text-green-700"
-            title="Add Project"
-          >
-            <FaPlusCircle size={18} />
-          </button>
-        )}
-      </div>
-    </div>
-  ))}
-</div>
-
+              {/* Action buttons */}
+              <div className="absolute top-2 right-2 flex space-x-2">
+                {projects.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveProject(index)}
+                    className="text-red-500 hover:text-red-700"
+                    title="Remove Project"
+                  >
+                    <FaTrash size={15} />
+                  </button>
+                )}
+                {index === projects.length - 1 && (
+                  <button
+                    type="button"
+                    onClick={handleAddProject}
+                    className="text-green-500 hover:text-green-700"
+                    title="Add Project"
+                  >
+                    <FaPlusCircle size={18} />
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
 
         {/* Add More Project */}
         <div className="flex justify-end-safe">
@@ -245,7 +261,6 @@ export default function AddDSRForm() {
               {isEdit ? "Update DSR" : "Submit DSR"}
             </button>
           </div>
-          
         </div>
       </form>
     </div>

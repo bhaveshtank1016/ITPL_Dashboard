@@ -14,13 +14,12 @@ import Sign_in from "./auth/sign_in";
 import ProfileForm from "./pages/user/profile/profile";
 import UserPage from "./pages/user/userPage";
 import Layout from "./layout/layout";
-import Dashboard from "./dashboard/dashboard";
+import Dashboard from "./dashboard/Dashboard"; // updated import
 import Profile_info from "./pages/user/profile/profile_infos";
 import DSR_List from "./pages/dsrListReport/DSR_List";
 import Dsr_Add from "./pages/dsrListReport/Dsr_Add";
 import AttendanceSheet from "./pages/attendanceSheet/AttendanceSheet";
 import Daily_Attendance from "./pages/attendanceSheet/Daily_Attendance";
-import "react-toastify/dist/ReactToastify.css";
 import HolidayCalender from "./pages/holidayCalender/HolidayCalender";
 import AddEmpReference from "./pages/empReference/AddEmpReference ";
 import EmpReferenceListing from "./pages/empReference/EmpReferenceListing";
@@ -28,11 +27,11 @@ import AddResign from "./pages/resign/AddResign";
 import ResignList from "./pages/resign/ResignList";
 import AddLeave from "./pages/leave/AddLeave";
 import LeaveList from "./pages/leave/LeaveList";
-
 import AddUserPage from "./pages/user/AddUserPage";
 import AddUserForm from "./pages/user/AddUserForm";
 import Role from "../src/pages/user/role/role";
 import AddDSRForm from "./pages/dsrListReport/Dsr_Add";
+import HRM from "./hr/hrm";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -66,40 +65,23 @@ function App() {
                     <Route path="/user/:id?" element={<AddUserPage />} />
                     <Route path="/add-user" element={<AddUserPage />} />
                     <Route path="/add-user/:id" element={<AddUserPage />} />
-                    <Route
-                      path="/holidayCalender"
-                      element={<HolidayCalender />}
-                    />
+                    <Route path="/holidayCalender"element={<HolidayCalender />}/>
                     <Route path="/dsr/add" element={<Dsr_Add />} />
                     <Route path="/dsr/edit/:id" element={<Dsr_Add />} />
                     <Route path="/dsr_list" element={<DSR_List />} />
-
-                    <Route
-                      path="/add_Dsr_Report"
-                      element={<Dsr_Add />}
-                    />
-                    <Route
-                      path="/attendanceSheet"
-                      element={<AttendanceSheet />}
-                    />
-                    <Route
-                      path="/daily_Attendance"
-                      element={<Daily_Attendance />}
-                    />
-                    <Route
-                      path="/addEmpReference"
-                      element={<AddEmpReference />}
-                    />
-                    <Route
-                      path="/empReferenceListing"
-                      element={<EmpReferenceListing />}
-                    />
+                    <Route path="/add_Dsr_Report" element={<Dsr_Add />} />
+                    <Route path="/attendanceSheet" element={<AttendanceSheet />}/>
+                    <Route path="/daily_Attendance" element={<Daily_Attendance />}/>
+                    <Route path="/addEmpReference" element={<AddEmpReference />}/>
+                    <Route path="/empReferenceListing" element={<EmpReferenceListing />}/>
                     <Route path="/addResign" element={<AddResign />} />
                     <Route path="/resignList" element={<ResignList />} />
                     <Route path="/info" element={<Profile_info />} />
                     <Route path="/addLeave" element={<AddLeave />} />
                     <Route path="/leaveList" element={<LeaveList />} />
                     <Route path="/role" element={<Role />} />
+                    <Route path="/hrm" element={<HRM />} />
+
                   </Routes>
                 </Layout>
               </ProtectedRoute>

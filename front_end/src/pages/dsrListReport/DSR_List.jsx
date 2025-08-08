@@ -32,18 +32,17 @@ export default function DSRList() {
 
   return (
     <div className="min-h-screen bg-neutral-950 rounded-xl text-white p-6">
-   
-        <div className="flex justify-between items-center mb-4 ">
+      <div className="flex justify-between items-center mb-4 ">
         <h1 className="text-2xl font-bold mb-4">DSR LIST</h1>
-          {/* ✅ Add Button */}
-          <button
-            onClick={() => navigate("/dsr/add")}
-            className="bg-blue-600 hover:bg-blue-700 mb-5 hover:scale-105 transition-transform duration-200 text-white font-semibold py-2 px-4 rounded"
-          >
-            + Add DSR
-          </button>
-        </div>
-   <div>
+        {/* ✅ Add Button */}
+        <button
+          onClick={() => navigate("/dsr/add")}
+          className="bg-blue-600 hover:bg-blue-700 mb-5 hover:scale-105 transition-transform duration-200 text-white font-semibold py-2 px-4 rounded"
+        >
+          + Add DSR
+        </button>
+      </div>
+      <div>
         <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
           <div className="mb-5">
             <label className="text-lg font-bold mr-2">Select Date</label>
@@ -69,6 +68,7 @@ export default function DSRList() {
               <th className="p-3">No.</th>
               <th className="p-3">Date</th>
               <th className="p-3">Email</th>
+              <th className="p-3">Name</th>
               <th className="p-3">Attachment</th>
               <th className="p-3">To Do Tasks</th>
               <th className="p-3">Action</th>
@@ -80,6 +80,7 @@ export default function DSRList() {
                 <td className="text-center">{index + 1}</td>
                 <td>{new Date(item.date).toLocaleDateString()}</td>
                 <td>{item.email}</td>
+                <td>{item.userId?.name || "No name"}</td> 
                 <td>{item.attachment || "No attachment"}</td>
                 <td>
                   <div className="flex flex-col items-start gap-2 px-2">
