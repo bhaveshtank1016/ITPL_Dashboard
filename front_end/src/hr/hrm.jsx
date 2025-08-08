@@ -8,22 +8,12 @@ import { useNavigate } from "react-router-dom";
 import {
   Users,
   ClipboardCheck,
-  Dumbbell,
   UserPlus,
-  BarChart2,
   Upload,
   Calendar,
-  Send,
-  UserCog,
+
 } from "lucide-react";
-import {
-  faLock,
-  faUserPlus,
-  faUser,
-  faTableColumns,
-  faBars,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
+
 
 export default function HRM() {
   const navigate = useNavigate();

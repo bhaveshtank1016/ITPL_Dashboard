@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import { API_URL } from "../../config";
-import { PlusCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+// import { PlusCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -13,7 +13,7 @@ const Role = () => {
 
   // State for the "Add Role" modal and form
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newRoleName, setNewRoleName] = useState('');
+  const [newRoleName, setNewRoleName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [addError, setAddError] = useState(null);
 
@@ -23,12 +23,12 @@ const Role = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
 
-
   // Use useCallback to memoize the fetch function
   const fetchRoles = useCallback(async () => {
     // setLoading(true); // Optional: show loader on refresh
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
+
       if (!token) {
         setError("User is not authenticated.");
         setLoading(false);
@@ -37,15 +37,15 @@ const Role = () => {
 
       const response = await fetch(`${API_URL}rolesList`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
-          throw new Error('Not authorized to view this page.');
+          throw new Error("Not authorized to view this page.");
         }
-        throw new Error('Failed to fetch roles');
+        throw new Error("Failed to fetch roles");
       }
 
       const data = await response.json();
@@ -118,15 +118,15 @@ const handleAddRole = async (event) => {
   setDeleteError(null);
 
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      throw new Error('Authentication required.');
+      throw new Error("Authentication required.");
     }
 
     const response = await fetch(`${API_URL}roleDelete/${roleToDelete._id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -135,17 +135,18 @@ const handleAddRole = async (event) => {
       throw new Error(errorData.message);
     }
 
-    toast.success('Role deleted'); // ✅ Show toast on successful deletion
+    toast.success("Role deleted"); // ✅ show toast after successful delete
 
     handleCloseDeleteModal();
-    await fetchRoles();
-
+    await fetchRoles(); // Refresh role list
   } catch (err) {
     setDeleteError(err.message);
   } finally {
     setIsDeleting(false);
   }
 };
+
+
 
 
 
@@ -159,41 +160,52 @@ const handleAddRole = async (event) => {
 
   return (
     <>
-      <div className='bg-neutral-900 p-4 rounded-xl shadow-md mx-auto container text-sm'>
-        <div className='flex justify-between items-center'>
-          <h2 className='text-white text-xl mb-4 font-bold'>Manage Roles</h2>
-          <button 
+      <div className="bg-neutral-900 p-4 rounded-xl shadow-md mx-auto container text-sm">
+        <div className="flex justify-between items-center">
+          <h2 className="text-white text-xl mb-4 font-bold">Manage Roles</h2>
+          <button
             onClick={() => setIsModalOpen(true)}
-            className='bg-blue-500 px-3 rounded-md hover:rounded-xl hover:bg-blue-600 duration-300 h-10'
+            className="bg-blue-500 px-3 rounded-md hover:rounded-xl hover:bg-blue-600 duration-300 h-10"
           >
             Add Role
           </button>
         </div>
-        <div className='overflow-x-auto pt-10'>
-          <table className='w-full text-left'>
+        <div className="overflow-x-auto pt-10">
+          <table className="w-full text-left">
             <thead>
-              <tr className='bg-neutral-800'>
-                <th className='p-3 text-white'>S. No.</th>
-                <th className='p-3 text-white'>Role Name</th>
-                <th className='p-3 text-white text-center'>Actions</th>
+              <tr className="bg-neutral-800">
+                <th className="p-3 text-white">S. No.</th>
+                <th className="p-3 text-white">Role Name</th>
+                <th className="p-3 text-white text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
               {roles.length > 0 ? (
                 roles.map((role, index) => (
-                  <tr key={role._id} className='border-b border-neutral-700'>
-                    <td className='p-3 text-white'>{index + 1}</td>
-                    <td className='p-3 text-white'>{role.name}</td>
-                    <td className='p-3 text-white text-center'>
+                  <tr key={role._id} className="border-b border-neutral-700">
+                    <td className="p-3 text-white">{index + 1}</td>
+                    <td className="p-3 text-white">{role.name}</td>
+                    <td className="p-3 text-white text-center">
                       {/* MODIFIED: Conditionally render the delete button */}
-                      {role.name.toLowerCase() !== 'admin' && (
-                        <button 
+                      {role.name.toLowerCase() !== "admin" && (
+                        <button
                           onClick={() => handleOpenDeleteModal(role)}
                           className="text-red-500 hover:text-red-700 transition-colors duration-200"
                           title="Delete Role"
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 mx-auto"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
                           </svg>
                         </button>
                       )}
@@ -268,26 +280,32 @@ const handleAddRole = async (event) => {
       {isDeleteModalOpen && roleToDelete && (
         <div className="fixed inset-0 bg-black/10  backdrop-blur-sm flex justify-center items-center z-50">
           <div className="bg-neutral-800 p-6 rounded-lg shadow-xl w-full max-w-md">
-            <h3 className="text-white text-lg font-bold mb-4">Confirm Deletion</h3>
+            <h3 className="text-white text-lg font-bold mb-4">
+              Confirm Deletion
+            </h3>
             <p className="text-neutral-300 mb-6">
-              Are you sure you want to delete the role: <strong className="text-white">"{roleToDelete.name}"</strong>? This action cannot be undone.
+              Are you sure you want to delete the role:{" "}
+              <strong className="text-white">"{roleToDelete.name}"</strong>?
+              This action cannot be undone.
             </p>
-            {deleteError && <p className="text-red-500 text-sm mb-4">{deleteError}</p>}
+            {deleteError && (
+              <p className="text-red-500 text-sm mb-4">{deleteError}</p>
+            )}
             <div className="flex justify-end space-x-4">
-              <button 
+              <button
                 type="button"
                 onClick={handleCloseDeleteModal}
                 className="bg-neutral-600 text-white px-4 py-2 rounded hover:bg-neutral-500"
               >
                 Cancel
               </button>
-              <button 
+              <button
                 type="button"
                 onClick={handleDeleteRole}
                 disabled={isDeleting}
                 className="bg-red-600 text-white px-4 py-2 rounded disabled:bg-red-500 disabled:cursor-not-allowed hover:bg-red-700"
               >
-                {isDeleting ? 'Deleting...' : 'Delete'}
+                {isDeleting ? "Deleting..." : "Delete"}
               </button>
             </div>
           </div>
@@ -300,4 +318,4 @@ const handleAddRole = async (event) => {
 export default Role;
 //authentication
 //authrization
-// 
+//

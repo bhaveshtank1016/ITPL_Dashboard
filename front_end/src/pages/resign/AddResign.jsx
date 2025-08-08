@@ -29,36 +29,26 @@ function AddResign() {
       <h2 className="text-xl mb-10 pb-3 rounded-md sm:text-2xl font-semibold ">
         Resign Section
       </h2>
-      <div>
+      <div >
         <form onSubmit={handleSubmit}>
-          <div>
-            <label className="text-xl  font-bold">From</label>
+          <div className="grid grid-cols-2">
+          <div className="mt-4">
+            <label className="text-xl font-bold">Reason For Leaving </label>
             <br />
             <input
               type="text"
               name="from"
               onChange={handleChange}
               value={resign.from}
+              placeholder="Reason"
               required
-              className="border mt-4 rounded-md bg-neutral-600 w-9/12 h-11"
-            />
-          </div>
-          <div className="mt-4">
-            <label className="text-xl  font-bold">Subject</label>
-            <br />
-            <input
-              type="text"
-              name="subject"
-              onChange={handleChange}
-              value={resign.subject}
-              required
-              className="border mt-4 rounded-md bg-neutral-600 w-9/12 h-11"
+              className="border mt-4 rounded-md pl-3 bg-neutral-600 w-9/12 h-11"
             />
           </div>
           <div className="mt-4">
             
             <label className="text-xl  font-bold">
-              Date <span>select</span>
+              Select Date
             </label>
             <br />
             <input
@@ -68,9 +58,11 @@ function AddResign() {
               onChange={handleChange}
               value={resign.date}
               required
-              className="border mt-4 rounded-md bg-neutral-600 w-9/12 h-11"
+              className="border mt-4 p-2 rounded-md bg-neutral-600 w-9/12 h-11"
             />  
           </div>
+          </div>
+          
           <div className="mt-4">
             <label className="text-xl  font-bold">Message</label>
             <br />
@@ -80,10 +72,14 @@ function AddResign() {
               onChange={handleChange}
               value={resign.message}
               required
-              className="border mt-4 rounded-md h-30 bg-neutral-600 w-9/12 "
+              placeholder="Write in Detail"
+              className="border mt-4 rounded-md p-2 h-30 bg-neutral-600 w-9/12 "
             />
           </div>
-
+          <div className="flex">
+          <input type="checkbox"/> <p className=" pl-2">I acknowledge that I have read the company's resignation policy and that this submission is final. </p></div>
+          <br/>
+          
           <button
             type="submit"
             className="text-xl px-4 py-2 bg-blue-700 text-white mt-5 rounded-md"

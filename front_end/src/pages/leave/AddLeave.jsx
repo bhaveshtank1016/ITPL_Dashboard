@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 function AddLeave() {
   const [leave, setleave] = useState({
     from: "",
-    subject: "",
+    leave: "",
     date: "",
     message: "",
   });
@@ -43,7 +43,7 @@ function AddLeave() {
       }
 
       // Reset form
-      setleave({ from: "", subject: "", date: "", message: "" });
+      setleave({ from: "", leave: "", date: "", message: "" });
       setEditMode(false);
       setEditId(null);
 
@@ -75,7 +75,7 @@ function AddLeave() {
             value={leave.from}
             required
             placeholder="Leave From "
-            className="border mt-4 rounded-md bg-neutral-600 w-9/12 h-11"
+            className="border mt-4 rounded-md pl-2 bg-neutral-600 w-9/12 h-11"
           />
         </div>
 
@@ -84,12 +84,12 @@ function AddLeave() {
           <br />
           <input
             type="date"
-            name="date"
+            name="leave"
             onChange={handleChange}
             value={leave.to}
             
             required
-            className="border mt-4 rounded-md bg-neutral-600 w-9/12 h-11"
+            className="border mt-4 rounded-md pl-2 bg-neutral-600 w-9/12 h-11"
           />
         </div>
         <div className="mt-4">
@@ -102,7 +102,7 @@ function AddLeave() {
             value={leave.subject}
             required
             placeholder="Write your Subject here"
-            className="border mt-4 rounded-md bg-neutral-600 w-9/12 h-11"
+            className="border mt-4 rounded-md pl-2 bg-neutral-600 w-9/12 h-11"
           />
         </div>
         <div className="mt-4">
@@ -115,7 +115,7 @@ function AddLeave() {
             value={leave.date}
             
             required
-            className="border mt-4 rounded-md bg-neutral-600 w-9/12 h-11"
+            className="border mt-4 rounded-md pl-2 bg-neutral-600 w-9/12 h-11"
           />
         </div>
         </div>
@@ -129,7 +129,7 @@ function AddLeave() {
             value={leave.message}
             required
             placeholder="Write your reason here" 
-            className="border mt-4 rounded-md h-30 bg-neutral-600 w-full "
+            className="border mt-4 rounded-md h-30 p-2 bg-neutral-600 w-full "
           />
         </div>
 

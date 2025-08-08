@@ -8,6 +8,8 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
   const { id } = useParams(); // for edit mode
   const [showPassword, setShowPassword] = useState(false);
   const [existingUser, setExistingUser] = useState(null);
+  const [roles, setRoles] = useState([]); //for feching roles
+
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -26,6 +28,30 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
     status: "Active",
     joiningDate: new Date().toISOString().substr(0, 10),
   });
+
+  // fetching existing roles
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/rolesList`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to fetch roles: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Roles response:", data); // 👈 THIS IS IMPORTANT
+        const roleArray = Array.isArray(data) ? data : data.roles;
+        setRoles(Array.isArray(roleArray) ? roleArray : []);
+      })
+      .catch((error) => {
+        console.error("Error fetching roles:", error);
+        setRoles([]); // fallback to empty array
+      });
+  }, []);
 
   // Fetch existing user data if editing
   useEffect(() => {
@@ -132,7 +158,7 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
         {/* Profile Image */}
         <div className="mb-4">
           <label className="block mb-1 text-sm font-medium">
-            Profile Image 
+            Profile Image
           </label>
           <input
             type="file"
@@ -187,7 +213,9 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
   </div>
 </div>
         {/* Email + Password */}
-        <label className="block mb-1 text-sm font-medium">Email <span className="text-red-600 text-lg">*</span></label>
+        <label className="block mb-1 text-sm font-medium">
+          Email <span className="text-red-600 text-lg">*</span>
+        </label>
         <div className="mb-3">
           <input
             type="email"
@@ -197,7 +225,9 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
             onChange={handleChange}
             className=" w-full mb-2 p-2 bg-neutral-800"
           />
-          <label className="block mb-1 text-sm font-medium">Password<span className="text-red-600 text-lg">*</span></label>
+          <label className="block mb-1 text-sm font-medium">
+            Password<span className="text-red-600 text-lg">*</span>
+          </label>
           {!existingUser && (
             <div className="relative">
               <input
@@ -255,7 +285,9 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
         {/* Gender */}
 
         <div className="mb-3">
-          <label className="block mb-1 text-sm font-medium">Gender<span className="text-red-600 text-lg">*</span> </label>
+          <label className="block mb-1 text-sm font-medium">
+            Gender<span className="text-red-600 text-lg">*</span>{" "}
+          </label>
           <div className="flex gap-15 pl-5 rounded-md bg-neutral-800 h-10 items-center ">
             {["Male", "Female", "Other"].map((g) => (
               <label key={g}>
@@ -273,7 +305,9 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
         </div>
 
         {/* Address */}
-        <label className="block mb-1 text-sm font-medium">Address<span className="text-red-600 text-lg">*</span> </label>
+        <label className="block mb-1 text-sm font-medium">
+          Address<span className="text-red-600 text-lg">*</span>{" "}
+        </label>
         <input
           type="text"
           name="address"
@@ -361,7 +395,9 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
         /> */}
 
         {/* Status */}
-        <label className="block mb-1 text-sm font-medium">Status<span className="text-red-600 text-lg">*</span></label>
+        <label className="block mb-1 text-sm font-medium">
+          status<span className="text-red-600 text-lg">*</span>
+        </label>
         <div className="flex gap-2 mb-3">
           <select
             name="Status"

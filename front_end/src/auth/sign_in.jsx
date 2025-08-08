@@ -17,7 +17,6 @@ const Sign_in = () => {
  const handleLogin = async (e) => {
   e.preventDefault();
 
-  // Frontend Validation
   if (!email) {
     toast.error("Email is required");
     return;
@@ -29,17 +28,13 @@ const Sign_in = () => {
   }
 
   try {
-
     const res = await fetch(`${API_URL}auth/login`, {
-
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
     });
-
-    console.log(res)
 
     const data = await res.json();
 
@@ -48,7 +43,17 @@ const Sign_in = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
-      setTimeout(() => navigate("/dashboard"), 1500);
+
+      // Get role from user object
+      const role = data.user.role;
+
+      // Redirect based on role
+      let dashboardPath = "/dashboard"; // default fallback
+      if (role === "admin") dashboardPath = "/dashboard/admin";
+      else if (role === "hr") dashboardPath = "/dashboard/hr";
+      else if (role === "employee") dashboardPath = "/dashboard/employee";
+
+      setTimeout(() => navigate(dashboardPath), 1000);
     } else {
       toast.error(data.message || "Invalid credentials");
     }
@@ -57,6 +62,7 @@ const Sign_in = () => {
     console.error("Login error:", err);
   }
 };
+
 
 
   return (
