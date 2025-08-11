@@ -27,7 +27,7 @@ const Sidebar = () => {
   const [openLeaveMenu, setOpenLeaveMenu] = useState(false);
 
   const { user } = useAuth();
-  console.log("User from Sidebar:", user);
+  // console.log("User from Sidebar:", user);
 
   const isAdmin = user?.role?.name?.toLowerCase() === "admin";
   const isHR = user?.role?.name?.toLowerCase() === "hr";
@@ -86,13 +86,24 @@ const Sidebar = () => {
 
         {/* Menu */}
         <div className="mt-4 flex flex-col pl-6 px-2">
+
+          
+          {user && user.role && user.role.name?.toLowerCase() === "hr" && (
           <SidebarLink
-            to="/dashboard"
+            to="/hrdashboard"
             icon={<FontAwesomeIcon icon={faTableColumns} />}
             label="Dashboard"
             current={location.pathname}
             expanded={expanded}
           />
+          )}
+          {/* <SidebarLink
+            to="/dashboard"
+            icon={<FontAwesomeIcon icon={faTableColumns} />}
+            label="Dashboard"
+            current={location.pathname}
+            expanded={expanded}
+          /> */}
 
           {isAdminOrHR && (
             <SidebarLink
@@ -104,7 +115,7 @@ const Sidebar = () => {
             />
           )}
 
-          {isAdminOrHR && (
+          {isAdmin &&(
             <SidebarLink
               to="/role"
               icon={<FontAwesomeIcon icon={faUser} />}

@@ -31,6 +31,7 @@ import AddUserPage from "./pages/user/AddUserPage";
 import AddUserForm from "./pages/user/AddUserForm";
 import Role from "../src/pages/user/role/role";
 import AddDSRForm from "./pages/dsrListReport/Dsr_Add";
+import HrDashboard from "./dashboard/HrDashboard";
 import HRM from "./hr/hrm";
 
 const ProtectedRoute = ({ children }) => {
@@ -81,7 +82,7 @@ function App() {
                     <Route path="/leaveList" element={<LeaveList />} />
                     <Route path="/role" element={<Role />} />
                     <Route path="/hrm" element={<HRM />} />
-
+                    <Route path="/hrdashboard" element ={<HrDashboard />}/>
                   </Routes>
                 </Layout>
               </ProtectedRoute>
