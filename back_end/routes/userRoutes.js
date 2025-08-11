@@ -8,13 +8,13 @@ const {
   deleteUserProfile,
   getAllUsers,
   getUserById,
+  getManagers,
 } = require("../controller/userController");
 const { protect } = require("../middleware/authMiddleware");
 // ✅ NEW: Get all users
 router.get("/", protect, getAllUsers);
 // Route to get user profile
 router.get("/profile", protect, getUserProfile);
-
 
 // Add new user (Protected)
 router.post("/create", protect, createUser);
@@ -24,6 +24,8 @@ router.put("/update", protect, updateUserProfile);
 
 // Delete user profile (Protected)
 router.delete("/delete/:id", protect, deleteUserProfile);
+
+router.get("/managers", getManagers); 
 
 router.get("/:id", protect, getUserById); // <-- GET USER BY ID FOR EDIT
 

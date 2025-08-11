@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { API_URL } from "../../config";
-import { PlusCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { API_URL } from "../../../../src/config";
+// import { PlusCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -160,7 +160,7 @@ const handleAddRole = async (event) => {
 
   return (
     <>
-      <div className="bg-neutral-900 p-4 rounded-xl shadow-md mx-auto container text-sm">
+      <div className="bg-neutral-900 h-screen p-6 rounded-xl shadow-md mx-auto container text-sm">
         <div className="flex justify-between items-center">
           <h2 className="text-white text-xl mb-4 font-bold">Manage Roles</h2>
           <button
@@ -236,7 +236,7 @@ const handleAddRole = async (event) => {
       
       {/* MODIFIED: Added an icon and improved typography */}
       <div className="flex items-center space-x-3 mb-6">
-        <PlusCircleIcon className="w-8 h-8 text-blue-400" />
+        {/* <PlusCircleIcon className="w-8 h-8 text-blue-400" /> */}
         <h3 className="text-white text-xl font-bold">Add a New Role</h3>
       </div>
       

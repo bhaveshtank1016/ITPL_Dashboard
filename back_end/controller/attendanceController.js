@@ -1,4 +1,4 @@
-const Attendance = require("../models/AttendanceSchema");
+const Attendance = require("../models/attendance");
 
 // Helper function to calculate status
 

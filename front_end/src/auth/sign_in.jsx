@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../context/AuthContext";
 
-import {API_URL} from "../config"
+import { API_URL } from "../config";
 
 const Sign_in = () => {
   const [email, setEmail] = useState("");
@@ -14,56 +14,55 @@ const Sign_in = () => {
 
   const navigate = useNavigate();
 
- const handleLogin = async (e) => {
-  e.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-  if (!email) {
-    toast.error("Email is required");
-    return;
-  }
-
-  if (!password) {
-    toast.error("Password is required");
-    return;
-  }
-
-  try {
-    const res = await fetch(`${API_URL}auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      toast.success("Login successful!");
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      setUser(data.user);
-
-      // Get role from user object
-      const role = data.user.role;
-
-      // Redirect based on role
-      let dashboardPath = "/dashboard"; // default fallback
-      if (role === "admin") dashboardPath = "/dashboard/admin";
-      else if (role === "hr") dashboardPath = "/dashboard/hr";
-      else if (role === "employee") dashboardPath = "/dashboard/employee";
-
-      setTimeout(() => navigate(dashboardPath), 1000);
-    } else {
-      toast.error(data.message || "Invalid credentials");
+    if (!email) {
+      toast.error("Email is required");
+      return;
     }
-  } catch (err) {
-    toast.error("Something went wrong. Please try again.");
-    console.error("Login error:", err);
-  }
-};
 
+    if (!password) {
+      toast.error("Password is required");
+      return;
+    }
 
+    try {
+      const res = await fetch(`${API_URL}auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success("Login successful!");
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("userId", data.user._id);
+        setUser(data.user);
+
+        // Get role from user object
+        const role = data.user.role;
+
+        // Redirect based on role
+        let dashboardPath = "/dashboard"; // default fallback
+        if (role === "admin") dashboardPath = "/dashboard/admin";
+        else if (role === "hr") dashboardPath = "/dashboard/hr";
+        else if (role === "employee") dashboardPath = "/dashboard/employee";
+
+        setTimeout(() => navigate(dashboardPath), 1000);
+      } else {
+        toast.error(data.message || "Invalid credentials");
+      }
+    } catch (err) {
+      toast.error("Something went wrong. Please try again.");
+      console.error("Login error:", err);
+    }
+  };
 
   return (
     <div>

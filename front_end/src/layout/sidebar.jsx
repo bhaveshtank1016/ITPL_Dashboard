@@ -7,6 +7,7 @@ import {
   faBars,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
+import { FaUsers } from "react-icons/fa";
 import { ClipboardList } from "lucide-react";
 import { IoCalendarNumber } from "react-icons/io5";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
@@ -104,8 +105,8 @@ const Sidebar = () => {
           {isAdminOrHR && (
             <SidebarLink
               to="/users"
-              icon={<FontAwesomeIcon icon={faUserPlus} />}
-              label="Add User"
+              icon={<FaUsers  size={20}/>}
+              label="Users"
               current={location.pathname}
               expanded={expanded}
             />
@@ -129,13 +130,7 @@ const Sidebar = () => {
             current={location.pathname}
             expanded={expanded}
           />
-          <SidebarLink
-            to="/add_Dsr_Report"
-            icon={<MdOutlinePlaylistAdd size={25} />}
-            label="Add DSR Report"
-            current={location.pathname}
-            expanded={expanded}
-          />
+
           <SidebarLink
             to="/attendanceSheet"
             icon={<FaPersonChalkboard size={22} />}

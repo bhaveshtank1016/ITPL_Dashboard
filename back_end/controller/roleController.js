@@ -1,4 +1,4 @@
-const Role = require("../models/Role");
+const Role = require("../models/role");
 
 exports.createRole = async (req, res) => {
   const { name } = req.body;

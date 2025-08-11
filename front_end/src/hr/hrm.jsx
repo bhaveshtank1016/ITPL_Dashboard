@@ -1,8 +1,3 @@
-
-
-
-
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -29,10 +24,10 @@ export default function HRM() {
   const navigate = useNavigate();
 
   const features = [
-    { title: "DSR List", icon: Users, path: "/DSR-List" },
-    { title: " Attendance List", icon: ClipboardCheck, path: "/Attendance List" },
-    { title: "Add Users", icon: UserPlus, path: "/Add-Users" },
-    { title: "Holiday List", icon: Calendar, path: "/Holiday-List" },
+    { title: "DSR List", icon: Users, path: "/dsr_list" },
+    { title: " Attendance List", icon: ClipboardCheck, path: "/attendanceSheet" },
+    { title: "Add Users", icon: UserPlus, path: "/users" },
+    { title: "Holiday List", icon: Calendar, path: "/holidayCalender" },
     { title: "Attendance Management", icon: Upload, path: "/trainer/upload-material" },
     
     

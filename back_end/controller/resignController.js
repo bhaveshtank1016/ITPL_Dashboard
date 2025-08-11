@@ -1,4 +1,4 @@
-const Resign = require("../models/Resign");
+const Resign = require("../models/resign");
 // get all resign list and pagination apply 
 const getAllResign = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
