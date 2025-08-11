@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../config";
+
 
 function AddResign() {
   const navigate = useNavigate();
@@ -55,14 +57,14 @@ function AddResign() {
     if (!validateForm()) return;
 
     try {
-      await axios.post("http://localhost:8001/api/resign/create", resign, {
+      await axios.post(`${API_URL}resign/create`, resign, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
       toast.success("Resign added successfully!");
-      navigate("/resign-list"); // redirect to list
+      navigate("/resignList"); // redirect to list
     } catch (error) {
       console.log("Error adding resign:", error);
       toast.error("Failed to add resign.");

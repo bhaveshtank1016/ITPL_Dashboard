@@ -2,11 +2,11 @@ const Resign = require("../models/Resign");
 // get all resign list and pagination apply 
 const getAllResign = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = 10;
+  const limit = parseInt(req.query.limit) || 10;
 
   try {
-    const userId = req.user && req.user.id;
-    const roleName = req.user && req.user.role?.name?.toLowerCase();
+    const userId = req.user?.id;
+    const roleName = req.user?.role?.name?.toLowerCase();
 
     let query = {};
 
@@ -15,24 +15,28 @@ const getAllResign = async (req, res) => {
       query.userId = userId;
     }
 
+    // Total count for pagination
     const totalCount = await Resign.countDocuments(query);
 
+    // Data fetch with pagination
     const resign = await Resign.find(query)
       .populate({
         path: "userId",
         select: "name position role",
         populate: {
-          path: "role", // role ka pura object laane ke liye
+          path: "role",
           select: "name",
-        }
+        },
       })
+      .sort({ date: -1 })
       .skip((page - 1) * limit)
-      .limit(limit)
-      .sort({ date: -1 });
+      .limit(limit);
 
     res.status(200).json({
       list: resign,
+      currentPage: page,
       totalPages: Math.ceil(totalCount / limit),
+      totalCount: totalCount, // Frontend ko actual count milega
     });
   } catch (error) {
     res.status(500).json({
@@ -41,6 +45,7 @@ const getAllResign = async (req, res) => {
     });
   }
 };
+
 
 
 // post a new resign

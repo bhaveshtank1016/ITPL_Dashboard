@@ -5,6 +5,8 @@ import PagePagination from "./PagePagination";
 import { useAuth } from "../../context/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { API_URL } from "../../config";
+
 
 function ResignList() {
   const [page, setPage] = useState(1);
@@ -13,12 +15,10 @@ function ResignList() {
   const { user } = useAuth();
   const userRole = user?.role?.name?.toLowerCase();
  
-  console.log("resign:", resign); // Debugging line
-
   const fetchResign = async () => {
     try {
       const res = await fetch(
-        `http://localhost:8001/api/resign/list?page=${page}`,
+        `${API_URL}resign/list?page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -40,7 +40,7 @@ function ResignList() {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const res = await fetch(`http://localhost:8001/api/resign/status/${id}`, {
+      const res = await fetch(`${API_URL}resign/status/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -51,14 +51,14 @@ function ResignList() {
 
       const data = await res.json();
       if (res.ok) {
-        toast.success(`Resignation ${newStatus} successfully ✅`);
+        toast.success(`Resignation ${newStatus} successfully`);
         fetchResign(); // refresh list
       } else {
-        toast.error(data.msg || "Something went wrong ❌");
+        toast.error(data.msg || "Something went wrong");
       }
     } catch (error) {
       console.error("Failed to update status", error);
-      toast.error("Failed to update status ❌");
+      toast.error("Failed to update status");
     }
   };
 
