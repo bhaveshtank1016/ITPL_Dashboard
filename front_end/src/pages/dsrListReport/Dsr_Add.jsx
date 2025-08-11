@@ -1,9 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { useParams, useNavigate } from "react-router-dom";
+import { FaPlusCircle, FaTrash } from "react-icons/fa";
 
 export default function AddDSRForm() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const isEdit = Boolean(id);
+  const [managers, setManagers] = useState([]);
+
   const [form, setForm] = useState({
+    name: "",
     email: "",
     date: "",
     attachment: "",
@@ -33,23 +41,88 @@ export default function AddDSRForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const payload = {
-        ...form,
-        projects,
-      };
-      console.log("Payload being sent:", payload);
-      await axios.post("http://localhost:8001/api/dsr", payload);
-      toast.success("DSR submitted successfully!");
 
-      // Reset form
-      setForm({ email: "", date: "", attachment: "" });
-      setProjects([{ projectName: "", projectDescription: "", todoTask: "" }]);
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+
+    if (!token || !userId) {
+      toast.error("Authentication required. Please log in again.");
+      navigate("/login");
+      return;
+    }
+
+    const payload = {
+      ...form,
+      userId,
+      projects,
+    };
+
+    try {
+      if (isEdit) {
+        await axios.put(`http://localhost:8001/api/dsr/${id}`, payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        toast.success("DSR updated successfully!");
+      } else {
+        await axios.post("http://localhost:8001/api/dsr", payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        toast.success("DSR submitted successfully!");
+      }
+
+      navigate("/dsr_list");
     } catch (error) {
-      console.error("Submission failed:", error);
-      toast.error("Failed to submit DSR");
+      console.error(
+        "Submission failed:",
+        error.response?.data || error.message
+      );
+      if (error.response?.status === 401) {
+        toast.error("Unauthorized. Please log in again.");
+        navigate("/login");
+      } else {
+        toast.error("Failed to submit DSR");
+      }
     }
   };
+
+  // Fetch existing DSR when editing
+  useEffect(() => {
+    if (isEdit) {
+      const token = localStorage.getItem("token");
+
+      axios
+        .get(`http://localhost:8001/api/dsr/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          const existing = res.data;
+          setForm({
+            email: existing.email || "",
+            date: existing.date ? existing.date.split("T")[0] : today,
+            attachment: existing.attachment || "",
+          });
+          setProjects(
+            existing.projects || [
+              { projectName: "", projectDescription: "", todoTask: "" },
+            ]
+          );
+        })
+        .catch(() => toast.error("Failed to fetch DSR"));
+    }
+  }, [id]);
+
+  // Fetch managers
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios
+        .get("http://localhost:8001/api/user/managers", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => setManagers(res.data))
+        .catch((err) => console.error("Failed to fetch managers:", err));
+    }
+  }, []);
 
   return (
     <div className="min-h-screen text-white bg-black px-7 rounded-md py-10">
@@ -65,15 +138,22 @@ export default function AddDSRForm() {
         {/* Email & Date */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block mb-1 text-sm font-semibold">Email</label>
-            <input
-              type="email"
-              placeholder="Enter email"
+            <label className="block mb-1 text-sm font-semibold">
+              Manager Name
+            </label>
+            <select
               className="w-full h-12 px-4 py-2 rounded-md border-white bg-neutral-800 text-white border"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               required
-            />
+            >
+              <option value="">Select Manager</option>
+              {managers.map((manager) => (
+                <option key={manager._id} value={manager.email}>
+                  {manager.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -107,10 +187,10 @@ export default function AddDSRForm() {
           {projects.map((project, index) => (
             <div
               key={index}
-              className="grid grid-cols-1 md:grid-cols-3 gap-4 relative bg-neutral-950 p-4 rounded-lg"
+              className="relative bg-neutral-950 p-4 rounded-lg grid grid-cols-1 md:grid-cols-3 gap-4"
             >
               <div>
-                <label className="block mb-3 text-sm  font-semibold">
+                <label className="block mb-3 text-sm font-semibold">
                   Project Name
                 </label>
                 <input
@@ -124,6 +204,7 @@ export default function AddDSRForm() {
                   required
                 />
               </div>
+
               <div>
                 <label className="block mb-3 text-sm font-semibold">
                   Project Description
@@ -143,6 +224,7 @@ export default function AddDSRForm() {
                   required
                 />
               </div>
+
               <div>
                 <label className="block mb-3 text-sm font-semibold">
                   Todo Task
@@ -158,40 +240,39 @@ export default function AddDSRForm() {
                 />
               </div>
 
-              {/* Remove button */}
-              {projects.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => handleRemoveProject(index)}
-                  className="absolute top-2 right-2 text-red-400 text-sm"
-                >
-                  Remove
-                </button>
-              )}
+              <div className="absolute top-2 right-2 flex space-x-2">
+                {projects.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveProject(index)}
+                    className="text-red-500 hover:text-red-700"
+                    title="Remove Project"
+                  >
+                    <FaTrash size={15} />
+                  </button>
+                )}
+                {index === projects.length - 1 && (
+                  <button
+                    type="button"
+                    onClick={handleAddProject}
+                    className="text-green-500 hover:text-green-700"
+                    title="Add Project"
+                  >
+                    <FaPlusCircle size={18} />
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Add More Project */}
-        <div className="flex justify-around">
-          {/* Submit */}
-          <div>
-            <button
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-md"
-            >
-              Submit DSR
-            </button>
-          </div>
-          <div>
-            <button
-              type="button"
-              onClick={handleAddProject}
-               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-md"
-            >
-              Add More Project
-            </button>
-          </div>
+        <div className="flex justify-end-safe">
+          <button
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-md"
+          >
+            {isEdit ? "Update DSR" : "Submit DSR"}
+          </button>
         </div>
       </form>
     </div>

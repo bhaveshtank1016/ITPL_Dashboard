@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router()
-const {createAttendance, getAttendance} = require("../controller/attendance-controller");
+const {createAttendance, getAttendance} = require("../controller/attendanceController");
 
 router.post("/attend",createAttendance);
 router.get("/attend",getAttendance);

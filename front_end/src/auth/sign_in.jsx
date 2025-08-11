@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../context/AuthContext";
 
-import {API_URL} from "../config"
+import { API_URL } from "../config";
 
 const Sign_in = () => {
   const [email, setEmail] = useState("");
@@ -14,50 +14,55 @@ const Sign_in = () => {
 
   const navigate = useNavigate();
 
- const handleLogin = async (e) => {
-  e.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-  // Frontend Validation
-  if (!email) {
-    toast.error("Email is required");
-    return;
-  }
-
-  if (!password) {
-    toast.error("Password is required");
-    return;
-  }
-
-  try {
-
-    const res = await fetch(`${API_URL}auth/login`, {
-
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    console.log(res)
-
-    const data = await res.json();
-
-    if (res.ok) {
-      toast.success("Login successful!");
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      setUser(data.user);
-      setTimeout(() => navigate("/dashboard"), 1500);
-    } else {
-      toast.error(data.message || "Invalid credentials");
+    if (!email) {
+      toast.error("Email is required");
+      return;
     }
-  } catch (err) {
-    toast.error("Something went wrong. Please try again.");
-    console.error("Login error:", err);
-  }
-};
 
+    if (!password) {
+      toast.error("Password is required");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_URL}auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success("Login successful!");
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("userId", data.user._id);
+        setUser(data.user);
+
+        // Get role from user object
+        const role = data.user.role;
+
+        // Redirect based on role
+        let dashboardPath = "/dashboard"; // default fallback
+        if (role === "admin") dashboardPath = "/dashboard/admin";
+        else if (role === "hr") dashboardPath = "/dashboard/hr";
+        else if (role === "employee") dashboardPath = "/dashboard/employee";
+
+        setTimeout(() => navigate(dashboardPath), 1000);
+      } else {
+        toast.error(data.message || "Invalid credentials");
+      }
+    } catch (err) {
+      toast.error("Something went wrong. Please try again.");
+      console.error("Login error:", err);
+    }
+  };
 
   return (
     <div>
@@ -74,13 +79,13 @@ const Sign_in = () => {
                 <h1 className="text-xl mx-10 font-bold justify-start">
                   Sign In
                 </h1>
-                <p className="text-slate-600 mx-10">
+                {/* <p className="text-slate-600 mx-10">
                   Don't have an account?
-                  <a className="font-semibold text-white">&nbsp;Sign Up</a>
-                </p>
+                  <a classNamLoge="font-semibold text-white">&nbsp;Sign Up</a>
+                </p> */}
               </div>
 
-              {showNotification && (
+              {/* {showNotification && (
                 <div className="bg-neutral-800 text-sm p-4 rounded-md flex justify-between items-center mb-6 mt-3 ml-10 mr-8">
                   <span>
                     Welcome to Tailwise demo! Simply click Sign In to explore
@@ -93,7 +98,7 @@ const Sign_in = () => {
                     ✕
                   </button>
                 </div>
-              )}
+              )} */}
             </div>
 
             <form className="container px-10 mx-auto" onSubmit={handleLogin}>

@@ -1,15 +1,16 @@
 const express = require("express");
+const { addDsr, getDsr, deleteDsr, updateDsr, getDsrById } = require("../controller/DsrController");
+const {protect} = require("../middleware/authMiddleware");
+
 const router = express.Router();
 
-// ✅ Correct destructuring import
-const { addDsr, getDsr } = require("../controller/add-Dsr-Controller");
-const { protect } = require("../middleware/authMiddleware");
+router.post("/dsr", protect, addDsr);
+router.get("/dsr", protect, getDsr);
+router.delete("/dsr/:id", protect, deleteDsr);
+router.put("/dsr/:id", protect, updateDsr);
+router.get("/dsr/:id",protect, getDsrById);
 
 
-// ✅ Route setup
-
-router.post("/create", protect, addDsr);
-router.get("/getDsr", protect, getDsr);
 
 
 module.exports = router;
