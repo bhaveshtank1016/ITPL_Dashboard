@@ -27,10 +27,18 @@ const Sidebar = () => {
 
   const { user } = useAuth();
   console.log("User from Sidebar:", user);
-  
+
   const isAdmin = user?.role?.name?.toLowerCase() === "admin";
   const isHR = user?.role?.name?.toLowerCase() === "hr";
   const isAdminOrHR = isAdmin || isHR;
+
+  // Prepare resign links conditionally
+  const resignLinks = [
+    { to: "/addEmpReference", label: "Add Emp Reference" },
+    { to: "/empReferenceListing", label: "Emp Reference Listing" },
+    ...(!isAdmin ? [{ to: "/addResign", label: "Add Resign" }] : []), // Show "Add Resign" only if NOT admin
+    { to: "/resignList", label: "Resign Listing" },
+  ];
 
   const toggleLeaveMenu = () => setOpenLeaveMenu((prev) => !prev);
   const toggleMenu = () => setOpenResignMenu((prev) => !prev);
@@ -93,25 +101,6 @@ const Sidebar = () => {
             expanded={expanded}
           />
 
-          {/* {user && user.role && user.role.name?.toLowerCase() === "admin" && (
-            <SidebarLink
-              to="/users"
-              icon={<FontAwesomeIcon icon={faUserPlus} />}
-              label="Add User"
-              current={location.pathname}
-              expanded={expanded}
-            />
-          )} */}
-          {/* {user && user.role && user.role.name?.toLowerCase() === "admin" && (
-            <SidebarLink
-              to="/role"
-              icon={<FontAwesomeIcon icon={faUser} />}
-              label="Role"
-              current={location.pathname}
-              expanded={expanded}
-            />
-          )} */}
-
           {isAdminOrHR && (
             <SidebarLink
               to="/users"
@@ -132,7 +121,7 @@ const Sidebar = () => {
             />
           )}
 
-          {/* SHow dsr list */}
+          {/* Show DSR List */}
           <SidebarLink
             to="/dsr_list"
             icon={<IoMdList size={19} />}
@@ -188,12 +177,7 @@ const Sidebar = () => {
             toggle={toggleMenu}
             icon={<FaRegFolder size={19} />}
             title="E-Resign/Ref"
-            links={[
-              { to: "/addEmpReference", label: "Add Emp Reference" },
-              { to: "/empReferenceListing", label: "Emp Reference Listing" },
-              { to: "/addResign", label: "Add Resign" },
-              { to: "/resignList", label: "Resign Listing" },
-            ]}
+            links={resignLinks}
           />
         </div>
       </div>
