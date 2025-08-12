@@ -3,6 +3,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaPlusCircle, FaTrash } from "react-icons/fa";
+import { API_URL } from "../../../src/config";
 
 export default function AddDSRForm() {
   const { id } = useParams();
@@ -59,12 +60,12 @@ export default function AddDSRForm() {
 
     try {
       if (isEdit) {
-        await axios.put(`http://localhost:8001/api/dsr/${id}`, payload, {
+        await axios.put(`${API_URL}/dsr/${id}`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
         toast.success("DSR updated successfully!");
       } else {
-        await axios.post("http://localhost:8001/api/dsr", payload, {
+        await axios.post(`${API_URL}/dsr`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
         toast.success("DSR submitted successfully!");
@@ -91,7 +92,7 @@ export default function AddDSRForm() {
       const token = localStorage.getItem("token");
 
       axios
-        .get(`http://localhost:8001/api/dsr/${id}`, {
+        .get(`${API_URL}/dsr/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -116,7 +117,7 @@ export default function AddDSRForm() {
     const token = localStorage.getItem("token");
     if (token) {
       axios
-        .get("http://localhost:8001/api/user/managers", {
+        .get(`${API_URL}/user/managers`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => setManagers(res.data))

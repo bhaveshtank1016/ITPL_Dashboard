@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { API_URL } from "../../../src/config"; 
+
 
 export default function EditDSR() {
   const { id } = useParams();
@@ -24,7 +26,7 @@ export default function EditDSR() {
     }
 
     axios
-      .get(`http://localhost:8001/api/dsr/${id}`, {
+      .get(`${API_URL}/dsr/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -56,7 +58,7 @@ export default function EditDSR() {
     e.preventDefault();
     try {
       await axios.put(
-        `http://localhost:8001/api/dsr/${id}`,
+        `${API_URL}/dsr/${id}`,
         { ...form, projects },
         { headers: { Authorization: `Bearer ${token}` } }
       );

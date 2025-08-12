@@ -35,7 +35,7 @@ const Role = () => {
         return;
       }
 
-      const response = await fetch(`${API_URL}rolesList`, {
+      const response = await fetch(`${API_URL}/rolesList`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -73,7 +73,7 @@ const handleAddRole = async (event) => {
       throw new Error('Authentication required.');
     }
 
-    const response = await fetch(`${API_URL}addRole`, {
+    const response = await fetch(`${API_URL}/addRole`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ const handleAddRole = async (event) => {
       throw new Error("Authentication required.");
     }
 
-    const response = await fetch(`${API_URL}roleDelete/${roleToDelete._id}`, {
+    const response = await fetch(`${API_URL}/roleDelete/${roleToDelete._id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import {API_URL} from "../../../src/config"
 
 const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
 
   // fetching existing roles
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/rolesList`, {
+    fetch(`${API_URL}/rolesList`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -56,7 +57,7 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
   // Fetch existing user data if editing
   useEffect(() => {
     if (id) {
-      fetch(`${import.meta.env.VITE_API_BASE_URL}/api/user/${id}`, {
+      fetch(`${API_URL}/user/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -99,8 +100,8 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
     const fullName = `${form.firstName} ${form.lastName}`.trim();
 
     const url = existingUser
-      ? `${import.meta.env.VITE_API_BASE_URL}/api/user/update`
-      : `${import.meta.env.VITE_API_BASE_URL}/api/user/create`;
+      ? `${API_URL}/user/update`
+      : `${API_URL}/user/create`;
     const method = existingUser ? "PUT" : "POST";
 
     const payload = {

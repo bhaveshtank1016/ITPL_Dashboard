@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { API_URL } from "../../../src/config"; 
 
 export default function DSRList() {
   const [dsrs, setDsrs] = useState([]);
@@ -20,7 +21,7 @@ export default function DSRList() {
         }
 
         // Fetch DSRs with token
-        const res = await axios.get("http://localhost:8001/api/dsr", {
+        const res = await axios.get(`${API_URL}/dsr`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -41,7 +42,7 @@ export default function DSRList() {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:8001/api/dsr/${id}`, {
+      await axios.delete(`${API_URL}/dsr/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
