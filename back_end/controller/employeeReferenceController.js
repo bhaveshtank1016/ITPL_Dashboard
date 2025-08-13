@@ -1,29 +1,41 @@
-const express = require("express");
 const EmployeeReference = require("../models/employeeReference");
 
-const createReference = async (req, res) => {
+exports.createReference = async (req, res) => {
   try {
-    const { name, email, phone, position } = req.body;
+    const { name, email, phone, position, company, relationship, experience, linkedin, notes } = req.body;
+
     if (!name || !email || !phone || !position) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res.status(400).json({ message: "All required fields must be filled" });
     }
-    const newRef = new EmployeeReference({ name, email, phone, position });
+
+    const newRef = new EmployeeReference({
+      name,
+      email,
+      phone,
+      position,
+      company,
+      relationship,
+      experience,
+      linkedin,
+      notes,
+      file: req.file ? req.file.filename : null
+    });
+
     await newRef.save();
-    res
-      .status(201)
-      .json({ message: "Reference saved successfully", data: newRef });
+
+    res.status(201).json({ message: "Employee reference added successfully", data: newRef });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    console.error("Error creating employee reference:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
-// GET - fetch all references
-const getEmpRef = async (req, res) => {
+exports.getEmpRef = async (req, res) => {
   try {
     const refs = await EmployeeReference.find().sort({ createdAt: -1 });
     res.status(200).json(refs);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching references" });
+    console.error("Error fetching references:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
-module.exports = { createReference, getEmpRef };

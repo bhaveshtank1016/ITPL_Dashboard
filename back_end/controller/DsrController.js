@@ -100,13 +100,16 @@ const getDsr = async (req, res) => {
   try {
     let query = {};
 
-    // If NOT admin → filter by logged-in user ID
-    if (req.user.role.name.toLowerCase() !== "admin") {
+    const role = req.user.role.name.toLowerCase();
+
+    // Employee → sirf apni DSR
+    if (role === "employee") {
       query.userId = req.user._id;
     }
+    // Admin & HR → query empty → sab DSR return
 
     const dsrs = await Dsr.find(query)
-      .populate("userId", "name email")
+      .populate("userId", "name email role")
       .sort({ createdAt: -1 });
 
     res.status(200).json(dsrs);
@@ -115,6 +118,7 @@ const getDsr = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+ 
 
 // Delete DSR
 const deleteDsr = async (req, res) => {
