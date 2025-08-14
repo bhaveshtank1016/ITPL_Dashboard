@@ -1,140 +1,315 @@
+// import { useEffect, useState } from "react";
+// import axios from "axios";
+// import { toast } from "react-toastify";
+// import { useNavigate } from "react-router-dom";
+// import { FaEdit } from "react-icons/fa";
+// import { MdDelete } from "react-icons/md";
+// import { API_URL } from "../../../src/config"; 
+
+// export default function DSRList() {
+//   const [dsrs, setDsrs] = useState([]);
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     const fetchDSRs = async () => {
+//       try {
+//         const token = localStorage.getItem("token");
+
+//         if (!token) {
+//           toast.error("No token found. Please log in.");
+//           return;
+//         }
+
+//         // Fetch DSRs with token
+//         const res = await axios.get(`${API_URL}/dsr`, {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         });
+
+//         console.log("Fetched DSRs:", res.data);
+//         setDsrs(res.data);
+//       } catch (err) {
+//         console.error("Error fetching DSRs:", err);
+//         toast.error("Failed to fetch DSRs");
+//       }
+//     };
+
+//     fetchDSRs();
+//   }, []);
+
+//   // Handle delete
+//   const handleDelete = async (id) => {
+//     try {
+//       const token = localStorage.getItem("token");
+//       await axios.delete(`${API_URL}/dsr/${id}`, {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+
+//       setDsrs((prev) => prev.filter((item) => item._id !== id));
+//       toast.success("DSR deleted successfully!");
+//     } catch (err) {
+//       toast.error("Failed to delete DSR");
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen bg-neutral-950 rounded-xl text-white p-6">
+//       <div className="flex justify-between items-center mb-4">
+//         <h1 className="text-2xl font-bold mb-4">DSR LIST</h1>
+//         <button
+//           onClick={() => navigate("/dsr/add")}
+//           className="bg-blue-600 hover:bg-blue-700 mb-5 hover:scale-105 transition-transform duration-200 text-white font-semibold py-2 px-4 rounded"
+//         >
+//           + Add DSR
+//         </button>
+//       </div>
+
+//       {/* Filter Section */}
+//       <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
+//         <div className="mb-5">
+//           <label className="text-lg font-bold mr-2">Select Date</label>
+//           <input type="date" className="border p-1 rounded" />
+//         </div>
+//         <div className="ml-auto">
+//           <label className="text-md font-medium mr-2">Search:</label>
+//           <input
+//             type="text"
+//             placeholder="Search..."
+//             className="border p-1 rounded mb-5 lg:md:mb-0"
+//           />
+//         </div>
+//       </div>
+
+//       {/* Table */}
+//       <div className="w-full overflow-x-auto border rounded-md text-white">
+//         <table className="min-w-full shadow rounded-lg">
+//           <thead className="bg-neutral-800">
+//             <tr className="text-center text-sm font-semibold">
+//               <th className="p-3">No.</th>
+//               <th className="p-3">Date</th>
+//               <th className="p-3">Email</th>
+//               <th className="p-3">Name</th>
+//               <th className="p-3">Attachment</th>
+//               <th className="p-3">To Do Tasks</th>
+//               <th className="p-3">Action</th>
+//             </tr>
+//           </thead>
+//           <tbody className="text-md bg-neutral-800 text-center">
+//             {dsrs.map((item, index) => (
+//               <tr key={item._id} className="border-t bg-neutral-800">
+//                 <td>{index + 1}</td>
+//                 <td>{new Date(item.date).toLocaleDateString()}</td>
+//                 <td>{item.email}</td>
+//                 <td>{item.userId?.name || "No name"}</td>
+//                 <td>{item.attachment || "No attachment"}</td>
+//                 <td>
+//                   <div className="flex flex-col items-start gap-2 px-2">
+//                     {item.projects && item.projects.length > 0 ? (
+//                       item.projects.map((project, pIndex) => (
+//                         <div
+//                           key={pIndex}
+//                           className="bg-neutral-900 text-left p-2 rounded w-full"
+//                         >
+//                           <p>
+//                             <strong>Name:</strong> {project.projectName}
+//                           </p>
+//                           <p>
+//                             <strong>Description:</strong>{" "}
+//                             {project.projectDescription}
+//                           </p>
+//                           <p>
+//                             <strong>To Do Task:</strong> {project.todoTask}
+//                           </p>
+//                         </div>
+//                       ))
+//                     ) : (
+//                       <span>No projects available</span>
+//                     )}
+
+//                     {item.todoTasks && item.todoTasks.length > 0 && (
+//                       <div className="mt-2 w-full bg-neutral-900 text-left p-2 rounded">
+//                         <p className="font-semibold">Other Tasks:</p>
+//                         <ul className="list-disc list-inside">
+//                           {item.todoTasks.map((task, tIndex) => (
+//                             <li key={tIndex}>{task}</li>
+//                           ))}
+//                         </ul>
+//                       </div>
+//                     )}
+//                   </div>
+//                 </td>
+//                 <td>
+//                   <button
+//                     onClick={() => handleDelete(item._id)}
+//                     className="bg-red-600 hover:bg-red-700 text-white py-2 px-2 rounded mr-2"
+//                   >
+//                     <MdDelete />
+//                   </button>
+//                   <button
+//                     onClick={() => navigate(`/dsr/edit/${item._id}`)}
+//                     className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded"
+//                   >
+//                     <FaEdit />
+//                   </button>
+//                 </td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { API_URL } from "../../../src/config"; 
 
 export default function DSRList() {
   const [dsrs, setDsrs] = useState([]);
+  const [user, setUser] = useState(null); 
   const navigate = useNavigate();
+
   useEffect(() => {
-    axios
-      .get("http://localhost:8001/api/dsr")
-      .then((res) => {
-        console.log("Fetched DSRs:", res.data); // ✅ Console check
+    const fetchUserAndDSRs = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const userDataStr = localStorage.getItem("user"); // user stored as string
+
+        if (!userDataStr) {
+          toast.error("User info not found. Please log in.");
+          return;
+        }
+
+        const userData = JSON.parse(userDataStr); 
+        setUser(userData);
+
+        if (!token) {
+          toast.error("Token not found. Please log in.");
+          return;
+        }
+
+        const res = await axios.get(`${API_URL}/dsr`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setDsrs(res.data);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Error fetching DSRs:", err);
-      });
+        toast.error("Failed to fetch DSRs");
+      }
+    };
+
+    fetchUserAndDSRs();
   }, []);
 
-  // handle delete
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:8001/api/dsr/${id}`);
-      toast.success("DSR deleted successfully!");
-    } catch (err) {
-      toast.error("Failed to delete DSR");
-    }
-  };
+  if (!user) return <p>Loading...</p>; 
+
+  // Role-based button visibility
+  const isEmployee = user.role && user.role.name === "employee";
+  const isAdmin = user.role && user.role.name === "admin";
+  const isHR = user.role && user.role.name === "hr";
 
   return (
     <div className="min-h-screen bg-neutral-950 rounded-xl text-white p-6">
-      <div className="flex justify-between items-center mb-4 ">
+      <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold mb-4">DSR LIST</h1>
-        {/* ✅ Add Button */}
-        <button
-          onClick={() => navigate("/dsr/add")}
-          className="bg-blue-600 hover:bg-blue-700 mb-5 hover:scale-105 transition-transform duration-200 text-white font-semibold py-2 px-4 rounded"
-        >
-          + Add DSR
-        </button>
-      </div>
-      <div>
-        <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
-          <div className="mb-5">
-            <label className="text-lg font-bold mr-2">Select Date</label>
-            <input type="date" className="border p-1 rounded" />
-          </div>
 
-          <div className="ml-auto">
-            <label className="text-md font-medium mr-2">Search:</label>
-            <input
-              type="text"
-              placeholder="Search..."
-              className="border p-1 rounded mb-5 lg:md:mb-0"
-            />
-          </div>
-        </div>
+        {/* Add DSR button */}
+        {(isEmployee || isHR) && (
+          <button
+            onClick={() => navigate("/dsr/add")}
+            className="bg-blue-600 hover:bg-blue-700 mb-5 hover:scale-105 transition-transform duration-200 text-white font-semibold py-2 px-4 rounded"
+          >
+            + Add DSR
+          </button>
+        )}
       </div>
 
-      {/* table */}
-      <div className="w-full overflow-x-auto border  rounded-md text-white">
+      <div className="w-full overflow-x-auto border rounded-md text-white">
         <table className="min-w-full shadow rounded-lg">
-          <thead className="bg-neutral-800 ">
-            <tr className="text-center text-sm  font-semibold">
+          <thead className="bg-neutral-800">
+            <tr className="text-center text-sm font-semibold">
               <th className="p-3">No.</th>
               <th className="p-3">Date</th>
               <th className="p-3">Email</th>
               <th className="p-3">Name</th>
               <th className="p-3">Attachment</th>
               <th className="p-3">To Do Tasks</th>
-              <th className="p-3">Action</th>
+              {/* Action column only for HR */}
+              {isHR && <th className="p-3">Action</th>}
             </tr>
           </thead>
           <tbody className="text-md bg-neutral-800 text-center">
             {dsrs.map((item, index) => (
               <tr key={item._id} className="border-t bg-neutral-800">
-                <td className="text-center">{index + 1}</td>
+                <td>{index + 1}</td>
                 <td>{new Date(item.date).toLocaleDateString()}</td>
                 <td>{item.email}</td>
-                <td>{item.userId?.name || "No name"}</td> 
+                <td>{item.userId?.name || "No name"}</td>
                 <td>{item.attachment || "No attachment"}</td>
-                <td>
-                  <div className="flex flex-col items-start gap-2 px-2">
-                    {/* Project Data */}
-                    {item.projects && item.projects.length > 0 ? (
-                      item.projects.map((project, pIndex) => (
-                        <div
-                          key={pIndex}
-                          className="bg-neutral-900 text-left p-2 rounded w-full"
-                        >
-                          <p>
-                            <strong>Name:</strong> {project.projectName}
-                          </p>
-                          <p>
-                            <strong>Description:</strong>{" "}
-                            {project.projectDescription}
-                          </p>
-                          <p>
-                            <strong>To Do Task:</strong> {project.todoTask}
-                          </p>
-                        </div>
-                      ))
-                    ) : (
-                      <span>No projects available</span>
-                    )}
-
-                    {/* To Do Tasks (if any) */}
-                    {item.todoTasks && item.todoTasks.length > 0 && (
-                      <div className="mt-2 w-full bg-neutral-900 text-left p-2 rounded">
-                        <p className="font-semibold">Other Tasks:</p>
-                        <ul className="list-disc list-inside">
-                          {item.todoTasks.map((task, tIndex) => (
-                            <li key={tIndex}>{task}</li>
-                          ))}
-                        </ul>
+                <td className="text-left px-2">
+                  {item.projects && item.projects.length > 0 ? (
+                    item.projects.map((project, pIndex) => (
+                      <div key={pIndex} className="bg-neutral-900 p-2 rounded mb-1">
+                        <p><strong>Name:</strong> {project.projectName}</p>
+                        <p><strong>Description:</strong> {project.projectDescription}</p>
+                        <p><strong>To Do Task:</strong> {project.todoTask}</p>
                       </div>
-                    )}
-                  </div>
-                </td>
-                <td>
-                  <button
-                    onClick={() => handleDelete(item._id)}
-                    className="bg-red-600 hover:bg-red-700 text-white py-2 px-2 rounded mr-2"
-                  >
-                    <MdDelete />
-                  </button>
+                    ))
+                  ) : (
+                    <span>No projects available</span>
+                  )}
 
-                  <button
-                    onClick={() => navigate(`/dsr/edit/${item._id}`)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded"
-                  >
-                    <FaEdit />
-                  </button>
+                  {item.todoTasks && item.todoTasks.length > 0 && (
+                    <div className="mt-2 w-full bg-neutral-900 text-left p-2 rounded">
+                      <p className="font-semibold">Other Tasks:</p>
+                      <ul className="list-disc list-inside">
+                        {item.todoTasks.map((task, tIndex) => (
+                          <li key={tIndex}>{task}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </td>
+
+                {/* Action buttons only for HR */}
+                {isHR && (
+                  <td>
+                    <button
+                      onClick={() => navigate(`/dsr/edit/${item._id}`)}
+                      className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded mr-2"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={async () => {
+                        try {
+                          const token = localStorage.getItem("token");
+                          await axios.delete(`${API_URL}/dsr/${item._id}`, {
+                            headers: { Authorization: `Bearer ${token}` },
+                          });
+                          setDsrs(prev => prev.filter(d => d._id !== item._id));
+                          toast.success("DSR deleted successfully!");
+                        } catch {
+                          toast.error("Failed to delete DSR");
+                        }
+                      }}
+                      className="bg-red-600 hover:bg-red-700 text-white py-2 px-2 rounded"
+                    >
+                      <MdDelete />
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

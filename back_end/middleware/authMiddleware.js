@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/user"); // Ensure this points to your user model
+const User = require("../models/user"); // ✅ Make sure path is correct
 
+// Protect routes (checks JWT and populates user + role)
 const protect = async (req, res, next) => {
   let token;
 
@@ -9,31 +10,37 @@ const protect = async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     try {
-      // check
       token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // ✅ Populate role when fetching user
-      const user = await User.findById(decoded.id).populate("role");
+      // ✅ Populate role.name directly
+      const user = await User.findById(decoded.id)
+        .populate("role", "name") // Only fetch the name from role
+        .select("-password");
 
       if (!user) {
         return res.status(401).json({ message: "User not found" });
       }
 
       req.user = user;
-      next();
+      return next();
     } catch (error) {
+      console.error("JWT Error:", error.message);
       return res.status(401).json({ message: "Invalid or expired token" });
     }
-  } else {
-    return res.status(401).json({ message: "No token provided" });
   }
+
+  return res.status(401).json({ message: "No token provided" });
 };
 
+// Check admin role
 const isAdmin = (req, res, next) => {
-    console.log("User role:", req.user ? req.user : "No user");
-  // ✅ Add null checks before accessing role.name
-  if (!req.user || !req.user.role || req.user.role.name !== "admin") {
+  if (
+    !req.user ||
+    !req.user.role ||
+    !req.user.role.name ||
+    req.user.role.name.toLowerCase() !== "admin"
+  ) {
     return res.status(403).json({ message: "Access denied. Admins only." });
   }
   next();

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import AddUserModal from "./AddUserForm";
 import { useNavigate } from "react-router-dom";
+import {API_URL} from "../../../src/config"
 
 const UserPage = () => {
   const [users, setUsers] = useState([]);
@@ -12,7 +13,7 @@ const UserPage = () => {
   const fetchUsers = () => {
     const token = localStorage.getItem("token");
 
-  fetch(`${import.meta.env.VITE_API_BASE_URL}/api/user`, {
+  fetch(`${API_URL}/user`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -38,7 +39,7 @@ const UserPage = () => {
     if (result.isConfirmed) {
       const token = localStorage.getItem("token");
 
-      const res = await fetch(`http://localhost:8001/api/user/delete/${id}`, {
+      const res = await fetch(`${API_URL}/user/delete/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

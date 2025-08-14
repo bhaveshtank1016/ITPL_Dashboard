@@ -1,16 +1,18 @@
 const Dsr = require("../models/dsr");
 const nodemailer = require("nodemailer");
 
+// Add DSR
 const addDsr = async (req, res) => {
   try {
     const { userId, email, date, attachment, projects } = req.body;
 
     if (!userId || !email || !date) {
-      console.error("❌ Missing email in request body");
-      return res.status(400).json({ message: "Email is required" });
+      return res
+        .status(400)
+        .json({ message: "User ID, Email and Date are required" });
     }
 
-    // 🔧 Fix: Define new DSR instance
+    // Create DSR
     const newDsr = new Dsr({
       userId,
       email,
@@ -20,12 +22,12 @@ const addDsr = async (req, res) => {
     });
 
     const savedDsr = await newDsr.save();
-    console.log("✅ Saved DSR from DB:", savedDsr);
 
-    // Generate HTML content for projects
+    // Generate HTML for email
     const generateProjectHTML = (projects) => {
-      if (!projects || !projects.length)
+      if (!projects || !projects.length) {
         return "<p>No project details provided.</p>";
+      }
 
       return `
         <h4>Project Details:</h4>
@@ -33,21 +35,23 @@ const addDsr = async (req, res) => {
           ${projects
             .map(
               (proj) => `
-            <li>
-              <strong>Project Name:</strong> ${proj.projectName || "N/A"}<br/>
-              <strong>Description:</strong> ${
-                proj.projectDescription || "N/A"
-              }<br/>
-              <strong>Todo Task:</strong> ${proj.todoTask || "N/A"}
-            </li><br/>
-          `
+                <li>
+                  <strong>Project Name:</strong> ${
+                    proj.projectName || "N/A"
+                  }<br/>
+                  <strong>Description:</strong> ${
+                    proj.projectDescription || "N/A"
+                  }<br/>
+                  <strong>Todo Task:</strong> ${proj.todoTask || "N/A"}
+                </li><br/>
+              `
             )
             .join("")}
         </ul>
       `;
     };
 
-    // ✅ Nodemailer setup
+    // Send email
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -70,7 +74,9 @@ const addDsr = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.status(201).json({ message: "DSR submitted and email sent!" });
+    res
+      .status(201)
+      .json({ message: "DSR submitted and email sent!", savedDsr });
   } catch (error) {
     console.error("❌ Error submitting DSR:", error.message);
     res
@@ -79,18 +85,42 @@ const addDsr = async (req, res) => {
   }
 };
 
-const getDsr = async (req, res) => {
+const getDsrById = async (req, res) => {
   try {
-    const dsrs = await Dsr.find()
-      .populate("userId", "name")
-      .sort({ createdAt: -1 }); // ✅ Only fetch 'name' from User model
-    res.json(dsrs);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const dsr = await Dsr.findById(req.params.id);
+    if (!dsr) return res.status(404).json({ message: "DSR not found" });
+    res.json(dsr);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-// delete project
+// Get DSRs (Admin → all, Employee → only own)
+const getDsr = async (req, res) => {
+  try {
+    let query = {};
+
+    const role = req.user.role.name.toLowerCase();
+
+    // Employee → sirf apni DSR
+    if (role === "employee") {
+      query.userId = req.user._id;
+    }
+    // Admin & HR → query empty → sab DSR return
+
+    const dsrs = await Dsr.find(query)
+      .populate("userId", "name email role")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(dsrs);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+ 
+
+// Delete DSR
 const deleteDsr = async (req, res) => {
   try {
     const deleted = await Dsr.findByIdAndDelete(req.params.id);
@@ -105,16 +135,15 @@ const deleteDsr = async (req, res) => {
   }
 };
 
-// update
-
+// Update DSR
 const updateDsr = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
 
     const updatedDsr = await Dsr.findByIdAndUpdate(id, updateData, {
-      new: true, // returns the updated document
-      runValidators: true, // ensure validation is applied
+      new: true,
+      runValidators: true,
     });
 
     if (!updatedDsr) {
@@ -134,8 +163,10 @@ const updateDsr = async (req, res) => {
   }
 };
 
+
 module.exports = {
   addDsr,
+  getDsrById,
   getDsr,
   deleteDsr,
   updateDsr,

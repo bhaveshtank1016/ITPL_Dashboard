@@ -11,10 +11,9 @@ import "react-toastify/dist/ReactToastify.css";
 //Hello 
 // Pages
 import Sign_in from "./auth/sign_in";
-import ProfileForm from "./pages/user/profile/profile";
 import UserPage from "./pages/user/userPage";
 import Layout from "./layout/layout";
-import Dashboard from "./dashboard/Dashboard"; // updated import
+import Dashboard from "./dashboard/Dashboard";
 import Profile_info from "./pages/user/profile/profile_infos";
 import DSR_List from "./pages/dsrListReport/DSR_List";
 import Dsr_Add from "./pages/dsrListReport/Dsr_Add";
@@ -60,7 +59,6 @@ function App() {
                 <Layout>
                   <Routes>
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/profile" element={<ProfileForm />} />
                     <Route path="/users" element={<UserPage />} />
                     <Route path="/add-user" element={<AddUserForm />} />
                     <Route path="/user/:id?" element={<AddUserPage />} />

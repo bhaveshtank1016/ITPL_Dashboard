@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaPlusCircle, FaTrash } from "react-icons/fa";
-import { useEffect } from "react";
+import { API_URL } from "../../../src/config";
 
 export default function AddDSRForm() {
   const { id } = useParams();
@@ -13,6 +13,7 @@ export default function AddDSRForm() {
 
   const [form, setForm] = useState({
     name: "",
+    email: "",
     date: "",
     attachment: "",
   });
@@ -39,71 +40,89 @@ export default function AddDSRForm() {
     setProjects(newProjects);
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const userId = localStorage.getItem("userId"); // ✅ Get userId from localStorage
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
 
-  if (!userId) {
-    toast.error("User ID not found. Please login again.");
-    return;
-  }
-
-  const payload = {
-    ...form,
-    userId, // ✅ Add userId to payload
-    projects,
-  };
-
-  try {
-    if (isEdit) {
-      await axios.put(`http://localhost:8001/api/dsr/${id}`, payload);
-      toast.success("DSR updated successfully!");
-    } else {
-      await axios.post("http://localhost:8001/api/dsr", payload);
-      toast.success("DSR submitted successfully!");
+    if (!token || !userId) {
+      toast.error("Authentication required. Please log in again.");
+      navigate("/login");
+      return;
     }
 
-    navigate("/dsr_list");
-  } catch (error) {
-    console.error("Submission failed:", error);
-    toast.error("Failed to submit DSR");
-  }
-};
+    const payload = {
+      ...form,
+      userId,
+      projects,
+    };
 
+    try {
+      if (isEdit) {
+        await axios.put(`${API_URL}/dsr/${id}`, payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        toast.success("DSR updated successfully!");
+      } else {
+        await axios.post(`${API_URL}/dsr`, payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        toast.success("DSR submitted successfully!");
+      }
 
-  // fetch for feild
+      navigate("/dsr_list");
+    } catch (error) {
+      console.error(
+        "Submission failed:",
+        error.response?.data || error.message
+      );
+      if (error.response?.status === 401) {
+        toast.error("Unauthorized. Please log in again.");
+        navigate("/login");
+      } else {
+        toast.error("Failed to submit DSR");
+      }
+    }
+  };
+
+  // Fetch existing DSR when editing
   useEffect(() => {
     if (isEdit) {
+      const token = localStorage.getItem("token");
+
       axios
-        .get("http://localhost:8001/api/dsr")
-        .then((res) => {
-          const existing = res.data.find((dsr) => dsr._id === id);
-          if (existing) {
-            setForm({
-              email: existing.email,
-              date: existing.date,
-              attachment: existing.attachment,
-            });
-            setProjects(existing.projects || []);
-          }
+        .get(`${API_URL}/dsr/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
         })
-        .catch((err) => {
-          console.error("Failed to fetch DSR:", err);
-        });
-    } else {
-      // set today's date only when not editing
-      const today = new Date().toISOString().split("T")[0];
-      setForm((prev) => ({ ...prev, date: today }));
+        .then((res) => {
+          const existing = res.data;
+          setForm({
+            email: existing.email || "",
+            date: existing.date ? existing.date.split("T")[0] : today,
+            attachment: existing.attachment || "",
+          });
+          setProjects(
+            existing.projects || [
+              { projectName: "", projectDescription: "", todoTask: "" },
+            ]
+          );
+        })
+        .catch(() => toast.error("Failed to fetch DSR"));
     }
   }, [id]);
 
-  // fetch menager
+  // Fetch managers
   useEffect(() => {
-    axios
-      .get("http://localhost:8001/api/user/managers")
-      .then((res) => setManagers(res.data))
-      .catch((err) => console.error("Failed to fetch managers:", err));
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios
+        .get(`${API_URL}/user/managers`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => setManagers(res.data))
+        .catch((err) => console.error("Failed to fetch managers:", err));
+    }
   }, []);
 
   return (
@@ -123,7 +142,6 @@ export default function AddDSRForm() {
             <label className="block mb-1 text-sm font-semibold">
               Manager Name
             </label>
-
             <select
               className="w-full h-12 px-4 py-2 rounded-md border-white bg-neutral-800 text-white border"
               value={form.email}
@@ -223,7 +241,6 @@ export default function AddDSRForm() {
                 />
               </div>
 
-              {/* Action buttons */}
               <div className="absolute top-2 right-2 flex space-x-2">
                 {projects.length > 1 && (
                   <button
@@ -250,17 +267,13 @@ export default function AddDSRForm() {
           ))}
         </div>
 
-        {/* Add More Project */}
         <div className="flex justify-end-safe">
-          {/* Submit */}
-          <div>
-            <button
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-md"
-            >
-              {isEdit ? "Update DSR" : "Submit DSR"}
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-md"
+          >
+            {isEdit ? "Update DSR" : "Submit DSR"}
+          </button>
         </div>
       </form>
     </div>
