@@ -1,74 +1,174 @@
-import React from "react";
-
-const attendanceData = [
-  { no: 1, date: "30-06-2025", day: "Monday", checkout: "", remark: "A" },
-  { no: 2, date: "29-06-2025", day: "Sunday", checkout: "", remark: "Week Off" },
-  { no: 3, date: "28-06-2025", day: "Saturday", checkout: "", remark: "Week Off" },
-  { no: 4, date: "27-06-2025", day: "Friday", checkout: "", remark: "A" },
-  { no: 5, date: "26-06-2025", day: "Thursday", checkout: "", remark: "A" },
-  { no: 6, date: "25-06-2025", day: "Wednesday", checkout: "", remark: "A" },
-  { no: 7, date: "24-06-2025", day: "Tuesday", checkout: "", remark: "A" },
-  { no: 8, date: "23-06-2025", day: "Monday", checkout: "", remark: "A" },
-  { no: 9, date: "22-06-2025", day: "Sunday", checkout: "", remark: "Week Off" },
-  { no: 10, date: "21-06-2025", day: "Saturday", checkout: "", remark: "Week Off" },
-];
-
-const getRemarkBadge = (remark) => {
-  if (remark === "Week Off") return "bg-green-500 text-white";
-  if (remark === "A") return "bg-red-600 text-white";
-  return "";
-};
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { API_URL } from "../../config";
+import { toast } from "react-toastify";
 
 export default function Daily_Attendance() {
+  const [attendance, setAttendance] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const userId = localStorage.getItem("userId");
+
+  const fetchAttendance = async () => {
+    try {
+      const res = await axios.get(`${API_URL}attendance?userId=${userId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      let records = res.data.data || [];
+
+      // Ensure today is always in table
+      const todayDate = new Date().toDateString();
+      const todayExists = records.some(
+        (r) => new Date(r.date).toDateString() === todayDate
+      );
+
+      if (!todayExists) {
+        records = [
+          {
+            date: new Date(),
+            day: new Date().toLocaleDateString("en-US", { weekday: "long" }),
+            check_in: null,
+            check_out: null,
+            attendance_status: "Absent", // placeholder until user checks in
+          },
+          ...records,
+        ];
+      }
+
+      setAttendance(records);
+    } catch (err) {
+      console.error("Error fetching attendance", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCheckIn = async () => {
+    try {
+      const res = await axios.post(
+        `${API_URL}attendance/checkin`,
+        { userId }, // backend can ignore body and use token; safe to send
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      toast.success(res.data.message || "Checked in!");
+      await fetchAttendance(); // pull fresh record (with check_in time)
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to check in");
+    }
+  };
+
+  const handleCheckOut = async () => {
+    try {
+      const res = await axios.post(
+        `${API_URL}attendance/checkout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      toast.success(res.data.message || "Checked out successfully!");
+      await fetchAttendance(); // pulls backend-calculated status
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Check-out failed");
+    }
+  };
+
+  useEffect(() => {
+    fetchAttendance();
+  }, []);
+
+  if (loading) return <p className="text-white">Loading...</p>;
+
+  // Helper: render status — show "None" if checked-in but not checked-out yet
+  const renderStatus = (row) => {
+    if (row?.check_in && !row?.check_out) return "⏳ None";
+    switch (row?.attendance_status) {
+      case "Present":
+        return "✅ Present";
+      case "Half Day":
+        return "🕒 Half Day";
+      case "Absent":
+        return "❌ Absent";
+      default:
+        return "-";
+    }
+  };
+
   return (
     <div className="min-h-screen text-white rounded-md p-5 bg-black">
-        <h2 className="text-2xl font-bold  mb-4">Employee Attendance Records</h2>
-      <div className="shadow-md bg-gradient-to-r from-neutral-900 to-blue-900 mx-auto rounded-md p-4">
+      <h2 className="text-2xl font-bold mb-4">Employee Attendance Records</h2>
 
-        {/* Filter Section */}
-        <div className="flex  flex-wrap items-center gap-4 mb-4">
-          <input type="text" value="June" readOnly className="border p-2 rounded-md" />
-          <input type="text" value="2025" readOnly className="border p-2 rounded-md" />
-          <div className="ml-auto">
-            <label className="font-semibold mr-2">Search:</label>
-            <input type="text" placeholder="Search..." className="border p-2 rounded-md" />
-          </div>
-        </div>
+      <div className="overflow-auto">
+        <table className="min-w-full border border-gray-300 text-md">
+          <thead className="bg-neutral-950">
+            <tr>
+              <th className="border px-6 py-4">Date</th>
+              <th className="border px-6 py-4">Day</th>
+              <th className="border px-6 py-4">Check-in</th>
+              <th className="border px-6 py-4">Check-out</th>
+              <th className="border px-6 py-4">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {attendance.map((row, idx) => {
+              const isToday =
+                new Date(row.date).toDateString() ===
+                new Date().toDateString();
 
-        {/* Table */}
-        <div className="overflow-auto">
-          <table className="min-w-full border border-gray-300 text-md">
-            <thead className="bg-neutral-950">
-              <tr className="text-start">
-                <th className="border px-6 py-4">Sr. No.</th>
-                <th className="border px-6 py-4">Date</th>
-                <th className="border px-6 py-4">Check-in</th>
-                <th className="border px-6 py-4">Check-out</th>
-                <th className="border px-6 py-4">Remarks</th>
-              </tr>
-            </thead>
-            <tbody>
-              {attendanceData.map((row, idx) => (
+              return (
                 <tr key={idx} className="hover:bg-gray-500 text-center">
-                  <td className="border px-4 py-2">{row.no}</td>
-                  <td className="border px-4 py-2">{row.date}</td>
-                  <td className="border px-4 py-2">{row.day}</td>
-                  <td className="border px-4 py-2">{row.checkout || "-"}</td>
                   <td className="border px-4 py-2">
-                    <span className={`px-3 py-1 rounded-full font-semibold ${getRemarkBadge(row.remark)}`}>
-                      {row.remark === "A" ? "❌ A" : "✅ Week Off"}
-                    </span>
+                    {new Date(row.date).toLocaleDateString()}
                   </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  <td className="border px-4 py-2">{row.day}</td>
 
-        {/* Footer */}
-        <div className="text-center text-xs text-gray-500 mt-6">
-          © Copyright © PineSucceed Pvt. Ltd 2025
-        </div>
+                  {/* Check-in cell */}
+                  <td className="border px-4 py-2">
+                    {isToday && !row.check_in ? (
+                      <button
+                        onClick={handleCheckIn}
+                        className="bg-green-600 px-3 py-1 rounded"
+                      >
+                        Check In
+                      </button>
+                    ) : (
+                      row.check_in || "-"
+                    )}
+                  </td>
+
+                  {/* Check-out cell */}
+                  <td className="border px-4 py-2">
+                    {isToday && row.check_in && !row.check_out ? (
+                      <button
+                        onClick={handleCheckOut}
+                        className="bg-red-600 px-3 py-1 rounded"
+                      >
+                        Check Out
+                      </button>
+                    ) : (
+                      row.check_out || "-"
+                    )}
+                  </td>
+
+                  {/* Status cell (trust backend, but show None while mid-shift) */}
+                  <td className="border px-4 py-2">{renderStatus(row)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="text-center text-xs text-gray-500 mt-6">
+        © Copyright © PineSucceed Pvt. Ltd 2025
       </div>
     </div>
   );

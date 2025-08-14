@@ -9,7 +9,7 @@ const holidayRoute = require("./routes/holiday-router");
 const resignRouter = require("./routes/resign-router");
 const leaveRouter = require("./routes/leave-router")
 const userRouter = require("./routes/userRoutes");
-const attendanceRouter = require("./routes/attendanceRoutes");
+const attendanceRoutes = require("./routes/attendanceRoutes");
 const authRouter = require("./routes/authRoutes");
 const roleRoutes = require("./routes/roleRoute");
 
@@ -35,7 +35,7 @@ app.use("/api", holidayRoute);
 app.use("/api", resignRouter);
 app.use("/api", leaveRouter);
 app.use("/api/user", userRouter);
-app.use("/api", attendanceRouter);
+app.use("/api/attendance", attendanceRoutes);
 app.use("/api/auth", authRouter);
 app.use("/api", roleRoutes);
 

@@ -6,10 +6,14 @@ const attendanceSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // date: {
-    //   type: Date,
-    //   required: true,
-    // },
+    date: {
+      type: Date,
+      required: true,
+    },
+    day:{
+      type: String,
+      required: true,
+    },
     check_in: {
       type: String, // "HH:mm"
       default: null,

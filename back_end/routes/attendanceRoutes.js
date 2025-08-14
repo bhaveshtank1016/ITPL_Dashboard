@@ -1,11 +1,10 @@
 const express = require("express");
-const router = express.Router()
-const {createAttendance, getAttendance} = require("../controller/attendanceController");
+const router = express.Router();
+const { checkIn, checkOut, getAttendance } = require("../controller/attendanceController");
+const { protect } = require("../middleware/authMiddleware");
 
-router.post("/attend",createAttendance);
-router.get("/attend",getAttendance);
+router.post("/checkin", protect, checkIn);
+router.post("/checkout", protect, checkOut);
+router.get("/", protect, getAttendance);
 
 module.exports = router;
-
-
-// checked and working 

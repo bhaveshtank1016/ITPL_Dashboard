@@ -1,124 +1,230 @@
-import { useEffect, useState } from "react"; //
-import { FaInbox, FaPen, FaEdit } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaInbox, FaPen } from "react-icons/fa";
 import { LuSend } from "react-icons/lu";
-import { toast } from "react-toastify";
-import { MdDelete } from "react-icons/md";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import PageLeavePagination from "./PageLeavePagination";
+import { useAuth } from "../../context/AuthContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { API_URL } from "../../config";
 
 function LeaveList() {
-  const [leave, setLeave] = useState([]);
-  const [editId, setEditId] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [formData, setFormData] = useState({
-    from: "",
-    subject: "",
-    date: "",
-    message: "",
-  });
-  const fetchLeave = async () => {
+  const [page, setPage] = useState(1);
+  const [leaveList, setLeaveList] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const { user } = useAuth();
+  const userRole = user?.role?.name?.toLowerCase();
+
+  const fetchLeaves = async () => {
     try {
-      const res = await fetch("http://localhost:8001/api/leave");
+      const res = await fetch(`${API_URL}leave?page=${page}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
       const data = await res.json();
-      setLeave(data);
+      setLeaveList(data.list || []);
+      setTotalPages(data.totalPages || 1);
     } catch (error) {
-      console.error("failed to fetch holidays", error);
+      console.error("Failed to fetch leaves", error);
     }
   };
-  // useeffect only call it on mount
+
   useEffect(() => {
-    fetchLeave();
-  }, []);
+    fetchLeaves();
+  }, [page]);
 
-  // delete the user on click delete button
-  const deleteUser = async (id) => {
-    try {
-      await axios.delete(`http://localhost:8001/api/leave/${id}`);
-      setLeave(leave.filter((item) => item._id !== id));
-      toast.success("Leave deleted successfully");
-    } catch (error) {
-      console.error("Delete failed:", error);
-      toast.error("Failed to delete leave");
+const handleStatusChange = async (id, newStatus) => {
+  try {
+    const res = await fetch(`${API_URL}leave/${id}/status`, {
+      method: "PUT", // ✅ matches backend
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ status: newStatus }),
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      toast.success(`Leave ${newStatus} successfully`);
+      fetchLeaves(); // refresh list after update
+    } else {
+      toast.error(data.msg || "Something went wrong");
     }
-  };
+  } catch (error) {
+    console.error("Failed to update status", error);
+    toast.error("Failed to update status");
+  }
+};
 
-  const navigate = useNavigate();
-
-  const editUser = (item) => {
-    navigate("/addleave", { state: { data: item } });
-  };
 
   return (
-    <div className="h-screen bg-black text-white p-5  rounded-md">
-      <h2 className="text-xl mb-10 pb-3 rounded-md sm:text-2xl font-semibold ">
-        Resign Section
+    <div className="h-screen bg-black text-white p-5 rounded-md">
+      <ToastContainer position="top-right" autoClose={2000} />
+      <h2 className="text-xl mb-10 pb-3 rounded-md sm:text-2xl font-semibold">
+        Leave Section
       </h2>
-      <div className="overflow-x-auto p-5 rounded-md bg-gradient-to-r from-neutral-900  to-blue-900">
-        <div className="flex justify-between">
-          <div className="flex mb-8 ">
-            <button className="border mr-2 px-4 py-2 w-30 h-12 flex gap-3 items-center bg-blue-700 rounded-md ">
-              <FaInbox />
-              Inbox
-            </button>
-            <button className="border mr-2 px-4 py-2 h-12 w-30 flex gap-3 items-center bg-blue-700 rounded-md ">
-              <span>
-                <LuSend />
-              </span>{" "}
-              Sent
-            </button>
-            <button className="border px-4 py-2 w-30 h-12 flex gap-3 items-center bg-blue-700 rounded-md ">
-              <FaPen />
-              Compose
-            </button>
-          </div>
-          <div className="flex justify-end mb-8 ">
-            <label className="font-bold text-xl mr-3 ">Search </label>
-            <input
-              type="text"
-              placeholder="Search by subject or from..."
-              className="border h-10  rounded-md w-60 text-white px-2"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
-        <table className="min-w-full border rounded-md border-gray-300 text-md">
-          <thead className="bg-neutral-950">
-            <tr className="text-center ">
-              <th className="border text-lg px-4 py-2">No.</th>
-              <th className="border text-lg px-4 py-2">Subject</th>
-              <th className="border text-lg px-4 py-2">From</th>
-              <th className="border text-lg px-4 py-2">Date</th>
-              <th className="border text-lg px-4 py-2">Action</th>
+
+      {/* Top buttons */}
+      <div className="flex justify-end">
+        <button className="border mr-2 px-4 py-2 flex gap-3 items-center bg-blue-700 rounded-md">
+          <FaInbox /> Inbox
+        </button>
+        <button className="border mr-2 px-4 py-2 flex gap-3 items-center bg-blue-700 rounded-md">
+          <LuSend /> Sent
+        </button>
+        <button className="border px-4 py-2 flex gap-3 items-center bg-blue-700 rounded-md">
+          <FaPen /> Compose
+        </button>
+      </div>
+
+      {/* Search */}
+      <div className="flex justify-end mt-5">
+        <label className="font-bold text-xl mr-3">Search</label>
+        <input
+          type="text"
+          className="border h-10 rounded-md w-60 text-black px-2"
+          placeholder="Search by subject or from..."
+        />
+      </div>
+
+      {/* Table */}
+      <div>
+        <table className="table-auto mt-10 w-full border-collapse border border-gray-300">
+          <thead>
+            <tr className="text-center border">
+              <th className="border border-gray-700 text-lg px-4 py-2">No.</th>
+              <th className="border border-gray-700 text-lg px-4 py-2">Name</th>
+              <th className="border border-gray-700 text-lg px-4 py-2">Role</th>
+
+              {/* Position column - only for Admin & HR */}
+              {["admin", "hr"].includes(userRole) && (
+                <th className="border border-gray-700 text-lg px-4 py-2">
+                  Position
+                </th>
+              )}
+
+              <th className="border border-gray-700 text-lg px-4 py-2">
+                Subject
+              </th>
+              <th className="border border-gray-700 text-lg px-4 py-2">
+                Leave From
+              </th>
+              <th className="border border-gray-700 text-lg px-4 py-2">
+                Leave To
+              </th>
+              <th className="border border-gray-700 text-lg px-4 py-2">
+                Date
+              </th>
+              <th className="border border-gray-700 text-lg px-4 py-2">
+                Status
+              </th>
+
+              {["admin", "hr"].includes(userRole) && (
+                <th className="border border-gray-700 text-lg px-4 py-2">
+                  Action
+                </th>
+              )}
             </tr>
           </thead>
+
           <tbody>
-            {leave
-              .filter(
-                (leaves) =>
-                  leaves.subject
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                  leaves.from.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-              .map((leaves, index) => (
-                <tr className="hover:bg-gray-500 text-center" key={index}>
-                  <td className="border px-4 py-2">{index + 1}</td>
-                  <td className="border  px-4 py-2">{leaves.subject}</td>
-                  <td className="border px-4 py-2">{leaves.from}</td>
-                  <td className="border px-4 py-2">{leaves.date}</td>
-                  <td className="border space-x-5 px-2 py-2">
-                    <button onClick={() => editUser(leaves)}>
-                      <FaEdit size={18} />
-                    </button>
-                    <button onClick={() => deleteUser(leaves._id)}>
-                      <MdDelete size={18} />
-                    </button>
+            {leaveList.map((item, index) => (
+              <tr className="text-center border" key={item._id || index}>
+                <td className="border border-gray-700 px-4 py-2">
+                  {(page - 1) * 10 + index + 1}
+                </td>
+                <td className="border border-gray-700 px-4 py-2">
+                  {item.user?.name || "-"}
+                </td>
+                <td className="border border-gray-700 px-4 py-2">
+                  {item.user?.role?.name || "-"}
+                </td>
+
+                {["admin", "hr"].includes(userRole) && (
+                  <td className="border border-gray-700 px-4 py-2">
+                    {item.user?.position || "-"}
                   </td>
-                </tr>
-              ))}
+                )}
+
+                <td className="border border-gray-700 px-4 py-2">
+                  {item.subject}
+                </td>
+                <td className="border border-gray-700 px-4 py-2">
+                  {item.from}
+                </td>
+                <td className="border border-gray-700 px-4 py-2">
+                  {item.leave}
+                </td>
+                <td className="border border-gray-700 px-4 py-2">
+                  {item.date ? new Date(item.date).toLocaleDateString() : "-"}
+                </td>
+                <td className="border border-gray-700 px-4 py-2">
+                  <span
+                    className={
+                      item.status === "approved"
+                        ? "text-green-500"
+                        : item.status === "rejected"
+                        ? "text-red-500"
+                        : "text-yellow-500"
+                    }
+                  >
+                    {item.status || "pending"}
+                  </span>
+                </td>
+
+                {["admin", "hr"].includes(userRole) && (
+                  <td className="border border-gray-700 px-4 py-2">
+                    {item.status === "pending" && (
+                      <>
+                        <button
+                          onClick={() =>
+                            handleStatusChange(item._id, "approved")
+                          }
+                          className="bg-green-600 px-2 py-1 rounded mr-2"
+                        >
+                          Approve
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleStatusChange(item._id, "rejected")
+                          }
+                          className="bg-red-600 px-2 py-1 rounded"
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )}
+
+                    {item.status === "rejected" && (
+                      <button
+                        onClick={() => handleStatusChange(item._id, "approved")}
+                        className="bg-green-600 px-2 py-1 rounded"
+                      >
+                        Approve
+                      </button>
+                    )}
+
+                    {item.status === "approved" && (
+                      <button
+                        onClick={() => handleStatusChange(item._id, "rejected")}
+                        className="bg-red-600 px-2 py-1 rounded"
+                      >
+                        Reject
+                      </button>
+                    )}
+                  </td>
+                )}
+              </tr>
+            ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center items-center mt-4">
+        <PageLeavePagination setPage={setPage} totalPages={totalPages} />
       </div>
     </div>
   );
