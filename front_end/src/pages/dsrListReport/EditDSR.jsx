@@ -58,7 +58,7 @@ export default function EditDSR() {
     e.preventDefault();
     try {
       await axios.put(
-        `${API_URL}/dsr/${id}`,
+        `${API_URL}/update/${id}`,
         { ...form, projects },
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -10,11 +10,11 @@ export default function AddDSRForm() {
   const navigate = useNavigate();
   const isEdit = Boolean(id);
   const [managers, setManagers] = useState([]);
-
+  const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
   const [form, setForm] = useState({
     name: "",
     email: "",
-    date: "",
+    date: today,  // <-- Set current date by default
     attachment: "",
   });
 
@@ -60,12 +60,12 @@ export default function AddDSRForm() {
 
     try {
       if (isEdit) {
-        await axios.put(`${API_URL}/dsr/${id}`, payload, {
+        await axios.put(`${API_URL}/dsr/update/${id}`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
         toast.success("DSR updated successfully!");
       } else {
-        await axios.post(`${API_URL}/dsr`, payload, {
+        await axios.post(`${API_URL}/dsr/create`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
         toast.success("DSR submitted successfully!");

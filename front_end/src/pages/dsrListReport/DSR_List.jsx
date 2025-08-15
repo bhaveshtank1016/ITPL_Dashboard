@@ -30,7 +30,7 @@ export default function DSRList() {
           return;
         }
 
-        const res = await axios.get(`${API_URL}/dsr`, {
+        const res = await axios.get(`${API_URL}/dsr/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setDsrs(res.data);
@@ -126,7 +126,7 @@ export default function DSRList() {
                       onClick={async () => {
                         try {
                           const token = localStorage.getItem("token");
-                          await axios.delete(`${API_URL}/dsr/${item._id}`, {
+                          await axios.delete(`${API_URL}/dsr/delete/${item._id}`, {
                             headers: { Authorization: `Bearer ${token}` },
                           });
                           setDsrs(prev => prev.filter(d => d._id !== item._id));

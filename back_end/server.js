@@ -32,7 +32,7 @@ app.use(cors(corsOptions));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
-app.use("/api", dsrRoute);
+app.use("/api/dsr", dsrRoute);
 app.use("/api", holidayRoute);
 app.use("/api", resignRouter);
 app.use("/api", leaveRouter);
