@@ -46,4 +46,18 @@ const isAdmin = (req, res, next) => {
   next();
 };
 
-module.exports = { protect, isAdmin };
+
+const isHR = (req, res, next) => {
+  if (
+    !req.user ||
+    !req.user.role ||
+    !req.user.role.name ||
+    req.user.role.name.toLowerCase() !== "hr"
+  ) {
+    return res.status(403).json({ message: "Access denied. HRs only." });
+  }
+  next();
+};
+
+
+module.exports = { protect, isAdmin,isHR };
