@@ -14,6 +14,7 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { MdOutlinePlaylistAdd } from "react-icons/md";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+``;
 import { FaRegFolder } from "react-icons/fa";
 import { IoMdList } from "react-icons/io";
 import { FaPersonChalkboard } from "react-icons/fa6";
@@ -97,7 +98,7 @@ const Sidebar = () => {
           {isAdminOrHR && (
             <SidebarLink
               to="/users"
-              icon={<FaUsers  size={20}/>}
+              icon={<FaUsers size={20} />}
               label="Users"
               current={location.pathname}
               expanded={expanded}
@@ -165,8 +166,14 @@ const Sidebar = () => {
             icon={<FaRegFolder size={19} />}
             title="E-Resign/Ref"
             links={[
-              { to: "/addEmpReference", label: "Add Emp Reference" },
-              { to: "/empReferenceListing", label: "Emp Reference Listing" },
+              ...(isHR
+                ? [
+                    {
+                      to: "/empReferenceListing",
+                      label: "Emp Reference Listing",
+                    },
+                  ]
+                : []),
               { to: "/addResign", label: "Add Resign" },
               { to: "/resignList", label: "Resign Listing" },
             ]}
