@@ -32,6 +32,14 @@ const Sidebar = () => {
   const isHR = user?.role?.name?.toLowerCase() === "hr";
   const isAdminOrHR = isAdmin || isHR;
 
+  // Prepare resign links conditionally
+  const resignLinks = [
+    { to: "/addEmpReference", label: "Add Emp Reference" },
+    { to: "/empReferenceListing", label: "Emp Reference Listing" },
+    ...(!isAdmin ? [{ to: "/addResign", label: "Add Resign" }] : []), // Show "Add Resign" only if NOT admin
+    { to: "/resignList", label: "Resign Listing" },
+  ];
+
   const toggleLeaveMenu = () => setOpenLeaveMenu((prev) => !prev);
   const toggleMenu = () => setOpenResignMenu((prev) => !prev);
 
@@ -113,7 +121,7 @@ const Sidebar = () => {
             />
           )}
 
-          {/* SHow dsr list */}
+          {/* Show DSR List */}
           <SidebarLink
             to="/dsr_list"
             icon={<IoMdList size={19} />}
