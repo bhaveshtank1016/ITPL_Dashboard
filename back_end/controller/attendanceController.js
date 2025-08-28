@@ -1,9 +1,8 @@
 const Attendance = require("../models/attendance");
 
-// Helper function to calculate status
-
+// ✅ Helper: Calculate Attendance Status
 const calculateStatus = (check_in, check_out) => {
-  if (!check_in || !check_out || typeof check_in !== 'string' || typeof check_out !== 'string') return "Absent";
+  if (!check_in || !check_out) return "Absent";
 
   const [inH, inM] = check_in.split(":").map(Number);
   const [outH, outM] = check_out.split(":").map(Number);
@@ -14,54 +13,93 @@ const calculateStatus = (check_in, check_out) => {
 
   if (totalMinutes >= 480) return "Present"; // >= 8 hrs
   if (totalMinutes >= 120) return "Half Day"; // 2–8 hrs
-  return "Absent"; // < 2 hrs
+  return "Absent";
 };
 
-exports.createAttendance = async (req, res) => {
-  const { userId, date, check_in, check_out } = req.body;
+// ⏰ Check-In
+exports.checkIn = async (req, res) => {
+  const { userId } = req.user; // from token middleware
+  const now = new Date();
+  const dateOnly = new Date(now.toDateString());
+  const timeString = now.toTimeString().slice(0, 5); // HH:mm
+  const dayName = now.toLocaleDateString("en-US", { weekday: "long" });
 
   try {
+    let existing = await Attendance.findOne({ userId, date: dateOnly });
+
+    if (existing) {
+      return res.status(200).json({
+        status: "already_checked_in",
+        message: "Already checked in today.",
+        data: existing
+      });
+    }
+
     const newRecord = new Attendance({
       userId,
-      date,
-      check_in,
-      check_out
+      date: dateOnly,
+      day: dayName,
+      check_in: timeString,
+      check_out: null
     });
 
-    const saved = await newRecord.save();
-
-    const status = calculateStatus(check_in, check_out);
+    await newRecord.save();
 
     res.status(201).json({
-      message: "Attendance recorded successfully.",
-      data: {
-        ...saved.toObject(),
-        attendance_status: status // added dynamically in response
-      }
+      status: "checked_in",
+      message: "Checked in successfully",
+      data: newRecord
     });
   } catch (error) {
-    res.status(500).json({ error: "Failed to save attendance." });
+    res.status(500).json({ error: "Failed to check in" });
   }
 };
 
 
+// ⏳ Check-Out
+exports.checkOut = async (req, res) => {
+  const userId = req.user.id; // ✅ from token
+  const now = new Date();
+  const dateOnly = new Date(now.toDateString());
+  const timeString = now.toTimeString().slice(0, 5);
 
-exports.getAttendance = async (req, res) => {
   try {
-    const records = await Attendance.find();
+    const existing = await Attendance.findOne({ userId, date: dateOnly });
+
+    if (!existing) {
+      return res.status(400).json({ message: "No check-in found for today." });
+    }
+    if (existing.check_out) {
+      return res.status(400).json({ message: "Already checked out today." });
+    }
+
+    existing.check_out = timeString;
+    const status = calculateStatus(existing.check_in, existing.check_out);
+
+    await existing.save();
+
+    res.status(200).json({
+      message: "Checked out successfully",
+      data: { ...existing.toObject(), attendance_status: status },
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to check out" });
+  }
+};
+
+// 📄 Get Attendance for user
+exports.getAttendance = async (req, res) => {
+  const userId = req.user.id; // ✅ from token
+  try {
+    const records = await Attendance.find({ userId }).sort({ date: -1 });
 
     const dataWithStatus = records.map((record) => ({
       ...record.toObject(),
-      attendance_status: calculateStatus(record.check_in, record.check_out)
+      attendance_status: calculateStatus(record.check_in, record.check_out),
     }));
 
-    res.status(200).json({
-      message: "Attendance fetched successfully.",
-      data: dataWithStatus
-    });
+    res.status(200).json({ message: "Fetched attendance", data: dataWithStatus });
   } catch (error) {
-    console.error("GET Attendance Error:", error);
-    res.status(500).json({ error: "Failed to fetch attendance." });
+    res.status(500).json({ error: "Failed to fetch attendance" });
   }
 };
-

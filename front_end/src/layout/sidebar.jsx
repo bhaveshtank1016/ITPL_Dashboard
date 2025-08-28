@@ -26,19 +26,11 @@ const Sidebar = () => {
   const [openLeaveMenu, setOpenLeaveMenu] = useState(false);
 
   const { user } = useAuth();
-  console.log("User from Sidebar:", user);
+  // console.log("User from Sidebar:", user);
 
   const isAdmin = user?.role?.name?.toLowerCase() === "admin";
   const isHR = user?.role?.name?.toLowerCase() === "hr";
   const isAdminOrHR = isAdmin || isHR;
-
-  // Prepare resign links conditionally
-  const resignLinks = [
-    { to: "/addEmpReference", label: "Add Emp Reference" },
-    { to: "/empReferenceListing", label: "Emp Reference Listing" },
-    ...(!isAdmin ? [{ to: "/addResign", label: "Add Resign" }] : []), // Show "Add Resign" only if NOT admin
-    { to: "/resignList", label: "Resign Listing" },
-  ];
 
   const toggleLeaveMenu = () => setOpenLeaveMenu((prev) => !prev);
   const toggleMenu = () => setOpenResignMenu((prev) => !prev);
@@ -93,13 +85,24 @@ const Sidebar = () => {
 
         {/* Menu */}
         <div className="mt-4 flex flex-col pl-6 px-2">
+
+          
+          {user && user.role && user.role.name?.toLowerCase() === "hr" && (
           <SidebarLink
-            to="/dashboard"
+            to="/hrdashboard"
             icon={<FontAwesomeIcon icon={faTableColumns} />}
             label="Dashboard"
             current={location.pathname}
             expanded={expanded}
           />
+          )}
+          {/* <SidebarLink
+            to="/dashboard"
+            icon={<FontAwesomeIcon icon={faTableColumns} />}
+            label="Dashboard"
+            current={location.pathname}
+            expanded={expanded}
+          /> */}
 
           {isAdminOrHR && (
             <SidebarLink
@@ -111,7 +114,7 @@ const Sidebar = () => {
             />
           )}
 
-          {isAdminOrHR && (
+          {isAdmin &&(
             <SidebarLink
               to="/role"
               icon={<FontAwesomeIcon icon={faUser} />}

@@ -76,7 +76,7 @@ function AddResign() {
       <h2 className="text-xl mb-10 pb-3 rounded-md sm:text-2xl font-semibold">
         Resign Section
       </h2>
-      <div>
+      <div >
         <form onSubmit={handleSubmit}>
           <div>
             <label className="text-xl font-bold">From</label>
@@ -124,7 +124,10 @@ function AddResign() {
               className="border mt-4 rounded-md h-30 bg-neutral-600 w-9/12"
             />
           </div>
-
+          <div className="flex">
+          <input type="checkbox"/> <p className=" pl-2">I acknowledge that I have read the company's resignation policy and that this submission is final. </p></div>
+          <br/>
+          
           <button
             type="submit"
             className="text-xl px-4 py-2 bg-blue-700 text-white mt-5 rounded-md"

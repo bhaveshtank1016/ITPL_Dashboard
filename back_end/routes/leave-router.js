@@ -3,21 +3,18 @@ const router = express.Router();
 const {
   getAllLeave,
   addLeave,
-  deleteLeave,
-  updateLeaveList,
+  // deleteLeave,
+  // updateLeaveList,
+  updateLeaveStatus
 } = require("../controller/leaveController");
 
-// POST new leave
-router.post("/leave", addLeave);
+const { protect, isAdmin } = require("../middleware/authMiddleware");
 
-// GET all leaves
-router.get("/leave", getAllLeave);
-
-
-// DELETE a leave
-router.delete("/leave/:id", deleteLeave);
-
-// ✅ PUT (update) a leave
-router.put("/leave/:id", updateLeaveList);
+// Protected routes
+router.post("/leave", protect, addLeave);
+router.get("/leave", protect, getAllLeave);
+// router.delete("/leave/:id", protect, isAdmin, deleteLeave);
+// router.put("/leave/:id", protect, updateLeaveList);
+router.put("/leave/:id/status", protect, updateLeaveStatus); // ✅ For Admin/HR approval
 
 module.exports = router;

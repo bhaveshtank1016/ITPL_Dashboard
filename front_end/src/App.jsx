@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+//Hello 
 // Pages
 import Sign_in from "./auth/sign_in";
 import UserPage from "./pages/user/userPage";
@@ -29,6 +29,8 @@ import LeaveList from "./pages/leave/LeaveList";
 import AddUserPage from "./pages/user/AddUserPage";
 import AddUserForm from "./pages/user/AddUserForm";
 import Role from "../src/pages/user/role/role";
+import AddDSRForm from "./pages/dsrListReport/Dsr_Add";
+import HrDashboard from "./dashboard/HrDashboard";
 import HRM from "./hr/hrm";
 import EditEmpReference from "./pages/empReference/EditEmpReference";
 
