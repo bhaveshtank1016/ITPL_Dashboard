@@ -50,7 +50,7 @@ useEffect(() => {
   e.preventDefault();
   try {
     const token = localStorage.getItem("token");
-    await axios.put(`${API_URL}/update/${id}`, formData, {
+    await axios.put(`${API_URL}/ref/update/${id}`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

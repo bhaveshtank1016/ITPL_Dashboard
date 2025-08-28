@@ -105,14 +105,14 @@ function AddEmpReference() {
       const token = localStorage.getItem("token");
 
       if (id) {
-        await axios.put(`${API_URL}/update/${id}`, data, {
+        await axios.put(`${API_URL}/ref/update/${id}`, data, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         });
       } else {
-        await axios.post(`${API_URL}/addref`, data, {
+        await axios.post(`${API_URL}/ref/create`, data, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,

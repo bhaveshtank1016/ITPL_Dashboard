@@ -14,7 +14,7 @@ function EmpReferenceList() {
   const fetchReferences = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${API_URL}/ref`, {
+      const res = await axios.get(`${API_URL}/ref/show`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -35,7 +35,7 @@ function EmpReferenceList() {
   const handleDelete = async (id) => {
     try {
        const token = localStorage.getItem("token");
-      await axios.delete(`${API_URL}/delete/${id}`, {
+      await axios.delete(`${API_URL}/ref/delete/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -49,9 +49,17 @@ function EmpReferenceList() {
 
   return (
     <div className="p-6 bg-gradient-to-br from-blue-50 via-white to-blue-100 w-full min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-blue-800">
-        Employee References
-      </h1>
+     <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-blue-800">
+          Employee References
+        </h1>
+        <button
+          onClick={() => navigate("/addEmpReference")}   // <-- Navigate to Add Form Page
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md transition"
+        >
+          + Add Reference
+        </button>
+      </div>
 
       {loading ? (
         <p className="text-gray-500">Loading...</p>

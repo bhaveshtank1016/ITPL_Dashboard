@@ -40,7 +40,7 @@ app.use("/api/user", userRouter);
 app.use("/api", attendanceRouter);
 app.use("/api/auth", authRouter);
 app.use("/api", roleRoutes);
-app.use("/api", empRefRoutes);
+app.use("/api/ref", empRefRoutes);
 
 // Server Start
 const PORT = process.env.PORT || 8001;

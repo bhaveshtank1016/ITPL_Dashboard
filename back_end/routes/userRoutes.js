@@ -25,8 +25,9 @@ router.put("/update", protect, updateUserProfile);
 // Delete user profile (Protected)
 router.delete("/delete/:id", protect, deleteUserProfile);
 
-router.get("/managers", getManagers); 
-
-router.get("/:id", protect, getUserById); // <-- GET USER BY ID FOR EDIT
+// fetch only role manager
+router.get("/managers", getManagers);
+// fetch by user id
+router.get("/:id", protect, getUserById);
 
 module.exports = router;
