@@ -5,11 +5,16 @@ const {
   getRoles,
   deleteRole,
 } = require("../controller/roleController");
-const { protect, isAdmin, isHR } = require("../middleware/authMiddleware");
+const { protect, authorizeRoles } = require("../middleware/authMiddleware");
 
 // ✅ Only authenticated users can access these
-router.post("/addRole", protect, isAdmin, createRole);
-router.get("/rolesList", protect, isAdmin, getRoles);
-router.delete("/roleDelete/:id", protect, isAdmin, deleteRole);
+router.post("/addRole", protect, authorizeRoles("admin", "hr"), createRole);
+router.get("/rolesList", protect, authorizeRoles("admin", "hr"), getRoles);
+router.delete(
+  "/roleDelete/:id",
+  protect,
+  authorizeRoles("admin", "hr"),
+  deleteRole
+);
 
 module.exports = router;

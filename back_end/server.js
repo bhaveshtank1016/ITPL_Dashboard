@@ -32,7 +32,7 @@ app.use(cors(corsOptions));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
-app.use("/api", dsrRoute);
+app.use("/api/dsr", dsrRoute);
 app.use("/api", holidayRoute);
 app.use("/api", resignRouter);
 app.use("/api", leaveRouter);
@@ -40,7 +40,7 @@ app.use("/api/user", userRouter);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/auth", authRouter);
 app.use("/api", roleRoutes);
-app.use("/api", empRefRoutes);
+app.use("/api/ref", empRefRoutes);
 
 // Server Start
 const PORT = process.env.PORT || 8001;

@@ -32,6 +32,7 @@ import Role from "../src/pages/user/role/role";
 import AddDSRForm from "./pages/dsrListReport/Dsr_Add";
 import HrDashboard from "./dashboard/HrDashboard";
 import HRM from "./hr/hrm";
+import EditEmpReference from "./pages/empReference/EditEmpReference";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -71,8 +72,6 @@ function App() {
                     <Route path="/add_Dsr_Report" element={<Dsr_Add />} />
                     <Route path="/attendanceSheet" element={<AttendanceSheet />}/>
                     <Route path="/daily_Attendance" element={<Daily_Attendance />}/>
-                    <Route path="/addEmpReference" element={<AddEmpReference />}/>
-                    <Route path="/empReferenceListing" element={<EmpReferenceListing />}/>
                     <Route path="/addResign" element={<AddResign />} />
                     <Route path="/resignList" element={<ResignList />} />
                     <Route path="/info" element={<Profile_info />} />
@@ -80,7 +79,10 @@ function App() {
                     <Route path="/leaveList" element={<LeaveList />} />
                     <Route path="/role" element={<Role />} />
                     <Route path="/hrm" element={<HRM />} />
-                    <Route path="/hrdashboard" element ={<HrDashboard />}/>
+                    <Route path="/addEmpReference" element={<AddEmpReference />}/>
+                    <Route path="/empReferenceListing" element={<EmpReferenceListing />}/>
+                      <Route path="/edit/ref/:id" element={<AddEmpReference  />} />
+
                   </Routes>
                 </Layout>
               </ProtectedRoute>

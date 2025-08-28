@@ -1,7 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faLock,
-  faUserPlus,
   faUser,
   faTableColumns,
   faBars,
@@ -14,6 +12,7 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { MdOutlinePlaylistAdd } from "react-icons/md";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+``;
 import { FaRegFolder } from "react-icons/fa";
 import { IoMdList } from "react-icons/io";
 import { FaPersonChalkboard } from "react-icons/fa6";
@@ -32,14 +31,6 @@ const Sidebar = () => {
   const isAdmin = user?.role?.name?.toLowerCase() === "admin";
   const isHR = user?.role?.name?.toLowerCase() === "hr";
   const isAdminOrHR = isAdmin || isHR;
-
-  // Prepare resign links conditionally
-  const resignLinks = [
-    { to: "/addEmpReference", label: "Add Emp Reference" },
-    { to: "/empReferenceListing", label: "Emp Reference Listing" },
-    ...(!isAdmin ? [{ to: "/addResign", label: "Add Resign" }] : []), // Show "Add Resign" only if NOT admin
-    { to: "/resignList", label: "Resign Listing" },
-  ];
 
   const toggleLeaveMenu = () => setOpenLeaveMenu((prev) => !prev);
   const toggleMenu = () => setOpenResignMenu((prev) => !prev);
@@ -116,7 +107,7 @@ const Sidebar = () => {
           {isAdminOrHR && (
             <SidebarLink
               to="/users"
-              icon={<FaUsers  size={20}/>}
+              icon={<FaUsers size={20} />}
               label="Users"
               current={location.pathname}
               expanded={expanded}
@@ -183,7 +174,18 @@ const Sidebar = () => {
             toggle={toggleMenu}
             icon={<FaRegFolder size={19} />}
             title="E-Resign/Ref"
-            links={resignLinks}
+            links={[
+              ...(isHR
+                ? [
+                    {
+                      to: "/empReferenceListing",
+                      label: "Emp Reference Listing",
+                    },
+                  ]
+                : []),
+              { to: "/addResign", label: "Add Resign" },
+              { to: "/resignList", label: "Resign Listing" },
+            ]}
           />
         </div>
       </div>

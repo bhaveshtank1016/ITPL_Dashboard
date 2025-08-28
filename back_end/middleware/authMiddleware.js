@@ -1,10 +1,9 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/user"); // ✅ Make sure path is correct
+const User = require("../models/user");
 
-// Protect routes (checks JWT and populates user + role)
+// ✅ Protect middleware: verify JWT and attach user
 const protect = async (req, res, next) => {
   let token;
-
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
@@ -13,9 +12,8 @@ const protect = async (req, res, next) => {
       token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // ✅ Populate role.name directly
       const user = await User.findById(decoded.id)
-        .populate("role", "name") // Only fetch the name from role
+        .populate("role", "name") // only role.name
         .select("-password");
 
       if (!user) {
@@ -25,25 +23,29 @@ const protect = async (req, res, next) => {
       req.user = user;
       return next();
     } catch (error) {
-      console.error("JWT Error:", error.message);
+      if (error.name === "TokenExpiredError") {
+        return res.status(401).json({ message: "Token expired" });
+      }
       return res.status(401).json({ message: "Invalid or expired token" });
     }
   }
-
   return res.status(401).json({ message: "No token provided" });
 };
 
-// Check admin role
-const isAdmin = (req, res, next) => {
-  if (
-    !req.user ||
-    !req.user.role ||
-    !req.user.role.name ||
-    req.user.role.name.toLowerCase() !== "admin"
-  ) {
-    return res.status(403).json({ message: "Access denied. Admins only." });
-  }
-  next();
+// ✅ Single reusable role authorization middleware
+const authorizeRoles = (...allowedRoles) => {
+  return (req, res, next) => {
+    const role = req.user?.role?.name?.toLowerCase();
+    console.log("User Role:", role); // 👈 Debug here
+    if (!role || !allowedRoles.map((r) => r.toLowerCase()).includes(role)) {
+      return res
+        .status(403)
+        .json({
+          message: `Access denied. Allowed roles: ${allowedRoles.join(", ")}`,
+        });
+    }
+    next();
+  };
 };
 
-module.exports = { protect, isAdmin };
+module.exports = { protect, authorizeRoles };
