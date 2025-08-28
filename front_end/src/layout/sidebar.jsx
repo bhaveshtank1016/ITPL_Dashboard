@@ -1,7 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faLock,
-  faUserPlus,
   faUser,
   faTableColumns,
   faBars,
