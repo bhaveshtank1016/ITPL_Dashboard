@@ -11,10 +11,9 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Pages
 import Sign_in from "./auth/sign_in";
-import ProfileForm from "./pages/user/profile/profile";
 import UserPage from "./pages/user/userPage";
 import Layout from "./layout/layout";
-import Dashboard from "./dashboard/Dashboard"; // updated import
+import Dashboard from "./dashboard/Dashboard";
 import Profile_info from "./pages/user/profile/profile_infos";
 import DSR_List from "./pages/dsrListReport/DSR_List";
 import Dsr_Add from "./pages/dsrListReport/Dsr_Add";
@@ -30,8 +29,8 @@ import LeaveList from "./pages/leave/LeaveList";
 import AddUserPage from "./pages/user/AddUserPage";
 import AddUserForm from "./pages/user/AddUserForm";
 import Role from "../src/pages/user/role/role";
-import AddDSRForm from "./pages/dsrListReport/Dsr_Add";
 import HRM from "./hr/hrm";
+import EditEmpReference from "./pages/empReference/EditEmpReference";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -59,7 +58,6 @@ function App() {
                 <Layout>
                   <Routes>
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/profile" element={<ProfileForm />} />
                     <Route path="/users" element={<UserPage />} />
                     <Route path="/add-user" element={<AddUserForm />} />
                     <Route path="/user/:id?" element={<AddUserPage />} />
@@ -72,8 +70,6 @@ function App() {
                     <Route path="/add_Dsr_Report" element={<Dsr_Add />} />
                     <Route path="/attendanceSheet" element={<AttendanceSheet />}/>
                     <Route path="/daily_Attendance" element={<Daily_Attendance />}/>
-                    <Route path="/addEmpReference" element={<AddEmpReference />}/>
-                    <Route path="/empReferenceListing" element={<EmpReferenceListing />}/>
                     <Route path="/addResign" element={<AddResign />} />
                     <Route path="/resignList" element={<ResignList />} />
                     <Route path="/info" element={<Profile_info />} />
@@ -81,6 +77,9 @@ function App() {
                     <Route path="/leaveList" element={<LeaveList />} />
                     <Route path="/role" element={<Role />} />
                     <Route path="/hrm" element={<HRM />} />
+                    <Route path="/addEmpReference" element={<AddEmpReference />}/>
+                    <Route path="/empReferenceListing" element={<EmpReferenceListing />}/>
+                      <Route path="/edit/ref/:id" element={<AddEmpReference  />} />
 
                   </Routes>
                 </Layout>

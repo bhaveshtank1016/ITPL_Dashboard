@@ -3,12 +3,16 @@ const { addDsr, getDsr, deleteDsr, updateDsr, getDsrById } = require("../control
 const {protect} = require("../middleware/authMiddleware");
 
 const router = express.Router();
-
-router.post("/dsr", protect, addDsr);
-router.get("/dsr", protect, getDsr);
-router.delete("/dsr/:id", protect, deleteDsr);
-router.put("/dsr/:id", protect, updateDsr);
-router.get("/dsr/:id",protect, getDsrById);
+// Add new dsr (Protected)
+router.post("/create", protect, addDsr);
+// NEW: Get all 
+router.get("/", protect, getDsr);
+// get single dsr 
+router.get("/:id",protect, getDsrById);
+// delete dsr 
+router.delete("/delete/:id", protect, deleteDsr);
+// update dsr 
+router.put("/update/:id", protect, updateDsr);
 
 
 

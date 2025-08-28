@@ -6,7 +6,10 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Header = () => {
   const location = useLocation();
-  const pathnames = location.pathname.split("/").filter(Boolean);
+const pathnames = location.pathname
+  .split("/")
+  .filter(Boolean)
+  .filter(name => !/^[a-f\d]{24}$/i.test(name)); //will automatically remove any MongoDB ObjectId
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -42,7 +45,7 @@ const Header = () => {
             const displayName = name.charAt(0).toUpperCase() + name.slice(1);
             return (
               <span key={index} className="text-white">
-                {displayName}
+               {displayName}
               </span>
             );
           })}

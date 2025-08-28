@@ -5,7 +5,7 @@ const {
   getRoles,
   deleteRole,
 } = require("../controller/roleController");
-const { protect, isAdmin, isHR } = require("../middleware/authMiddleware");
+const { protect, isAdmin } = require("../middleware/authMiddleware");
 
 // ✅ Only authenticated users can access these
 router.post("/addRole", protect, isAdmin, createRole);

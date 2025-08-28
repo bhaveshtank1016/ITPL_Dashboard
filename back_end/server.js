@@ -2,17 +2,18 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db");
+const path = require("path");
 
 // Route imports
 const dsrRoute = require("./routes/dsr-router");
 const holidayRoute = require("./routes/holiday-router");
 const resignRouter = require("./routes/resign-router");
-const leaveRouter = require("./routes/leave-router")
+const leaveRouter = require("./routes/leave-router");
 const userRouter = require("./routes/userRoutes");
 const attendanceRouter = require("./routes/attendanceRoutes");
 const authRouter = require("./routes/authRoutes");
 const roleRoutes = require("./routes/roleRoute");
-
+const empRefRoutes = require("./routes/employeeReferenceRouter");
 
 const app = express();
 dotenv.config();
@@ -28,9 +29,10 @@ const corsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
-app.use("/api", dsrRoute);
+app.use("/api/dsr", dsrRoute);
 app.use("/api", holidayRoute);
 app.use("/api", resignRouter);
 app.use("/api", leaveRouter);
@@ -38,7 +40,7 @@ app.use("/api/user", userRouter);
 app.use("/api", attendanceRouter);
 app.use("/api/auth", authRouter);
 app.use("/api", roleRoutes);
-
+app.use("/api", empRefRoutes);
 
 // Server Start
 const PORT = process.env.PORT || 8001;
