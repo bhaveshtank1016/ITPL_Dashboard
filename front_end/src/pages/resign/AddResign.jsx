@@ -57,7 +57,7 @@ function AddResign() {
     if (!validateForm()) return;
 
     try {
-      await axios.post(`${API_URL}resign/create`, resign, {
+      await axios.post(`${API_URL}/resign/create`, resign, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

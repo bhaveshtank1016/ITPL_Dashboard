@@ -10,7 +10,7 @@ export default function Daily_Attendance() {
 
   const fetchAttendance = async () => {
     try {
-      const res = await axios.get(`${API_URL}attendance?userId=${userId}`, {
+      const res = await axios.get(`${API_URL}/attendance?userId=${userId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -48,7 +48,7 @@ export default function Daily_Attendance() {
   const handleCheckIn = async () => {
     try {
       const res = await axios.post(
-        `${API_URL}attendance/checkin`,
+        `${API_URL}/attendance/checkin`,
         { userId }, // backend can ignore body and use token; safe to send
         {
           headers: {
@@ -66,7 +66,7 @@ export default function Daily_Attendance() {
   const handleCheckOut = async () => {
     try {
       const res = await axios.post(
-        `${API_URL}attendance/checkout`,
+        `${API_URL}/attendance/checkout`,
         {},
         {
           headers: {
@@ -103,7 +103,7 @@ export default function Daily_Attendance() {
   };
 
   return (
-    <div className="min-h-screen text-white rounded-md p-5 bg-black">
+   <div className="min-h-screen text-white rounded-md p-5 bg-gradient-to-r from-gray-900 to-blue-900">
       <h2 className="text-2xl font-bold mb-4">Employee Attendance Records</h2>
 
       <div className="overflow-auto">
@@ -167,9 +167,7 @@ export default function Daily_Attendance() {
         </table>
       </div>
 
-      <div className="text-center text-xs text-gray-500 mt-6">
-        © Copyright © PineSucceed Pvt. Ltd 2025
-      </div>
+     
     </div>
   );
 }

@@ -18,7 +18,7 @@ function ResignList() {
   const fetchResign = async () => {
     try {
       const res = await fetch(
-        `${API_URL}resign/list?page=${page}`,
+        `${API_URL}/resign/list?page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -40,7 +40,7 @@ function ResignList() {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const res = await fetch(`${API_URL}resign/status/${id}`, {
+      const res = await fetch(`${API_URL}/resign/status/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -16,9 +16,11 @@ const calculateStatus = (check_in, check_out) => {
   return "Absent";
 };
 
+
 // ⏰ Check-In
+
 exports.checkIn = async (req, res) => {
-  const { userId } = req.user; // from token middleware
+  const userId = req.user.id; 
   const now = new Date();
   const dateOnly = new Date(now.toDateString());
   const timeString = now.toTimeString().slice(0, 5); // HH:mm
@@ -51,7 +53,8 @@ exports.checkIn = async (req, res) => {
       data: newRecord
     });
   } catch (error) {
-    res.status(500).json({ error: "Failed to check in" });
+    console.error(error);
+    res.status(500).json({ error: error.message || "Failed to check in" });
   }
 };
 
@@ -98,7 +101,9 @@ exports.getAttendance = async (req, res) => {
       attendance_status: calculateStatus(record.check_in, record.check_out),
     }));
 
-    res.status(200).json({ message: "Fetched attendance", data: dataWithStatus });
+    res
+      .status(200)
+      .json({ message: "Fetched attendance", data: dataWithStatus });
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch attendance" });
   }

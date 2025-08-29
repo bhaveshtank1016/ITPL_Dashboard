@@ -16,7 +16,7 @@ function LeaveList() {
 
   const fetchLeaves = async () => {
     try {
-      const res = await fetch(`${API_URL}/leave/show?page=${page}`, {
+      const res = await fetch(`${API_URL}/show?page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
