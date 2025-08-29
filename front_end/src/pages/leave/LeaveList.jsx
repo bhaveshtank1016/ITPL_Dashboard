@@ -16,7 +16,7 @@ function LeaveList() {
 
   const fetchLeaves = async () => {
     try {
-      const res = await fetch(`${API_URL}leave?page=${page}`, {
+      const res = await fetch(`${API_URL}/leave/show?page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -36,7 +36,7 @@ function LeaveList() {
 
 const handleStatusChange = async (id, newStatus) => {
   try {
-    const res = await fetch(`${API_URL}leave/${id}/status`, {
+    const res = await fetch(`${API_URL}/leave/update/${id}/status`, {
       method: "PUT", // ✅ matches backend
       headers: {
         "Content-Type": "application/json",

@@ -10,7 +10,7 @@ function EditForm({ formData, setFormData, editId, setEditId, setLeave }) {
 
   const handleUpdate = async () => {
     try {
-      const res = await axios.put(`http://localhost:8001/api/leave/${editId}`, formData);
+      const res = await axios.put(`${API_URL}/leave/${editId}`, formData);
       const updated = res.data;
       setLeave((prev) =>
         prev.map((item) => (item._id === editId ? updated : item))

@@ -96,13 +96,7 @@ const Sidebar = () => {
             expanded={expanded}
           />
           )}
-          {/* <SidebarLink
-            to="/dashboard"
-            icon={<FontAwesomeIcon icon={faTableColumns} />}
-            label="Dashboard"
-            current={location.pathname}
-            expanded={expanded}
-          /> */}
+        
 
           {isAdminOrHR && (
             <SidebarLink
@@ -114,7 +108,7 @@ const Sidebar = () => {
             />
           )}
 
-          {isAdmin &&(
+          {isAdminOrHR &&(
             <SidebarLink
               to="/role"
               icon={<FontAwesomeIcon icon={faUser} />}

@@ -67,7 +67,7 @@ function AddLeave() {
     if (!validateForm()) return;
 
     try {
-      await axios.post(`${API_URL}leave`, leave, {
+      await axios.post(`${API_URL}/leave/create`, leave, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
