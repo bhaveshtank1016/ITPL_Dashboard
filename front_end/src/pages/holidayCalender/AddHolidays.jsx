@@ -25,7 +25,10 @@ function AddHolidays({ onClose, fetchData, editData, isEdit }) {
     e.preventDefault();
     try {
       if (isEdit) {
-        await axios.put(`http://localhost:8001/api/holidays/${editData._id}`, formData);
+        await axios.put(
+          `http://localhost:8001/api/holidays/${editData._id}`,
+          formData
+        );
         toast.success("Holiday updated successfully!");
       } else {
         await axios.post("http://localhost:8001/api/holidays", formData);
@@ -52,17 +55,6 @@ function AddHolidays({ onClose, fetchData, editData, isEdit }) {
             {isEdit ? "Edit Holiday" : "Add Holiday"}
           </h1>
           <form className="text-center" onSubmit={handleSubmit}>
-            <div>
-              <label>SrNo:</label>
-              <input
-                type="text"
-                className="border border-gray-700 bg-neutral-800 px-3 py-1 ml-2 mt-3 text-white rounded-lg"
-                name="srno"
-                onChange={handleChange}
-                value={formData.srno}
-                required
-              />
-            </div>
             <div>
               <label>Holiday Name:</label>
               <input

@@ -1,4 +1,3 @@
-// EditForm.jsx
 import React from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -10,7 +9,7 @@ function EditForm({ formData, setFormData, editId, setEditId, setLeave }) {
 
   const handleUpdate = async () => {
     try {
-      const res = await axios.put(`${API_URL}/leave/${editId}`, formData);
+      const res = await axios.put(`${API_URL}/update/${editId}`, formData);
       const updated = res.data;
       setLeave((prev) =>
         prev.map((item) => (item._id === editId ? updated : item))

@@ -15,13 +15,13 @@ const getAllHolidays = async (req, res) => {
 // POST a new holiday
 const addHoliday = async (req, res) => {
   try {
-    const { srno, name, date, weekday } = req.body;
+    const { name, date, weekday } = req.body;
 
-    if (!srno || !name || !date || !weekday) {
+    if (!name || !date || !weekday) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const newHoliday = new Holiday({ srno, name, date, weekday });
+    const newHoliday = new Holiday({ name, date, weekday });
     await newHoliday.save();
 
     res
@@ -50,6 +50,5 @@ const update = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 module.exports = { getAllHolidays, addHoliday, update };

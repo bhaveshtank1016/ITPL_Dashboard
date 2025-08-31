@@ -89,7 +89,7 @@ const Sidebar = () => {
           
           {user && user.role && user.role.name?.toLowerCase() === "hr" && (
           <SidebarLink
-            to="/hrdashboard"
+            to="/dashboard"
             icon={<FontAwesomeIcon icon={faTableColumns} />}
             label="Dashboard"
             current={location.pathname}
