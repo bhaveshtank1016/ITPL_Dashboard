@@ -4,19 +4,18 @@ const nodemailer = require("nodemailer");
 // Add DSR
 const addDsr = async (req, res) => {
   try {
-    const { userId, email, date, attachment, projects } = req.body;
+    const { userId, email, attachment, projects } = req.body;
 
-    if (!userId || !email || !date) {
+    if (!userId || !email) {
       return res
         .status(400)
-        .json({ message: "User ID, Email and Date are required" });
+        .json({ message: "User ID, Email  are required" });
     }
 
     // Create DSR
     const newDsr = new Dsr({
       userId,
       email,
-      date,
       attachment,
       projects,
     });
@@ -65,11 +64,11 @@ const addDsr = async (req, res) => {
       to: email,
       subject: "DSR Form Submitted",
       html: `
-        <h3>Hello,</h3>
-        <p>Your DSR form has been submitted successfully!</p>
-        <p><strong>Date:</strong> ${date}</p>
-        ${generateProjectHTML(projects)}
-      `,
+  <h3>Hello,</h3>
+  <p>Your DSR form has been submitted successfully!</p>
+  <p><strong>Date:</strong> ${savedDsr.date.toISOString().split("T")[0]}</p>
+  ${generateProjectHTML(projects)}
+`,
     };
 
     await transporter.sendMail(mailOptions);
@@ -118,7 +117,6 @@ const getDsr = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
- 
 
 // Delete DSR
 const deleteDsr = async (req, res) => {
@@ -162,7 +160,6 @@ const updateDsr = async (req, res) => {
     });
   }
 };
-
 
 module.exports = {
   addDsr,

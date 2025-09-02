@@ -87,7 +87,7 @@ const Sidebar = () => {
         <div className="mt-4 flex flex-col pl-6 px-2">
 
           
-          {user && user.role && user.role.name?.toLowerCase() === "hr" && (
+         
           <SidebarLink
             to="/dashboard"
             icon={<FontAwesomeIcon icon={faTableColumns} />}
@@ -95,7 +95,7 @@ const Sidebar = () => {
             current={location.pathname}
             expanded={expanded}
           />
-          )}
+        
         
 
           {isAdminOrHR && (

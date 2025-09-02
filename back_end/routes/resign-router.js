@@ -13,5 +13,4 @@ router.put("/resign/status/:id", protect, updateResignStatus);
 
 
 
-
 module.exports = router;

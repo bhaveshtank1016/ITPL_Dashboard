@@ -1,31 +1,46 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../config";
-
 
 function AddResign() {
   const navigate = useNavigate();
 
   const [resign, setResign] = useState({
-    from: "",
+    from: "", // Dropdown value
     subject: "",
     date: "",
     message: "",
   });
+
+  const [hrs, setHrs] = useState([]); // HR users for dropdown
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios
+        .get(`${API_URL}/user/hr`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          console.log("HR API response:", res.data); // array of HRs
+          setHrs(res.data); // direct set karo
+        })
+        .catch((err) => {
+          console.error("Failed to fetch users:", err);
+          toast.error("Failed to load HR users");
+        });
+    }
+  }, []);
 
   const handleChange = (e) => {
     setResign({ ...resign, [e.target.name]: e.target.value });
   };
 
   const validateForm = () => {
-    if (!resign.from.trim()) {
-      toast.error("From is required");
-      return false;
-    }
-    if (resign.from.length < 3) {
-      toast.error("From must be at least 3 characters");
+    if (!resign.from) {
+      toast.error("HR selection is required");
       return false;
     }
     if (!resign.subject.trim()) {
@@ -64,7 +79,7 @@ function AddResign() {
       });
 
       toast.success("Resign added successfully!");
-      navigate("/resignList"); // redirect to list
+      navigate("/resignList");
     } catch (error) {
       console.log("Error adding resign:", error);
       toast.error("Failed to add resign.");
@@ -76,18 +91,26 @@ function AddResign() {
       <h2 className="text-xl mb-10 pb-3 rounded-md sm:text-2xl font-semibold">
         Resign Section
       </h2>
-      <div >
+      <div>
         <form onSubmit={handleSubmit}>
+          {/* HR Dropdown */}
           <div>
-            <label className="text-xl font-bold">From</label>
+            <label className="text-xl font-bold">Select HR</label>
             <br />
-            <input
-              type="text"
+            <select
               name="from"
               onChange={handleChange}
               value={resign.from}
               className="border mt-4 rounded-md bg-neutral-600 w-9/12 h-11"
-            />
+              required
+            >
+              <option value="">Select HR</option>
+              {hrs.map((hr) => (
+                <option key={hr._id} value={hr._id}>
+                  {hr.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="mt-4">
@@ -124,10 +147,15 @@ function AddResign() {
               className="border mt-4 rounded-md h-30 bg-neutral-600 w-9/12"
             />
           </div>
-          <div className="flex">
-          <input type="checkbox"/> <p className=" pl-2">I acknowledge that I have read the company's resignation policy and that this submission is final. </p></div>
-          <br/>
-          
+
+          <div className="flex mt-4">
+            <input type="checkbox" />
+            <p className="pl-2">
+              I acknowledge that I have read the company's resignation policy
+              and that this submission is final.
+            </p>
+          </div>
+
           <button
             type="submit"
             className="text-xl px-4 py-2 bg-blue-700 text-white mt-5 rounded-md"

@@ -9,6 +9,7 @@ const {
   getAllUsers,
   getUserById,
   getManagers,
+  gethr,
 } = require("../controller/userController");
 const { protect } = require("../middleware/authMiddleware");
 // ✅ NEW: Get all users
@@ -27,6 +28,7 @@ router.delete("/delete/:id", protect, deleteUserProfile);
 
 // fetch only role manager
 router.get("/managers", getManagers);
+router.get("/hr", gethr);
 // fetch by user id
 router.get("/:id", protect, getUserById);
 

@@ -234,6 +234,26 @@ const getManagers = async (req, res) => {
 };
 
 
+// ✅ Get users with 'hr' role
+const gethr = async (req, res) => {
+  try {
+    const hrRole = await Role.findOne({ name: "hr" });
+
+    if (!hrRole) {
+      return res.status(404).json({ message: "HR role not found" });
+    }
+
+    const hr = await User.find({ role: hrRole._id }).select("name email");
+    res.status(200).json(hr);
+  } catch (error) {
+    console.error("Error fetching hr:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
+
+
 module.exports = {
   getUserProfile,
   createUser,
@@ -242,4 +262,5 @@ module.exports = {
   getAllUsers,
   getUserById,
   getManagers,
+  gethr,
 };
