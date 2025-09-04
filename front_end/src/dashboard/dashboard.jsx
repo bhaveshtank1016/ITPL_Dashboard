@@ -12,6 +12,7 @@ const Dashboard = () => {
   if (role === "admin") return <AdminDashboard />;
   if (role === "hr") return <HrDashboard />;
   if (role === "employee") return <EmployeeDashboard />;
+  // if (role === "manager") return <manager />;
 
   return <div>Access Denied</div>;
 };

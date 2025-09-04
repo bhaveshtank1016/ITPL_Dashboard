@@ -87,15 +87,15 @@ const Sidebar = () => {
         <div className="mt-4 flex flex-col pl-6 px-2">
 
           
-          {user && user.role && user.role.name?.toLowerCase() === "hr" && (
+         
           <SidebarLink
-            to="/hrdashboard"
+            to="/dashboard"
             icon={<FontAwesomeIcon icon={faTableColumns} />}
             label="Dashboard"
             current={location.pathname}
             expanded={expanded}
           />
-          )}
+        
         
 
           {isAdminOrHR && (

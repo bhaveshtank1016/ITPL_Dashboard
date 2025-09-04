@@ -1,5 +1,4 @@
 const express = require("express");
-const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const path = require("path");
@@ -14,9 +13,10 @@ const attendanceRoutes = require("./routes/attendanceRoutes");
 const authRouter = require("./routes/authRoutes");
 const roleRoutes = require("./routes/roleRoute");
 const empRefRoutes = require("./routes/employeeReferenceRouter");
+const dotenv = require("dotenv");
 
-const app = express();
 dotenv.config();
+const app = express();
 connectDB();
 
 // Body parser

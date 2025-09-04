@@ -6,6 +6,15 @@ const Holiday = () => {
   const [showModel, setShowModel] = useState(false);
   const [editData, setEditData] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // ✅ Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const holidaysPerPage = 10; // Fixed 10 per page
+
+  // ✅ Get role name from user object in localStorage
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const userRole = (user?.role?.name || "").toLowerCase();
 
   const fetchHolidays = async () => {
     try {
@@ -27,83 +36,180 @@ const Holiday = () => {
     fetchHolidays();
   }, []);
 
-  return (
-    <div className="sm:p-6 min-h-screen rounded-md bg-black text-gray-200">
-      <h2 className="text-xl pb-3 rounded-md sm:text-2xl font-semibold mb-4">
-        All Official Holidays
-      </h2>
+  // ✅ Filter holidays by search term
+  const filteredHolidays = holidays.filter(
+    (holiday) =>
+      holiday.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      holiday.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      holiday.weekday.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-      <div className="flex sm:text-base rounded-md justify-between p-5 bg-gradient-to-r from-neutral-900 to-blue-900 ">
-        <input
-          className="border rounded-md mb-5 px-3 bg-neutral-800 h-13 font-bold text-xl py-2"
-          type="text"
-          value={"2025"}
-          readOnly
-        />
-        <div className="flex flex-col">
-          <button
-            className="border rounded-md bg-neutral-800 mb-5 px-3 font-bold text-start text-xl py-2"
-            type="button"
-            onClick={() => {
-              setIsEdit(false);
-              setEditData(null);
-              setShowModel(true);
-            }}
-          >
-            Add Holiday
-          </button>
+  // ✅ Pagination logic
+  const indexOfLastHoliday = currentPage * holidaysPerPage;
+  const indexOfFirstHoliday = indexOfLastHoliday - holidaysPerPage;
+  const currentHolidays = filteredHolidays.slice(
+    indexOfFirstHoliday,
+    indexOfLastHoliday
+  );
+
+  const totalPages = Math.ceil(filteredHolidays.length / holidaysPerPage);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-neutral-950 to-neutral-900 text-gray-200 p-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+        <h2 className="text-2xl font-bold tracking-wide">📅 Official Holidays</h2>
+
+        <div className="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0">
+          {/* Year Display */}
           <input
-            className="border rounded-md bg-neutral-800 mb-5 px-3 font-bold text-xl py-2"
+            className="border border-neutral-700 rounded-lg px-4 py-2 bg-neutral-800/80 text-gray-200 font-semibold w-28 text-center"
             type="text"
-            value={"Search"}
+            value={"2025"}
             readOnly
           />
-          {showModel && (
-            <AddHolidays
-              onClose={() => {
-                setShowModel(false);
+
+          {/* Add Button (only for admin/hr) */}
+          {(userRole === "admin" || userRole === "hr") && (
+            <button
+              className="bg-blue-600 hover:bg-blue-700 transition px-5 py-2 rounded-lg font-semibold shadow-md"
+              onClick={() => {
                 setIsEdit(false);
                 setEditData(null);
+                setShowModel(true);
               }}
-              fetchData={fetchHolidays}
-              editData={editData}
-              isEdit={isEdit}
-            />
+            >
+              ➕ Add Holiday
+            </button>
           )}
+
+          {/* Search */}
+          <input
+            className="border border-neutral-700 rounded-lg px-4 py-2 bg-neutral-800/80 text-gray-200 font-medium placeholder-gray-400 w-60"
+            type="text"
+            placeholder="🔍 Search holidays..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+          />
         </div>
       </div>
 
-      <div className="overflow-x-auto p-5 bg-gradient-to-r from-neutral-900 to-blue-900">
-        <table className="min-w-full border rounded-md border-gray-300 text-md">
-          <thead className="bg-neutral-950">
-            <tr className="text-center">
-              <th className="border px-6 py-4">Sr.No</th>
-              <th className="border px-6 py-4">Holiday Name</th>
-              <th className="border px-6 py-4">Date</th>
-              <th className="border px-6 py-4">Weekday</th>
-              <th className="border px-6 py-4">Action</th>
+      {/* Add / Edit Modal */}
+      {showModel && (
+        <AddHolidays
+          onClose={() => {
+            setShowModel(false);
+            setIsEdit(false);
+            setEditData(null);
+          }}
+          fetchData={fetchHolidays}
+          editData={editData}
+          isEdit={isEdit}
+        />
+      )}
+
+      {/* Table */}
+      <div className="bg-neutral-900/60 rounded-xl shadow-xl overflow-x-auto">
+        <table className="w-full border-collapse text-left">
+          <thead className="bg-neutral-800/80 text-gray-300">
+            <tr className="text-center text-sm">
+              <th className="px-6 py-4 border-b border-neutral-700">Sr.No</th>
+              <th className="px-6 py-4 border-b border-neutral-700">Holiday</th>
+              <th className="px-6 py-4 border-b border-neutral-700">Date</th>
+              <th className="px-6 py-4 border-b border-neutral-700">Weekday</th>
+              {(userRole === "admin" || userRole === "hr") && (
+                <th className="px-6 py-4 border-b border-neutral-700">Action</th>
+              )}
             </tr>
           </thead>
           <tbody>
-            {holidays.map((holiday, index) => (
-              <tr className="hover:bg-gray-500 text-center" key={holiday._id}>
-                <td className="border px-4 py-2">{index + 1}</td>
-                <td className="border px-4 py-2">{holiday.name}</td>
-                <td className="border px-4 py-2">{holiday.date}</td>
-                <td className="border px-4 py-2">{holiday.weekday}</td>
-                <td className="border px-4 py-2">
-                  <button
-                    className="px-2 py-1 bg-blue-600 rounded"
-                    onClick={() => handleEdit(holiday)}
-                  >
-                    Edit
-                  </button>
+            {currentHolidays.length > 0 ? (
+              currentHolidays.map((holiday, index) => (
+                <tr
+                  key={holiday._id}
+                  className="text-center hover:bg-neutral-800/80 transition"
+                >
+                  <td className="px-6 py-3 border-b border-neutral-700">
+                    {indexOfFirstHoliday + index + 1}
+                  </td>
+                  <td className="px-6 py-3 border-b border-neutral-700 font-medium">
+                    {holiday.name}
+                  </td>
+                  <td className="px-6 py-3 border-b border-neutral-700">
+                    {holiday.date}
+                  </td>
+                  <td className="px-6 py-3 border-b border-neutral-700">
+                    {holiday.weekday}
+                  </td>
+                  {(userRole === "admin" || userRole === "hr") && (
+                    <td className="px-6 py-3 border-b border-neutral-700">
+                      <button
+                        className="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-semibold"
+                        onClick={() => handleEdit(holiday)}
+                      >
+                        ✏️ Edit
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="5"
+                  className="text-center py-6 text-gray-400 font-medium"
+                >
+                  🚫 No holidays found
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
+
+      {/* ✅ Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-6 gap-2 flex-wrap">
+          <button
+            className="px-3 py-1 bg-neutral-800 hover:bg-neutral-700 rounded-lg disabled:opacity-40"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            ◀ Prev
+          </button>
+
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index}
+              className={`px-3 py-1 rounded-lg font-medium ${
+                currentPage === index + 1
+                  ? "bg-blue-600 text-white"
+                  : "bg-neutral-800 hover:bg-neutral-700"
+              }`}
+              onClick={() => handlePageChange(index + 1)}
+            >
+              {index + 1}
+            </button>
+          ))}
+
+          <button
+            className="px-3 py-1 bg-neutral-800 hover:bg-neutral-700 rounded-lg disabled:opacity-40"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next ▶
+          </button>
+        </div>
+      )}
     </div>
   );
 };

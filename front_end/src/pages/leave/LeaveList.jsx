@@ -36,7 +36,7 @@ function LeaveList() {
 
 const handleStatusChange = async (id, newStatus) => {
   try {
-    const res = await fetch(`${API_URL}/leave/update/${id}/status`, {
+    const res = await fetch(`${API_URL}/update/${id}/status`, {
       method: "PUT", // ✅ matches backend
       headers: {
         "Content-Type": "application/json",

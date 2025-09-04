@@ -10,11 +10,9 @@ export default function AddDSRForm() {
   const navigate = useNavigate();
   const isEdit = Boolean(id);
   const [managers, setManagers] = useState([]);
-  const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
   const [form, setForm] = useState({
     name: "",
     email: "",
-    date: today,  // <-- Set current date by default
     attachment: "",
   });
 
@@ -136,8 +134,8 @@ export default function AddDSRForm() {
         onSubmit={handleSubmit}
         className="bg-gradient-to-r from-neutral-900 to-blue-900 rounded-lg p-10 space-y-6 w-full mx-auto"
       >
-        {/* Email & Date */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Email  */}
+        
           <div>
             <label className="block mb-1 text-sm font-semibold">
               Manager Name
@@ -156,18 +154,7 @@ export default function AddDSRForm() {
               ))}
             </select>
           </div>
-
-          <div>
-            <label className="block mb-1 text-sm font-semibold">Date</label>
-            <input
-              type="date"
-              className="w-full h-12 px-4 py-2 rounded-md border bg-neutral-800 text-white border-white"
-              value={form.date}
-              onChange={(e) => setForm({ ...form, date: e.target.value })}
-              required
-            />
-          </div>
-        </div>
+      
 
         {/* Attachment */}
         <div>

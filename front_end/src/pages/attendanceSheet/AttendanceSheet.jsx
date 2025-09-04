@@ -47,21 +47,21 @@ const AttendanceList = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-gray-900 to-blue-900 text-gray-200 p-6">
-      <h2 className="text-3xl font-bold mb-6 text-center text-gray-200">
+    <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-black text-white p-6">
+      <h2 className="text-3xl font-bold mb-6  text-gray-200">
         Attendance List
       </h2>
 
-      <div className="overflow-x-auto shadow-xl rounded-2xl border border-gray-700">
-        <table className="min-w-full border-gray-300 bg-gray-800 border rounded-lg">
-          <thead className="bg-gray-700 text-gray-300 uppercase text-sm">
+      <div className="overflow-x-auto shadow-xl rounded-lg border border-gray-700">
+        <table className="min-w-full border-gray-300  border rounded-lg">
+          <thead className="bg-neutral-800/80 text-gray-300 uppercase text-sm">
             <tr>
-              <th className="px-6 py-3 border border-gray-600">Date</th>
-              <th className="px-6 py-3 border border-gray-600">Day</th>
-              <th className="px-6 py-3 border border-gray-600">Check In</th>
-              <th className="px-6 py-3 border border-gray-600">Check Out</th>
-              <th className="px-6 py-3 border border-gray-600">Status</th>
-              <th className="px-6 py-3 border border-gray-600">Actions</th>
+              <th className="p-3">Date</th>
+              <th className="p-3">Day</th>
+              <th className="p-3">Check In</th>
+              <th className="p-3">Check Out</th>
+              <th className="p-3">Status</th>
+              <th className="p-3">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -69,7 +69,7 @@ const AttendanceList = () => {
               attendance.map((item) => (
                 <tr
                   key={item._id}
-                  className="text-center hover:bg-gray-700 transition-colors"
+                  className="border-t border-neutral-700 hover:bg-neutral-800/70 transition"
                 >
                   <td className="px-6 py-3 border border-gray-600">
                     {new Date(item.date).toLocaleDateString()}
@@ -112,7 +112,7 @@ const AttendanceList = () => {
               <tr>
                 <td
                   colSpan="6"
-                  className="px-6 py-6 text-center text-gray-400 border border-gray-600"
+                  className="px-6 py-6 text-center text-gray-200 border border-gray-600"
                 >
                   No attendance records found.
                 </td>
