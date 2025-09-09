@@ -13,16 +13,11 @@ export default function EmployeeDashboard() {
   const features = [
     { title: "DSR List", icon: Users, path: "/dsr_list" },
     {
-      title: " Attendance List",
-      icon: ClipboardCheck,
-      path: "/attendanceSheet",
+      title: " Attendance List",icon: ClipboardCheck,path: "/attendanceSheet",
     },
-    { title: "Add Users", icon: UserPlus, path: "/users" },
     { title: "Holiday List", icon: Calendar, path: "/holidayCalender" },
     {
-      title: "Attendance Management",
-      icon: Upload,
-      path: "/trainer/upload-material",
+      title: "Attendance Management",icon: Upload,path: "/daily_Attendance",
     },
   ];
   return (

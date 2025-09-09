@@ -13,6 +13,7 @@ function LeaveList() {
   const [totalPages, setTotalPages] = useState(1);
   const { user } = useAuth();
   const userRole = user?.role?.name?.toLowerCase();
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchLeaves = async () => {
     try {
@@ -34,196 +35,189 @@ function LeaveList() {
     fetchLeaves();
   }, [page]);
 
-const handleStatusChange = async (id, newStatus) => {
-  try {
-    const res = await fetch(`${API_URL}/update/${id}/status`, {
-      method: "PUT", // ✅ matches backend
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({ status: newStatus }),
-    });
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const res = await fetch(`${API_URL}/update/${id}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
 
-    const data = await res.json();
-    if (res.ok) {
-      toast.success(`Leave ${newStatus} successfully`);
-      fetchLeaves(); // refresh list after update
-    } else {
-      toast.error(data.msg || "Something went wrong");
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(`Leave ${newStatus} successfully`);
+        fetchLeaves();
+      } else {
+        toast.error(data.msg || "Something went wrong");
+      }
+    } catch (error) {
+      console.error("Failed to update status", error);
+      toast.error("Failed to update status");
     }
-  } catch (error) {
-    console.error("Failed to update status", error);
-    toast.error("Failed to update status");
-  }
-};
+  };
 
+  const filteredLeaves = leaveList.filter((item) => {
+    const search = searchTerm.toLowerCase();
+    return (
+      item.subject?.toLowerCase().includes(search) ||
+      item.user?.name?.toLowerCase().includes(search) ||
+      item.user?.role?.name?.toLowerCase().includes(search)
+    );
+  });
 
   return (
-    <div className="h-screen bg-black text-white p-5 rounded-md">
+    <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-black text-white p-6 rounded-xl shadow-lg">
       <ToastContainer position="top-right" autoClose={2000} />
-      <h2 className="text-xl mb-10 pb-3 rounded-md sm:text-2xl font-semibold">
+      <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-white mb-8">
         Leave Section
       </h2>
-
+      <div className="flex justify-between">
+        {" "}
+        <div className="flex justify-end mb-6 space-x-3">
+          <button className="px-4 py-2 flex items-center gap-2 bg-blue-700 hover:bg-blue-800 rounded-lg shadow-md transition">
+            <FaInbox /> Inbox
+          </button>
+          <button className="px-4 py-2 flex items-center gap-2 bg-blue-700 hover:bg-blue-800 rounded-lg shadow-md transition">
+            <LuSend /> Sent
+          </button>
+          <button className="px-4 py-2 flex items-center gap-2 bg-blue-700 hover:bg-blue-800 rounded-lg shadow-md transition">
+            <FaPen /> Compose
+          </button>
+        </div>
+        {/* Search */}
+        <div className="flex justify-end items-center mb-6">
+          <label className="font-semibold text-lg mr-3">Search</label>
+          <input
+            type="text"
+            value={searchTerm} // ✅ bind kiya
+            onChange={(e) => setSearchTerm(e.target.value)} // ✅ update
+            className="px-3 py-2 w-64 rounded-lg bg-neutral-800 text-white border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Search by subject or name..."
+          />
+        </div>
+      </div>
       {/* Top buttons */}
-      <div className="flex justify-end">
-        <button className="border mr-2 px-4 py-2 flex gap-3 items-center bg-blue-700 rounded-md">
-          <FaInbox /> Inbox
-        </button>
-        <button className="border mr-2 px-4 py-2 flex gap-3 items-center bg-blue-700 rounded-md">
-          <LuSend /> Sent
-        </button>
-        <button className="border px-4 py-2 flex gap-3 items-center bg-blue-700 rounded-md">
-          <FaPen /> Compose
-        </button>
-      </div>
-
-      {/* Search */}
-      <div className="flex justify-end mt-5">
-        <label className="font-bold text-xl mr-3">Search</label>
-        <input
-          type="text"
-          className="border h-10 rounded-md w-60 text-black px-2"
-          placeholder="Search by subject or from..."
-        />
-      </div>
 
       {/* Table */}
-      <div>
-        <table className="table-auto mt-10 w-full border-collapse border border-gray-300">
-          <thead>
-            <tr className="text-center border">
-              <th className="border border-gray-700 text-lg px-4 py-2">No.</th>
-              <th className="border border-gray-700 text-lg px-4 py-2">Name</th>
-              <th className="border border-gray-700 text-lg px-4 py-2">Role</th>
-
-              {/* Position column - only for Admin & HR */}
+      <div className="overflow-x-auto h-[80vh] rounded-lg shadow-lg">
+        <table className="min-w-full  bg-neutral-900/60 rounded-xl overflow-hidden">
+          <thead className="bg-neutral-800/80 uppercase text-gray-300">
+            <tr className="text-center text-sm font-semibold">
+              <th className="p-3">No.</th>
+              <th className="p-3">Name</th>
+              <th className="p-3">Role</th>
               {["admin", "hr"].includes(userRole) && (
-                <th className="border border-gray-700 text-lg px-4 py-2">
-                  Position
-                </th>
+                <th className="p-3">Position</th>
               )}
-
-              <th className="border border-gray-700 text-lg px-4 py-2">
-                Subject
-              </th>
-              <th className="border border-gray-700 text-lg px-4 py-2">
-                Leave From
-              </th>
-              <th className="border border-gray-700 text-lg px-4 py-2">
-                Leave To
-              </th>
-              <th className="border border-gray-700 text-lg px-4 py-2">
-                Date
-              </th>
-              <th className="border border-gray-700 text-lg px-4 py-2">
-                Status
-              </th>
-
+              <th className="p-3">Subject</th>
+              <th className="p-3">Leave From</th>
+              <th className="p-3">Leave To</th>
+              <th className="p-3">Date</th>
+              <th className="p-3">Status</th>
               {["admin", "hr"].includes(userRole) && (
-                <th className="border border-gray-700 text-lg px-4 py-2">
-                  Action
-                </th>
+                <th className="p-3">Action</th>
               )}
             </tr>
           </thead>
 
-          <tbody>
-            {leaveList.map((item, index) => (
-              <tr className="text-center border" key={item._id || index}>
-                <td className="border border-gray-700 px-4 py-2">
-                  {(page - 1) * 10 + index + 1}
-                </td>
-                <td className="border border-gray-700 px-4 py-2">
-                  {item.user?.name || "-"}
-                </td>
-                <td className="border border-gray-700 px-4 py-2">
-                  {item.user?.role?.name || "-"}
-                </td>
-
-                {["admin", "hr"].includes(userRole) && (
-                  <td className="border border-gray-700 px-4 py-2">
-                    {item.user?.position || "-"}
+          <tbody className="">
+            {filteredLeaves.length > 0 ? (
+              filteredLeaves.map((item, index) => (
+                <tr
+                  className="text-center border-t  border-neutral-700 hover:bg-neutral-800/70 transition"
+                  key={item._id || index}
+                >
+                  <td className="p-3">{(page - 1) * 10 + index + 1}</td>
+                  <td className="p-3">{item.user?.name || "-"}</td>
+                  <td className="p-3">{item.user?.role?.name || "-"}</td>
+                  {["admin", "hr"].includes(userRole) && (
+                    <td className="p-3">{item.user?.position || "-"}</td>
+                  )}
+                  <td className="p-3">{item.subject}</td>
+                  <td className="p-3">{item.from}</td>
+                  <td className="p-3">{item.leave}</td>
+                  <td className="p-3">
+                    {item.date ? new Date(item.date).toLocaleDateString() : "-"}
                   </td>
-                )}
+                  <td className="p-3">
+                    <span
+                      className={`font-semibold ${
+                        item.status === "approved"
+                          ? "text-green-400"
+                          : item.status === "rejected"
+                          ? "text-red-400"
+                          : "text-yellow-400"
+                      }`}
+                    >
+                      {item.status || "pending"}
+                    </span>
+                  </td>
 
-                <td className="border border-gray-700 px-4 py-2">
-                  {item.subject}
-                </td>
-                <td className="border border-gray-700 px-4 py-2">
-                  {item.from}
-                </td>
-                <td className="border border-gray-700 px-4 py-2">
-                  {item.leave}
-                </td>
-                <td className="border border-gray-700 px-4 py-2">
-                  {item.date ? new Date(item.date).toLocaleDateString() : "-"}
-                </td>
-                <td className="border border-gray-700 px-4 py-2">
-                  <span
-                    className={
-                      item.status === "approved"
-                        ? "text-green-500"
-                        : item.status === "rejected"
-                        ? "text-red-500"
-                        : "text-yellow-500"
-                    }
-                  >
-                    {item.status || "pending"}
-                  </span>
-                </td>
-
-                {["admin", "hr"].includes(userRole) && (
-                  <td className="border border-gray-700 px-4 py-2">
-                    {item.status === "pending" && (
-                      <>
+                  {["admin", "hr"].includes(userRole) && (
+                    <td className="p-3">
+                      {item.status === "pending" && (
+                        <>
+                          <button
+                            onClick={() =>
+                              handleStatusChange(item._id, "approved")
+                            }
+                            className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded-lg mr-2"
+                          >
+                            Approve
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleStatusChange(item._id, "rejected")
+                            }
+                            className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg"
+                          >
+                            Reject
+                          </button>
+                        </>
+                      )}
+                      {item.status === "rejected" && (
                         <button
                           onClick={() =>
                             handleStatusChange(item._id, "approved")
                           }
-                          className="bg-green-600 px-2 py-1 rounded mr-2"
+                          className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded-lg"
                         >
                           Approve
                         </button>
+                      )}
+                      {item.status === "approved" && (
                         <button
                           onClick={() =>
                             handleStatusChange(item._id, "rejected")
                           }
-                          className="bg-red-600 px-2 py-1 rounded"
+                          className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg"
                         >
                           Reject
                         </button>
-                      </>
-                    )}
-
-                    {item.status === "rejected" && (
-                      <button
-                        onClick={() => handleStatusChange(item._id, "approved")}
-                        className="bg-green-600 px-2 py-1 rounded"
-                      >
-                        Approve
-                      </button>
-                    )}
-
-                    {item.status === "approved" && (
-                      <button
-                        onClick={() => handleStatusChange(item._id, "rejected")}
-                        className="bg-red-600 px-2 py-1 rounded"
-                      >
-                        Reject
-                      </button>
-                    )}
-                  </td>
-                )}
+                      )}
+                    </td>
+                  )}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={["admin", "hr"].includes(userRole) ? 10 : 9}
+                  className="py-6 text-center text-gray-400"
+                >
+                  No leave requests found.
+                </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center items-center mt-4">
+      <div className="flex justify-center items-center mt-6">
         <PageLeavePagination setPage={setPage} totalPages={totalPages} />
       </div>
     </div>

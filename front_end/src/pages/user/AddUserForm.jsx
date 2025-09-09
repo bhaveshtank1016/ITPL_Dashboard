@@ -394,14 +394,7 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
             <option value="Inactive">Inactive</option>
           </select>
 
-          {/* Joining Date
-          <input
-            type="date"
-            name="joiningDate"
-            value={form.joiningDate}
-            onChange={handleChange}
-            className=" p-2 w-full mb-3 rounded-md bg-neutral-800 "
-          /> */}
+        
         </div>
 
         {/* Buttons */}

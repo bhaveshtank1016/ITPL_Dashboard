@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AddHolidays from "./AddHolidays";
+import { RiEdit2Line } from "react-icons/ri";
 
 const Holiday = () => {
   const [holidays, setHolidays] = useState([]);
@@ -118,7 +119,7 @@ const Holiday = () => {
       )}
 
       {/* Table */}
-      <div className="bg-neutral-900/60 rounded-xl shadow-xl overflow-x-auto">
+      <div className="bg-neutral-900/60 h-[80vh] rounded-xl shadow-xl overflow-x-auto">
         <table className="w-full border-collapse text-left">
           <thead className="bg-neutral-800/80 text-gray-300">
             <tr className="text-center text-sm">
@@ -156,7 +157,7 @@ const Holiday = () => {
                         className="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-semibold"
                         onClick={() => handleEdit(holiday)}
                       >
-                        ✏️ Edit
+                        <RiEdit2Line />
                       </button>
                     </td>
                   )}
@@ -178,7 +179,7 @@ const Holiday = () => {
 
       {/* ✅ Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center mt-6 gap-2 flex-wrap">
+        <div className="flex   justify-center mt-6 gap-2 flex-wrap">
           <button
             className="px-3 py-1 bg-neutral-800 hover:bg-neutral-700 rounded-lg disabled:opacity-40"
             onClick={() => handlePageChange(currentPage - 1)}

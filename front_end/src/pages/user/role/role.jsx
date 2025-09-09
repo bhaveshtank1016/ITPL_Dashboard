@@ -170,8 +170,8 @@ const handleAddRole = async (event) => {
             Add Role
           </button>
         </div>
-        <div className="overflow-x-auto pt-10">
-          <table className="w-full text-left">
+        <div className="overflow-x-auto  pt-10">
+          <table className="w-full  text-left">
             <thead>
               <tr className="bg-neutral-800">
                 <th className="p-3 text-white">S. No.</th>

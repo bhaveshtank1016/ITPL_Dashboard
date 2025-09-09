@@ -13,7 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Sign_in from "./auth/sign_in";
 import UserPage from "./pages/user/userPage";
 import Layout from "./layout/layout";
-import Dashboard from "./dashboard/Dashboard";
+import Dashboard from "./dashboard/dashboard";
 import Profile_info from "./pages/user/profile/profile_infos";
 import DSR_List from "./pages/dsrListReport/DSR_List";
 import Dsr_Add from "./pages/dsrListReport/Dsr_Add";
@@ -32,6 +32,7 @@ import Role from "../src/pages/user/role/role";
 import AddDSRForm from "./pages/dsrListReport/Dsr_Add";
 import HrDashboard from "./dashboard/HrDashboard";
 import HRM from "./hr/hrm";
+import ManagerDashboard from "./dashboard/ManagerDashboard";
 import EditEmpReference from "./pages/empReference/EditEmpReference";
 
 const ProtectedRoute = ({ children }) => {
@@ -79,6 +80,8 @@ function App() {
                     <Route path="/leaveList" element={<LeaveList />} />
                     <Route path="/role" element={<Role />} />
                     <Route path="/hrm" element={<HRM />} />
+                    <Route path="/ManagerDashboard" element={<ManagerDashboard/>} />
+
                     <Route path="/addEmpReference" element={<AddEmpReference />}/>
                     <Route path="/empReferenceListing" element={<EmpReferenceListing />}/>
                       <Route path="/edit/ref/:id" element={<AddEmpReference  />} />

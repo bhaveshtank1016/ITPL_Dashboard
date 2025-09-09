@@ -6,14 +6,25 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Header = () => {
   const location = useLocation();
-const pathnames = location.pathname
-  .split("/")
-  .filter(Boolean)
-  .filter(name => !/^[a-f\d]{24}$/i.test(name)); //will automatically remove any MongoDB ObjectId
+  const pathnames = location.pathname
+    .split("/")
+    .filter(Boolean)
+    .filter(name => !/^[a-f\d]{24}$/i.test(name)); 
+
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
+  const [userName, setUserName] = useState("");  // ✅ User name state
   const dropdownRef = useRef();
+
+  // Fetch user from localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const userObj = JSON.parse(storedUser);
+      setUserName(userObj.name || "User"); // agar naam na ho to fallback "User"
+    }
+  }, []);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -28,10 +39,11 @@ const pathnames = location.pathname
 
   // Handle Logout
   const handleLogout = () => {
-    localStorage.removeItem("token");          // Remove JWT
-    toast.success("Logged out successfully");  // Show toast
+    localStorage.removeItem("token");
+    localStorage.removeItem("user"); // ✅ user bhi hatao
+    toast.success("Logged out successfully");
     setTimeout(() => {
-      navigate("/");                      // Redirect after short delay
+      navigate("/");
     }, 1000);
   };
 
@@ -39,16 +51,10 @@ const pathnames = location.pathname
     <>
       <ToastContainer />
       <div className="w-full flex items-center justify-between px-6 py-4 rounded-md bg-gradient-to-r from-neutral-900 to-blue-700 text-white shadow-md container mx-auto mb-6">
-        {/* Breadcrumb */}
+        
+        {/* ✅ Left side me User name */}
         <div className="text-xl font-semibold pl-4">
-          {pathnames.map((name, index) => {
-            const displayName = name.charAt(0).toUpperCase() + name.slice(1);
-            return (
-              <span key={index} className="text-white">
-               {displayName}
-              </span>
-            );
-          })}
+          Welcome, {userName}
         </div>
 
         {/* Profile Dropdown */}

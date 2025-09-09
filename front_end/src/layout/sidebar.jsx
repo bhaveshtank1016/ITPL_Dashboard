@@ -159,7 +159,8 @@ const Sidebar = () => {
             title="Leave Apply"
             links={[
               { to: "/leaveList", label: "Leave List" },
-              { to: "/addLeave", label: "Add Leave" },
+            ...(!isAdmin ? [{ to: "/addLeave", label: "Add Leave" }] : []), //admin ko addleave nhi dikhega 
+            
             ]}
           />
           <DropdownMenu
