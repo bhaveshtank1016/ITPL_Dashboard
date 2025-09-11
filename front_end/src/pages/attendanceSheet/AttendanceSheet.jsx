@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../config";
 import { useNavigate } from "react-router-dom";
-
+import { RiDeleteBinFill,RiEdit2Fill } from "react-icons/ri";
 const AttendanceList = () => {
   const [attendance, setAttendance] = useState([]);
   const navigate = useNavigate();
@@ -47,15 +47,16 @@ const AttendanceList = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-black text-white p-6">
-      <h2 className="text-3xl font-bold mb-6  text-gray-200">
-        Attendance List
-      </h2>
+    <div
+      className="min-h-screen bg-[#d9e0e8] text-gray-800 rounded-2xl shadow-md  
+        dark:bg-neutral-900 dark:text-white p-6"
+    >
+      <h2 className="text-3xl font-bold mb-6  ">Attendance List</h2>
 
-      <div className="overflow-x-auto shadow-xl rounded-lg border border-gray-700">
-        <table className="min-w-full border-gray-300  border rounded-lg">
-          <thead className="bg-neutral-800/80 text-gray-300 uppercase text-sm">
-            <tr>
+      <div className="hidden h-screen rounded-2xl md:block overflow-x-auto mt-10">
+        <table className="w-full    bg-gray-100/90 dark:bg-neutral-900   ">
+          <thead className="bg-neutral-800/80   uppercase  text-gray-300">
+            <tr className=" text-sm  font-semibold ">
               <th className="p-3">Date</th>
               <th className="p-3">Day</th>
               <th className="p-3">Check In</th>
@@ -69,20 +70,16 @@ const AttendanceList = () => {
               attendance.map((item) => (
                 <tr
                   key={item._id}
-                  className="border-t border-neutral-700 hover:bg-neutral-800/70 transition"
+                  className=" border-t border-gray-700 text-center hover:bg-neutral-800/70 "
                 >
-                  <td className="px-6 py-3 border border-gray-600">
+                  <td className="p-3">
                     {new Date(item.date).toLocaleDateString()}
                   </td>
-                  <td className="px-6 py-3 border border-gray-600">{item.day}</td>
-                  <td className="px-6 py-3 border border-gray-600">
-                    {item.check_in || "-"}
-                  </td>
-                  <td className="px-6 py-3 border border-gray-600">
-                    {item.check_out || "-"}
-                  </td>
+                  <td className="p-3">{item.day}</td>
+                  <td className="p-3">{item.check_in || "-"}</td>
+                  <td className="p-3">{item.check_out || "-"}</td>
                   <td
-                    className={`px-6 py-3 border border-gray-600 font-semibold ${
+                    className={`p-3 font-semibold ${
                       item.attendance_status === "Present"
                         ? "text-green-400"
                         : item.attendance_status === "Half Day"
@@ -92,18 +89,19 @@ const AttendanceList = () => {
                   >
                     {item.attendance_status}
                   </td>
-                  <td className="px-6 py-3 border border-gray-600 flex justify-center gap-3">
+                  <td className="p-3 flex justify-center ">
                     <button
                       onClick={() => handleEdit(item._id)}
-                      className="px-3 py-1 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg text-sm"
+                      className="px-2 py-1  hover:bg-blue-900  rounded-lg text-xl"
                     >
-                      Edit
+                   <RiEdit2Fill />
+
                     </button>
                     <button
                       onClick={() => handleDelete(item._id)}
-                      className="px-3 py-1 bg-red-500 hover:scale-110 hover:bg-red-600 text-white rounded-lg text-sm"
+                      className="px-2 py-1 hover:scale-110 hover:bg-red-600  rounded-lg text-xl"
                     >
-                      Delete
+                      <RiDeleteBinFill  />
                     </button>
                   </td>
                 </tr>
@@ -126,4 +124,3 @@ const AttendanceList = () => {
 };
 
 export default AttendanceList;
-

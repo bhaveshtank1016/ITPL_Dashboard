@@ -76,10 +76,10 @@ export default function DSRList() {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-black text-white p-6">
+    <div className="min-h-screen rounded-2xl bg-[#d9e0e8] text-gray-800 dark:bg-neutral-900 dark:text-white p-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-white mb-4 md:mb-0">
+        <h1 className="text-3xl font-extrabold  mb-4 md:mb-0">
         DSR LIST
         </h1>
 
@@ -109,7 +109,7 @@ export default function DSRList() {
 
       {/* Table / Card */}
       <div className="overflow-x-auto rounded-lg shadow-lg">
-        <table className="hidden md:table min-w-full bg-neutral-900/60 rounded-xl overflow-hidden">
+        <table className="hidden md:table min-w-full  rounded-xl overflow-hidden">
           <thead className="bg-neutral-800/80 uppercase text-gray-300">
             <tr className="text-center text-sm font-semibold">
               <th className="p-3">No.</th>
@@ -126,7 +126,7 @@ export default function DSRList() {
               currentDsrs.map((item, index) => (
                 <tr
                   key={item._id}
-                  className="border-t border-neutral-700 hover:bg-neutral-800/70 transition"
+                  className="border-t border-neutral-700 text-center hover:bg-neutral-800/70 transition"
                 >
                   <td className="p-3">{indexOfFirstDSR + index + 1}</td>
                   <td className="p-3">{new Date(item.date).toLocaleString()}</td>
@@ -136,7 +136,7 @@ export default function DSRList() {
                   <td className="p-3 text-left">
                     {item.projects?.length > 0 ? (
                       item.projects.map((p, i) => (
-                        <div key={i} className="bg-neutral-900 p-2 rounded mb-1">
+                        <div key={i} className=" p-2 text-center rounded mb-1">
                           <p><strong>Name:</strong> {p.projectName}</p>
                           <p><strong>Description:</strong> {p.projectDescription}</p>
                           <p><strong>To Do Task:</strong> {p.todoTask}</p>
@@ -249,7 +249,7 @@ export default function DSRList() {
           <button
             onClick={() => currentPage > 1 && paginate(currentPage - 1)}
             disabled={currentPage === 1}
-            className="px-4 py-2 bg-neutral-800 rounded-lg hover:bg-neutral-700 disabled:opacity-50"
+            className="px-4 py-2  rounded-lg  disabled:opacity-50"
           >
             Prev
           </button>
@@ -271,7 +271,7 @@ export default function DSRList() {
           <button
             onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-neutral-800 rounded-lg hover:bg-neutral-700 disabled:opacity-50"
+            className="px-4 py-2  rounded-lg  disabled:opacity-50"
           >
             Next
           </button>

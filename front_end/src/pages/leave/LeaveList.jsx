@@ -6,6 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { API_URL } from "../../config";
+import { CalendarDays, FileText, CheckCircle, XCircle, Clock } from "lucide-react";
 
 function LeaveList() {
   const [page, setPage] = useState(1);
@@ -69,21 +70,22 @@ function LeaveList() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-black text-white p-6 rounded-xl shadow-lg">
+    <div
+      className="min-h-screen bg-[#d9e0e8] text-gray-800 shadow-md  
+            dark:bg-neutral-900 dark:text-white p-6 rounded-xl "
+    >
       <ToastContainer position="top-right" autoClose={2000} />
-      <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-white mb-8">
-        Leave Section
-      </h2>
+      <h2 className="text-3xl font-bold  mb-8">Leave Section</h2>
       <div className="flex justify-between">
         {" "}
         <div className="flex justify-end mb-6 space-x-3">
-          <button className="px-4 py-2 flex items-center gap-2 bg-blue-700 hover:bg-blue-800 rounded-lg shadow-md transition">
+          <button className="px-4 py-2 flex items-center gap-2 text-white bg-blue-900 hover:bg-blue-800 rounded-lg shadow-md transition">
             <FaInbox /> Inbox
           </button>
-          <button className="px-4 py-2 flex items-center gap-2 bg-blue-700 hover:bg-blue-800 rounded-lg shadow-md transition">
+          <button className="px-4 py-2 flex items-center gap-2 text-white bg-blue-900 hover:bg-blue-800 rounded-lg shadow-md transition">
             <LuSend /> Sent
           </button>
-          <button className="px-4 py-2 flex items-center gap-2 bg-blue-700 hover:bg-blue-800 rounded-lg shadow-md transition">
+          <button className="px-4 py-2 flex items-center gap-2 text-white bg-blue-900 hover:bg-blue-800 rounded-lg shadow-md transition">
             <FaPen /> Compose
           </button>
         </div>
@@ -94,7 +96,7 @@ function LeaveList() {
             type="text"
             value={searchTerm} // ✅ bind kiya
             onChange={(e) => setSearchTerm(e.target.value)} // ✅ update
-            className="px-3 py-2 w-64 rounded-lg bg-neutral-800 text-white border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 w-64 rounded-lg bg-neutral-600 text-white border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Search by subject or name..."
           />
         </div>
@@ -102,8 +104,8 @@ function LeaveList() {
       {/* Top buttons */}
 
       {/* Table */}
-      <div className="overflow-x-auto h-[80vh] rounded-lg shadow-lg">
-        <table className="min-w-full  bg-neutral-900/60 rounded-xl overflow-hidden">
+      <div className=" overflow-x-auto rounded-lg shadow-lg">
+        <table className="hidden md:table min-w-full  rounded-xl overflow-hidden">
           <thead className="bg-neutral-800/80 uppercase text-gray-300">
             <tr className="text-center text-sm font-semibold">
               <th className="p-3">No.</th>
@@ -127,7 +129,7 @@ function LeaveList() {
             {filteredLeaves.length > 0 ? (
               filteredLeaves.map((item, index) => (
                 <tr
-                  className="text-center border-t  border-neutral-700 hover:bg-neutral-800/70 transition"
+                  className="border-t border-neutral-700 text-center hover:bg-neutral-800/70 transition"
                   key={item._id || index}
                 >
                   <td className="p-3">{(page - 1) * 10 + index + 1}</td>
@@ -164,17 +166,17 @@ function LeaveList() {
                             onClick={() =>
                               handleStatusChange(item._id, "approved")
                             }
-                            className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded-lg mr-2"
+                            className="text-green-500  px-3 py-1 rounded-lg mr-2"
                           >
-                            Approve
+                            <CheckCircle />
                           </button>
                           <button
                             onClick={() =>
                               handleStatusChange(item._id, "rejected")
                             }
-                            className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg"
+                            className=" px-3 py-1 rounded-lg"
                           >
-                            Reject
+                            <XCircle className=" text-red-500" />
                           </button>
                         </>
                       )}
@@ -183,9 +185,9 @@ function LeaveList() {
                           onClick={() =>
                             handleStatusChange(item._id, "approved")
                           }
-                          className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded-lg"
+                          className="text-green-600  hover:bg-green-700 px-3 py-1 rounded-lg"
                         >
-                          Approve
+                          <CheckCircle />
                         </button>
                       )}
                       {item.status === "approved" && (
@@ -193,9 +195,9 @@ function LeaveList() {
                           onClick={() =>
                             handleStatusChange(item._id, "rejected")
                           }
-                          className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg"
+                          className=" px-3 py-1 rounded-lg"
                         >
-                          Reject
+                          <XCircle className=" text-red-500" />
                         </button>
                       )}
                     </td>
@@ -214,11 +216,10 @@ function LeaveList() {
             )}
           </tbody>
         </table>
-      </div>
-
-      {/* Pagination */}
-      <div className="flex justify-center items-center mt-6">
-        <PageLeavePagination setPage={setPage} totalPages={totalPages} />
+        {/* Pagination */}
+        <div className="flex  justify-center items-center mt-6">
+          <PageLeavePagination setPage={setPage} totalPages={totalPages} />
+        </div>
       </div>
     </div>
   );

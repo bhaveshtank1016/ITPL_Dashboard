@@ -81,7 +81,7 @@ const UserPage = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-neutral-950 via-neutral-900 to-black min-h-screen text-white p-6 rounded-xl">
+    <div className="bg-[#d9e0e8] text-gray-800 min-h-screen dark:bg-neutral-900 dark:text-white p-6 rounded-xl">
       {/* Header with Search */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
         <h2 className="text-2xl font-bold">Users</h2>
@@ -92,11 +92,11 @@ const UserPage = () => {
             placeholder="Search users..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-3 py-2 rounded-lg bg-neutral-800 text-white border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
+            className="px-3 py-2 rounded-lg bg-neutral-400 dark:bg-neutral-500 text-white border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
           />
           <button
             onClick={() => navigate("/add-user")}
-            className="bg-blue-600 px-4 py-2 rounded-lg text-white hover:bg-blue-700 transition"
+            className="bg-blue-600 px-4 py-2 rounded-lg text-white hover:bg-blue-800 transition"
           >
             + Add User
           </button>
@@ -105,7 +105,7 @@ const UserPage = () => {
 
       {/* Table for larger screens */}
       <div className="hidden rounded-2xl md:block overflow-x-auto">
-        <table className="w-full   bg-neutral-900/60   ">
+        <table className="w-full   bg-gray-100/90 dark:bg-neutral-900  ">
           <thead className="bg-neutral-800/80   uppercase  text-gray-300">
             <tr className="text-left text-sm   font-semibold">
               <th className="p-3">Name</th>
@@ -149,7 +149,7 @@ const UserPage = () => {
                     </p>
                   </td>
                   <td className="p-3">
-                    <span className="bg-gray-800 px-2 py-1 rounded">
+                    <span className="uppercase px-2 py-1 rounded">
                       {user.role?.name || "N/A"}
                     </span>
                   </td>

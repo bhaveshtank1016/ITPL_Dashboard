@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
   return (
     <div className="flex">
       <Sidebar />
-      <main className="w-full p-4">
+      <main className="w-full p-1">
         { <Header />       /*Breadcrumb bar */}
         {children}       {/* Current route content */}
       </main>

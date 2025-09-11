@@ -100,19 +100,20 @@ export default function Daily_Attendance() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-black text-white p-6">
+    <div
+      className="min-h-screen bg-[#d9e0e8] text-gray-800 rounded-2xl shadow-md  
+        dark:bg-neutral-900 dark:text-white p-6"
+    >
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-white mb-4 md:mb-0">
-          Attendance Records
-        </h1>
+        <h1 className="text-3xl font-bold  mb-4 md:mb-0">Attendance Records</h1>
       </div>
 
       {/* Table View */}
-      <div className="overflow-x-auto rounded-lg shadow-lg">
-        <table className="hidden md:table min-w-full bg-neutral-900/60 rounded-xl overflow-hidden">
-          <thead className="bg-neutral-800/80 uppercase text-gray-300">
-            <tr className="text-center text-sm font-semibold">
+      <div className="hidden h-screen rounded-2xl md:block overflow-x-auto mt-10">
+        <table className="w-full    bg-gray-100/90 dark:bg-neutral-900 ">
+          <thead className="bg-neutral-800/80   uppercase  text-gray-300">
+            <tr className="text-sm  font-semibold">
               <th className="p-3">Date</th>
               <th className="p-3">Day</th>
               <th className="p-3">Check-in</th>
@@ -130,7 +131,7 @@ export default function Daily_Attendance() {
                 return (
                   <tr
                     key={idx}
-                    className="border-t border-neutral-700 hover:bg-neutral-800/70 transition text-center"
+                    className=" border-t border-gray-700 text-center hover:bg-neutral-800/70 "
                   >
                     <td className="p-3">
                       {new Date(row.date).toLocaleDateString()}
@@ -166,10 +167,7 @@ export default function Daily_Attendance() {
               })
             ) : (
               <tr>
-                <td
-                  colSpan={5}
-                  className="py-6 text-center text-gray-400"
-                >
+                <td colSpan={5} className="py-6 text-center text-gray-400">
                   No records found.
                 </td>
               </tr>
@@ -182,8 +180,7 @@ export default function Daily_Attendance() {
           {attendance.length > 0 ? (
             attendance.map((row, idx) => {
               const isToday =
-                new Date(row.date).toDateString() ===
-                new Date().toDateString();
+                new Date(row.date).toDateString() === new Date().toDateString();
 
               return (
                 <div
