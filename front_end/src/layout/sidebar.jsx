@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CalendarDays, LogOut , CheckCircle, XCircle, Clock } from "lucide-react";
 import {
   faUser,
   faTableColumns,
@@ -6,10 +7,11 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FaUsers } from "react-icons/fa";
+import { IoPerson } from "react-icons/io5";
 import { ClipboardList } from "lucide-react";
 import { IoCalendarNumber } from "react-icons/io5";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { MdOutlinePlaylistAdd } from "react-icons/md";
+import { MdDashboard } from "react-icons/md";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 ``;
@@ -61,7 +63,7 @@ const Sidebar = () => {
           setOpenLeaveMenu(false);
           setOpenResignMenu(false);
         }}
-        className={`fixed top-0 left-0 bg-gradient-to-r from-neutral-900 to-blue-900 border border-r-2 rounded-md border-white text-white z-50 transform duration-300 ease-in-out min-h-screen 
+        className={`fixed top-0 left-0 bg-[#d9e0e8] dark:bg-neutral-900 dark:text-white border border-r-2 rounded-md border-white text-gray-700 z-50 transform duration-300 ease-in-out min-h-screen 
         ${expanded ? "w-64" : "w-20"}
         ${mobileOpen ? "translate-x-0" : "-translate-x-full"} 
         lg:translate-x-0 lg:static`}
@@ -78,19 +80,19 @@ const Sidebar = () => {
         </div>
 
         {/* Logo (Desktop) */}
-        <div className="pl-6 pt-4 hidden lg:flex items-center gap-2">
-          <img src="/logo1.png" className="w-8" alt="Logo" />
+        <div className=" p-3 hidden lg:flex items-center gap-2">
+          <img src="/logo1.png" className="w-15" alt="Logo" />
           {expanded && <span className="text-xl font-bold">ITPL</span>}
         </div>
 
         {/* Menu */}
-        <div className="mt-4 flex flex-col pl-6 px-2">
+        <div className="mt-2 flex flex-col p-3">
 
           
          
           <SidebarLink
             to="/dashboard"
-            icon={<FontAwesomeIcon icon={faTableColumns} />}
+            icon={ <MdDashboard size={25} />}
             label="Dashboard"
             current={location.pathname}
             expanded={expanded}
@@ -101,7 +103,7 @@ const Sidebar = () => {
           {isAdminOrHR && (
             <SidebarLink
               to="/users"
-              icon={<FaUsers size={20} />}
+              icon={<FaUsers size={25} />}
               label="Users"
               current={location.pathname}
               expanded={expanded}
@@ -111,7 +113,7 @@ const Sidebar = () => {
           {isAdminOrHR &&(
             <SidebarLink
               to="/role"
-              icon={<FontAwesomeIcon icon={faUser} />}
+              icon={<IoPerson size={25} />}
               label="Role"
               current={location.pathname}
               expanded={expanded}
@@ -121,7 +123,7 @@ const Sidebar = () => {
           {/* Show DSR List */}
           <SidebarLink
             to="/dsr_list"
-            icon={<IoMdList size={19} />}
+            icon={<IoMdList size={25} />}
             label="DSR List"
             current={location.pathname}
             expanded={expanded}
@@ -129,7 +131,7 @@ const Sidebar = () => {
 
           <SidebarLink
             to="/attendanceSheet"
-            icon={<FaPersonChalkboard size={22} />}
+            icon={<FaPersonChalkboard size={25} />}
             label="Attendance Sheet"
             className="shrink-0"
             current={location.pathname}
@@ -137,14 +139,14 @@ const Sidebar = () => {
           />
           <SidebarLink
             to="/daily_Attendance"
-            icon={<ClipboardList size={22} />}
+            icon={<ClipboardList size={25} />}
             label="Daily Attendance Report"
             current={location.pathname}
             expanded={expanded}
           />
           <SidebarLink
             to="/holidayCalender"
-            icon={<IoCalendarNumber size={19} />}
+            icon={<IoCalendarNumber size={25} />}
             label="Holiday Calendar"
             current={location.pathname}
             expanded={expanded}
@@ -155,18 +157,19 @@ const Sidebar = () => {
             expanded={expanded}
             isOpen={openLeaveMenu}
             toggle={toggleLeaveMenu}
-            icon={<FaRegFolder size={19} />}
+            icon={<CalendarDays  size={25} />}
             title="Leave Apply"
             links={[
               { to: "/leaveList", label: "Leave List" },
-              { to: "/addLeave", label: "Add Leave" },
+            ...(!isAdmin ? [{ to: "/addLeave", label: "Add Leave" }] : []), //admin ko addleave nhi dikhega 
+            
             ]}
           />
           <DropdownMenu
             expanded={expanded}
             isOpen={openResignMenu}
             toggle={toggleMenu}
-            icon={<FaRegFolder size={19} />}
+            icon={<LogOut  size={25} />}
             title="E-Resign/Ref"
             links={[
               ...(isHR
@@ -192,7 +195,7 @@ const SidebarLink = ({ to, icon, label, current, expanded }) => (
   <Link
     to={to}
     className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
-      current === to ? "text-blue-500 font-bold border" : "hover:border"
+      current === to ? "text-blue-900 font-bold border" : "hover:border"
     }`}
   >
     {icon}

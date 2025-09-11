@@ -7,7 +7,7 @@ import {
   Calendar,
 } from "lucide-react";
 
-export default function HrDashboard() {
+export default function ManagerDashboard() {
   const navigate = useNavigate();
 
   const features = [
@@ -17,12 +17,11 @@ export default function HrDashboard() {
       icon: ClipboardCheck,
       path: "/attendanceSheet",
     },
-    { title: "Add Users", icon: UserPlus, path: "/users" },
     { title: "Holiday List", icon: Calendar, path: "/holidayCalender" },
     {
       title: "Attendance Management",
       icon: Upload,
-      path: "/daily_Attendance",
+      path: "daily_Attendance",
     },
   ];
   return (
@@ -31,7 +30,7 @@ export default function HrDashboard() {
         {/* Top Navbar */}
         <div className="bg-white shadow-md py-4 px-6 sticky top-0 z-30 flex items-center justify-between ">
           <h1 className="text-2xl font-bold text-gray-800 mx-auto container">
-            HR Dashboard
+            Manager
           </h1>
         </div>
 

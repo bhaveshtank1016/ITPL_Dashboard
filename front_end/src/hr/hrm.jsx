@@ -3,22 +3,11 @@ import { useNavigate } from "react-router-dom";
 import {
   Users,
   ClipboardCheck,
-  Dumbbell,
   UserPlus,
-  BarChart2,
   Upload,
   Calendar,
-  Send,
-  UserCog,
 } from "lucide-react";
-import {
-  faLock,
-  faUserPlus,
-  faUser,
-  faTableColumns,
-  faBars,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
+
 
 export default function HRM() {
   const navigate = useNavigate();
@@ -28,7 +17,7 @@ export default function HRM() {
     { title: " Attendance List", icon: ClipboardCheck, path: "/attendanceSheet" },
     { title: "Add Users", icon: UserPlus, path: "/users" },
     { title: "Holiday List", icon: Calendar, path: "/holidayCalender" },
-    { title: "Attendance Management", icon: Upload, path: "/trainer/upload-material" },
+    { title: "Attendance Management", icon: Upload, path: "//daily_Attendance" },
     
     
   ];

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AddHolidays from "./AddHolidays";
+import { RiEdit2Line } from "react-icons/ri";
 
 const Holiday = () => {
   const [holidays, setHolidays] = useState([]);
@@ -61,10 +62,13 @@ const Holiday = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neutral-950 to-neutral-900 text-gray-200 p-6">
+    <div
+      className="min-h-screen bg-[#d9e0e8] text-gray-800 shadow-md  
+        dark:bg-neutral-900 dark:text-white p-6"
+    >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-        <h2 className="text-2xl font-bold tracking-wide">📅 Official Holidays</h2>
+        <h2 className="text-2xl font-bold tracking-wide">Official Holidays</h2>
 
         <div className="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0">
           {/* Year Display */}
@@ -78,20 +82,20 @@ const Holiday = () => {
           {/* Add Button (only for admin/hr) */}
           {(userRole === "admin" || userRole === "hr") && (
             <button
-              className="bg-blue-600 hover:bg-blue-700 transition px-5 py-2 rounded-lg font-semibold shadow-md"
+              className="bg-blue-900 text-white hover:bg-blue-700 transition px-5 py-2 rounded-lg font-semibold shadow-md"
               onClick={() => {
                 setIsEdit(false);
                 setEditData(null);
                 setShowModel(true);
               }}
             >
-              ➕ Add Holiday
+              Add Holiday
             </button>
           )}
 
           {/* Search */}
           <input
-            className="border border-neutral-700 rounded-lg px-4 py-2 bg-neutral-800/80 text-gray-200 font-medium placeholder-gray-400 w-60"
+            className="border border-neutral-700 rounded-lg px-4 py-2 bg-neutral-800/80 text-gray-50 font-medium placeholder-gray-400 w-60"
             type="text"
             placeholder="🔍 Search holidays..."
             value={searchTerm}
@@ -118,16 +122,18 @@ const Holiday = () => {
       )}
 
       {/* Table */}
-      <div className="bg-neutral-900/60 rounded-xl shadow-xl overflow-x-auto">
-        <table className="w-full border-collapse text-left">
-          <thead className="bg-neutral-800/80 text-gray-300">
-            <tr className="text-center text-sm">
-              <th className="px-6 py-4 border-b border-neutral-700">Sr.No</th>
-              <th className="px-6 py-4 border-b border-neutral-700">Holiday</th>
-              <th className="px-6 py-4 border-b border-neutral-700">Date</th>
-              <th className="px-6 py-4 border-b border-neutral-700">Weekday</th>
+      <div className=" overflow-x-auto rounded-lg shadow-lg">
+        <table className="hidden md:table min-w-full  rounded-xl overflow-hidden">
+          <thead className="bg-neutral-800/80 uppercase text-gray-300">
+            <tr className="text-center text-sm font-semibold">
+              <th className="p-3">S. No</th>
+              <th className="p-3">Holiday</th>
+              <th className="p-3">Date</th>
+              <th className="p-3">Weekday</th>
               {(userRole === "admin" || userRole === "hr") && (
-                <th className="px-6 py-4 border-b border-neutral-700">Action</th>
+                <th className="p-3">
+                  Action
+                </th>
               )}
             </tr>
           </thead>
@@ -136,27 +142,19 @@ const Holiday = () => {
               currentHolidays.map((holiday, index) => (
                 <tr
                   key={holiday._id}
-                  className="text-center hover:bg-neutral-800/80 transition"
+                  className="border-t border-neutral-700 text-center hover:bg-neutral-800/70 transition"
                 >
-                  <td className="px-6 py-3 border-b border-neutral-700">
-                    {indexOfFirstHoliday + index + 1}
-                  </td>
-                  <td className="px-6 py-3 border-b border-neutral-700 font-medium">
-                    {holiday.name}
-                  </td>
-                  <td className="px-6 py-3 border-b border-neutral-700">
-                    {holiday.date}
-                  </td>
-                  <td className="px-6 py-3 border-b border-neutral-700">
-                    {holiday.weekday}
-                  </td>
+                  <td className="p-3">{indexOfFirstHoliday + index + 1}</td>
+                  <td className="p-3 font-medium">{holiday.name}</td>
+                  <td className="p-3">{holiday.date}</td>
+                  <td className="p-3">{holiday.weekday}</td>
                   {(userRole === "admin" || userRole === "hr") && (
-                    <td className="px-6 py-3 border-b border-neutral-700">
+                    <td className="p-3">
                       <button
-                        className="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-semibold"
+                        className="px-3 py-1  hover:bg-blue-700 rounded-lg text-sm font-semibold"
                         onClick={() => handleEdit(holiday)}
                       >
-                        ✏️ Edit
+                        <RiEdit2Line size={20} />
                       </button>
                     </td>
                   )}
@@ -178,9 +176,9 @@ const Holiday = () => {
 
       {/* ✅ Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center mt-6 gap-2 flex-wrap">
+        <div className="flex   justify-center mt-6 gap-2 flex-wrap">
           <button
-            className="px-3 py-1 bg-neutral-800 hover:bg-neutral-700 rounded-lg disabled:opacity-40"
+            className="px-3 py-1  hover:bg-neutral-700 rounded-lg disabled:opacity-40"
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
           >
@@ -192,8 +190,8 @@ const Holiday = () => {
               key={index}
               className={`px-3 py-1 rounded-lg font-medium ${
                 currentPage === index + 1
-                  ? "bg-blue-600 text-white"
-                  : "bg-neutral-800 hover:bg-neutral-700"
+                  ? "bg-blue-900 text-white"
+                  : " hover:bg-neutral-700"
               }`}
               onClick={() => handlePageChange(index + 1)}
             >
@@ -202,7 +200,7 @@ const Holiday = () => {
           ))}
 
           <button
-            className="px-3 py-1 bg-neutral-800 hover:bg-neutral-700 rounded-lg disabled:opacity-40"
+            className="px-3 py-1  hover:bg-neutral-700 rounded-lg disabled:opacity-40"
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
           >

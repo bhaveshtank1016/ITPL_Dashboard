@@ -147,7 +147,7 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
   };
 
   return (
-    <div className="p-4 md:p-6 w-full min-h-screen rounded-2xl bg-neutral-900 text-white flex items-center justify-center overflow-auto">
+    <div className="p-4 md:p-6 w-full min-h-screen rounded-2xl bg-[#d9e0e8] text-gray-800 dark:bg-neutral-900 dark:text-white text-white flex items-center justify-center overflow-auto">
       <form
         onSubmit={handleSubmit}
         className=" bg-neutral-950 backdrop-blur-md text-white p-8 rounded-2xl shadow-2xl w-full  border border-white/20"
@@ -394,14 +394,7 @@ const AddUserForm = ({ onUserAdded, onUserUpdated }) => {
             <option value="Inactive">Inactive</option>
           </select>
 
-          {/* Joining Date
-          <input
-            type="date"
-            name="joiningDate"
-            value={form.joiningDate}
-            onChange={handleChange}
-            className=" p-2 w-full mb-3 rounded-md bg-neutral-800 "
-          /> */}
+        
         </div>
 
         {/* Buttons */}

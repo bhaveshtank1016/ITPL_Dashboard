@@ -87,8 +87,11 @@ function AddResign() {
   };
 
   return (
-    <div className="sm:p-6 min-h-screen rounded-md bg-black text-gray-200">
-      <h2 className="text-xl mb-10 pb-3 rounded-md sm:text-2xl font-semibold">
+    <div
+      className="sm:p-6 min-h-screen rounded-md bg-[#d9e0e8] text-gray-800 shadow-md  
+            dark:bg-neutral-900  dark:text-white"
+    >
+      <h2 className="text-xl mb-10 pb-3 rounded-md sm:text-2xl font-bold">
         Resign Section
       </h2>
       <div>
@@ -101,7 +104,7 @@ function AddResign() {
               name="from"
               onChange={handleChange}
               value={resign.from}
-              className="border mt-4 rounded-md bg-neutral-600 w-9/12 h-11"
+              className="border mt-4 rounded-md  w-9/12 h-11"
               required
             >
               <option value="">Select HR</option>
@@ -121,7 +124,7 @@ function AddResign() {
               name="subject"
               onChange={handleChange}
               value={resign.subject}
-              className="border mt-4 rounded-md bg-neutral-600 w-9/12 h-11"
+              className="border mt-4 rounded-md  w-9/12 h-11"
             />
           </div>
 
@@ -133,7 +136,7 @@ function AddResign() {
               name="date"
               onChange={handleChange}
               value={resign.date}
-              className="border mt-4 rounded-md bg-neutral-600 w-9/12 h-11"
+              className="border mt-4 rounded-md  w-9/12 h-11"
             />
           </div>
 
@@ -144,7 +147,7 @@ function AddResign() {
               name="message"
               onChange={handleChange}
               value={resign.message}
-              className="border mt-4 rounded-md h-30 bg-neutral-600 w-9/12"
+              className="border mt-4 rounded-md h-30  w-9/12"
             />
           </div>
 
@@ -158,7 +161,7 @@ function AddResign() {
 
           <button
             type="submit"
-            className="text-xl px-4 py-2 bg-blue-700 text-white mt-5 rounded-md"
+            className="text-xl px-4 py-2 bg-blue-900 text-white mt-5 rounded-md"
           >
             Submit
           </button>
