@@ -1,24 +1,44 @@
+// const mongoose = require("mongoose");
+
+// const dsrSchema = new mongoose.Schema(
+//   {
+//     userId: {
+//       type: mongoose.Schema.Types.ObjectId,
+//       ref: "User",
+//       required: true,
+//     },
+//     email: { type: String, required: true },
+//     date: { type: Date, default: Date.now, required: true },
+//     attachment: String,
+//     projects: [
+//       {
+//         projectName: { type: String, required: true },
+//         projectDescription: { type: String, required: true },
+//         todoTask: { type: String },
+//       },
+//     ],
+//   },
+//   { timestamps: true }
+// );
+
+// module.exports = mongoose.model("Dsr", dsrSchema);
 const mongoose = require("mongoose");
 
-const dsrSchema = new mongoose.Schema(
-  {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+const dsrSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  email: { type: String, required: true },
+  projects: [
+    {
+      projectName: String,
+      projectDescription: String,
+      todoTask: String,
     },
-    email: { type: String, required: true },
-    date: { type: Date, default: Date.now, required: true },
-    attachment: String,
-    projects: [
-      {
-        projectName: { type: String, required: true },
-        projectDescription: { type: String, required: true },
-        todoTask: { type: String },
-      },
-    ],
+  ],
+  attachment: {
+    data: Buffer, // file data
+    contentType: String, // file ka type (pdf, png, docx...)
   },
-  { timestamps: true }
-);
+   createdAt: { type: Date, default: Date.now },
+});
 
 module.exports = mongoose.model("Dsr", dsrSchema);

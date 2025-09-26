@@ -3,6 +3,7 @@ import { API_URL } from "../../../../src/config";
 // import { PlusCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { TbSwitchVertical } from "react-icons/tb";
 
 const Role = () => {
   // State for the list
@@ -159,23 +160,38 @@ const Role = () => {
 
   return (
     <>
-      <div className="bg-[#d9e0e8] text-gray-800 dark:bg-neutral-900 dark:text-white h-screen p-6 rounded-xl shadow-md mx-auto container text-sm">
+      <div className="bg-[#f7f7f7d8] text-gray-800 dark:bg-neutral-900 dark:text-white h-screen p-6 rounded-xl shadow-md mx-auto container text-sm">
         <div className="flex justify-between items-center">
           <h2 className=" text-2xl mb-4 font-bold">Manage Roles</h2>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-blue-900 text-white px-3 rounded-md hover:rounded-xl hover:bg-blue-600 duration-300 h-10"
+            className="bg-blue-900 text-white text-lg px-6 py-2 rounded-md hover:rounded-xl hover:bg-blue-600 duration-300 "
           >
             Add Role
           </button>
         </div>
         <div className="hidden rounded-2xl md:block overflow-x-auto mt-10">
-          <table className="w-full   bg-gray-100/90 dark:bg-neutral-900   text-left">
-            <thead className="bg-neutral-800/80   uppercase  text-gray-300">
+          <table className="w-full       text-left">
+            <thead className="   uppercase ">
               <tr className="text-left text-sm   font-semibold  ">
-                <th className="p-3 text-white">S. No.</th>
-                <th className="p-3 text-white">Role Name</th>
-                <th className="p-3 text-white text-center">Actions</th>
+                <th className="p-3">
+                  S. No.{" "}
+                  <span>
+                    <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                  </span>
+                </th>
+                <th className="p-3">
+                  Role Name{" "}
+                  <span>
+                    <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                  </span>
+                </th>
+                <th className="p-3 text-left">
+                  Actions{" "}
+                  <span>
+                    <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -186,8 +202,8 @@ const Role = () => {
                     className="border-t border-gray-700 hover:bg-neutral-800/70 "
                   >
                     <td className="p-3 ">{index + 1}</td>
-                    <td className="p-3 ">{role.name}</td>
-                    <td className="p-3  text-center">
+                    <td className="p-3 uppercase ">{role.name}</td>
+                    <td className="p-3  text-left">
                       {/* MODIFIED: Conditionally render the delete button */}
                       {role.name.toLowerCase() !== "admin" && (
                         <button
@@ -320,6 +336,3 @@ const Role = () => {
 };
 
 export default Role;
-//authentication
-//authrization
-//

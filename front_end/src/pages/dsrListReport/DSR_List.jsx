@@ -4,12 +4,13 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { API_URL } from "../../../src/config"; 
+import { API_URL } from "../../../src/config";
+import { TbSwitchVertical } from "react-icons/tb";
 
 export default function DSRList() {
   const [dsrs, setDsrs] = useState([]);
-  const [user, setUser] = useState(null); 
-  const [searchTerm, setSearchTerm] = useState(""); 
+  const [user, setUser] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const dsrsPerPage = 5;
 
@@ -19,14 +20,14 @@ export default function DSRList() {
     const fetchUserAndDSRs = async () => {
       try {
         const token = localStorage.getItem("token");
-        const userDataStr = localStorage.getItem("user"); 
+        const userDataStr = localStorage.getItem("user");
 
         if (!userDataStr) {
           toast.error("User info not found. Please log in.");
           return;
         }
 
-        const userData = JSON.parse(userDataStr); 
+        const userData = JSON.parse(userDataStr);
         setUser(userData);
 
         if (!token) {
@@ -47,7 +48,7 @@ export default function DSRList() {
     fetchUserAndDSRs();
   }, []);
 
-  if (!user) return <p className="text-center text-gray-300">Loading...</p>; 
+  if (!user) return <p className="text-center text-gray-300">Loading...</p>;
 
   const isEmployee = user.role && user.role.name === "employee";
   const isAdmin = user.role && user.role.name === "admin";
@@ -76,12 +77,10 @@ export default function DSRList() {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div className="min-h-screen rounded-2xl bg-[#d9e0e8] text-gray-800 dark:bg-neutral-900 dark:text-white p-6">
+    <div className="min-h-screen rounded-2xl bg-[#f7f7f7d8] text-gray-800 dark:bg-neutral-900 dark:text-white p-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h1 className="text-3xl font-extrabold  mb-4 md:mb-0">
-        DSR LIST
-        </h1>
+        <h1 className="text-3xl font-extrabold  mb-4 md:mb-0">DSR LIST</h1>
 
         {(isEmployee || isHR) && (
           <button
@@ -103,22 +102,59 @@ export default function DSRList() {
             setSearchTerm(e.target.value);
             setCurrentPage(1);
           }}
-          className="w-full md:w-1/2 px-4 py-3 rounded-xl bg-neutral-800/70 backdrop-blur-md text-white border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className=" md:w-1/4 px-4 py-3 rounded-xl  backdrop-blur-md dark:text-white text-black border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
         />
       </div>
 
       {/* Table / Card */}
-      <div className="overflow-x-auto rounded-lg shadow-lg">
+      <div className="overflow-x-auto rounded-lg shadow-">
         <table className="hidden md:table min-w-full  rounded-xl overflow-hidden">
-          <thead className="bg-neutral-800/80 uppercase text-gray-300">
-            <tr className="text-center text-sm font-semibold">
-              <th className="p-3">No.</th>
-              <th className="p-3">Date</th>
-              <th className="p-3">Email</th>
-              <th className="p-3">Name</th>
-              <th className="p-3">Attachment</th>
-              <th className="p-3">To Do Tasks</th>
-              {isHR && <th className="p-3">Action</th>}
+          <thead className=" uppercase dark:text-gray-300 text-gray-800">
+            <tr className="text-left text-sm font-semibold">
+              <th className="p-3">
+                No.
+                <span>
+                  <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                </span>
+              </th>
+              <th className="p-3">
+                Date{" "}
+                <span>
+                  <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                </span>
+              </th>
+              <th className="p-3">
+                Email{" "}
+                <span>
+                  <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                </span>
+              </th>
+              <th className="p-3">
+                Name{" "}
+                <span>
+                  <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                </span>
+              </th>
+              <th className="p-3">
+                Attachment{" "}
+                <span>
+                  <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                </span>
+              </th>
+              <th className="p-3">
+                To Do Tasks{" "}
+                <span>
+                  <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                </span>
+              </th>
+              {isHR && (
+                <th className="p-3">
+                  Action{" "}
+                  <span>
+                    <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                  </span>
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -126,20 +162,48 @@ export default function DSRList() {
               currentDsrs.map((item, index) => (
                 <tr
                   key={item._id}
-                  className="border-t border-neutral-700 text-center hover:bg-neutral-800/70 transition"
+                  className="border-t border-neutral-400 text-left hover:bg-neutral-400/70 transition"
                 >
                   <td className="p-3">{indexOfFirstDSR + index + 1}</td>
-                  <td className="p-3">{new Date(item.date).toLocaleString()}</td>
+                  <td className="p-3">
+                    {new Date(item.createdAt).toLocaleString()}
+                  </td>
                   <td className="p-3">{item.email}</td>
                   <td className="p-3">{item.userId?.name || "No name"}</td>
-                  <td className="p-3">{item.attachment || "No attachment"}</td>
+                  <td className="p-3">
+                    {item.attachment ? (
+                      <a
+                        href={`data:${
+                          item.attachment.contentType
+                        };base64,${btoa(
+                          new Uint8Array(item.attachment.data).reduce(
+                            (data, byte) => data + String.fromCharCode(byte),
+                            ""
+                          )
+                        )}`}
+                        download="dsr_file"
+                        className="text-blue-500 underline"
+                      >
+                        Download
+                      </a>
+                    ) : (
+                      "No attachment"
+                    )}
+                  </td>
+
                   <td className="p-3 text-left">
                     {item.projects?.length > 0 ? (
                       item.projects.map((p, i) => (
-                        <div key={i} className=" p-2 text-center rounded mb-1">
-                          <p><strong>Name:</strong> {p.projectName}</p>
-                          <p><strong>Description:</strong> {p.projectDescription}</p>
-                          <p><strong>To Do Task:</strong> {p.todoTask}</p>
+                        <div key={i} className=" p-2 text-left rounded mb-1">
+                          <p>
+                            <strong>Name:</strong> {p.projectName}
+                          </p>
+                          <p>
+                            <strong>Description:</strong> {p.projectDescription}
+                          </p>
+                          <p>
+                            <strong>To Do Task:</strong> {p.todoTask}
+                          </p>
                         </div>
                       ))
                     ) : (
@@ -158,10 +222,15 @@ export default function DSRList() {
                         onClick={async () => {
                           try {
                             const token = localStorage.getItem("token");
-                            await axios.delete(`${API_URL}/dsr/delete/${item._id}`, {
-                              headers: { Authorization: `Bearer ${token}` },
-                            });
-                            setDsrs(prev => prev.filter(d => d._id !== item._id));
+                            await axios.delete(
+                              `${API_URL}/dsr/delete/${item._id}`,
+                              {
+                                headers: { Authorization: `Bearer ${token}` },
+                              }
+                            );
+                            setDsrs((prev) =>
+                              prev.filter((d) => d._id !== item._id)
+                            );
                             toast.success("DSR deleted!");
                           } catch {
                             toast.error("Delete failed");
@@ -177,7 +246,10 @@ export default function DSRList() {
               ))
             ) : (
               <tr>
-                <td colSpan={isHR ? 7 : 6} className="py-6 text-center text-gray-400">
+                <td
+                  colSpan={isHR ? 7 : 6}
+                  className="py-6 text-center text-gray-400"
+                >
                   No DSRs found.
                 </td>
               </tr>
@@ -193,18 +265,51 @@ export default function DSRList() {
                 key={item._id}
                 className="bg-neutral-900/70 p-4 rounded-xl shadow-md border border-neutral-700"
               >
-                <p className="text-sm text-gray-400">#{indexOfFirstDSR + index + 1}</p>
-                <p><strong>Date:</strong> {new Date(item.date).toLocaleString()}</p>
-                <p><strong>Email:</strong> {item.email}</p>
-                <p><strong>Name:</strong> {item.userId?.name || "No name"}</p>
-                <p><strong>Attachment:</strong> {item.attachment || "No attachment"}</p>
+                <p className="text-sm text-gray-400">
+                  #{indexOfFirstDSR + index + 1}
+                </p>
+                <p>
+                  <strong>Date:</strong> {new Date(item.date).toLocaleString()}
+                </p>
+                <p>
+                  <strong>Email:</strong> {item.email}
+                </p>
+                <p>
+                  <strong>Name:</strong> {item.userId?.name || "No name"}
+                </p>
+                <p>
+                  <strong>Attachment:</strong>{" "}
+                  {item.attachment ? (
+                    <a
+                      href={`data:${item.attachment.contentType};base64,${btoa(
+                        new Uint8Array(item.attachment.data).reduce(
+                          (data, byte) => data + String.fromCharCode(byte),
+                          ""
+                        )
+                      )}`}
+                      download="dsr_file"
+                      className="text-blue-500 underline"
+                    >
+                      Download
+                    </a>
+                  ) : (
+                    "No attachment"
+                  )}
+                </p>
+
                 <div className="mt-2">
                   {item.projects?.length > 0 &&
                     item.projects.map((p, i) => (
                       <div key={i} className="bg-neutral-800 p-2 rounded mb-1">
-                        <p><strong>Name:</strong> {p.projectName}</p>
-                        <p><strong>Description:</strong> {p.projectDescription}</p>
-                        <p><strong>Task:</strong> {p.todoTask}</p>
+                        <p>
+                          <strong>Name:</strong> {p.projectName}
+                        </p>
+                        <p>
+                          <strong>Description:</strong> {p.projectDescription}
+                        </p>
+                        <p>
+                          <strong>Task:</strong> {p.todoTask}
+                        </p>
                       </div>
                     ))}
                 </div>
@@ -220,10 +325,15 @@ export default function DSRList() {
                       onClick={async () => {
                         try {
                           const token = localStorage.getItem("token");
-                          await axios.delete(`${API_URL}/dsr/delete/${item._id}`, {
-                            headers: { Authorization: `Bearer ${token}` },
-                          });
-                          setDsrs(prev => prev.filter(d => d._id !== item._id));
+                          await axios.delete(
+                            `${API_URL}/dsr/delete/${item._id}`,
+                            {
+                              headers: { Authorization: `Bearer ${token}` },
+                            }
+                          );
+                          setDsrs((prev) =>
+                            prev.filter((d) => d._id !== item._id)
+                          );
                           toast.success("DSR deleted!");
                         } catch {
                           toast.error("Delete failed");
@@ -269,7 +379,9 @@ export default function DSRList() {
           ))}
 
           <button
-            onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
+            onClick={() =>
+              currentPage < totalPages && paginate(currentPage + 1)
+            }
             disabled={currentPage === totalPages}
             className="px-4 py-2  rounded-lg  disabled:opacity-50"
           >

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import logo from "../../public/logo1.png"
 
 function DarkmodeToggle() {
   const [darkMode, setDarkMode] = useState(
@@ -19,8 +20,9 @@ function DarkmodeToggle() {
       className="  text-lg rounded-full  text-gray-500 dark:text-white "
       onClick={() => setDarkMode((prev) => !prev)}
     >
-      {" "}
-      {darkMode ? "☀️" : "🌙"}
+      <img src={logo}  />
+      {/* {" "}
+      {darkMode ? "☀️" : "🌙"} */}
     </button>
   );
 }

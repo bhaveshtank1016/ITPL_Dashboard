@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import AddUserModal from "./AddUserForm";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../../src/config";
+import { TbSwitchVertical } from "react-icons/tb";
 import { RiDeleteBinLine, RiEdit2Line } from "react-icons/ri";
 
 const UserPage = () => {
@@ -81,39 +82,69 @@ const UserPage = () => {
   };
 
   return (
-    <div className="bg-[#d9e0e8] text-gray-800 min-h-screen dark:bg-neutral-900 dark:text-white p-6 rounded-xl">
+    <div className="bg-[#f7f7f7d8] text-gray-800 min-h-screen dark:bg-neutral-900 dark:text-white p-6 rounded-xl">
       {/* Header with Search */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
-        <h2 className="text-2xl font-bold">Users</h2>
+      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3"> */}
+      <h2 className="text-2xl font-bold mb-5">Users</h2>
 
-        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-          <input
-            type="text"
-            placeholder="Search users..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-3 py-2 rounded-lg bg-neutral-400 dark:bg-neutral-500 text-white border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
-          />
-          <button
-            onClick={() => navigate("/add-user")}
-            className="bg-blue-600 px-4 py-2 rounded-lg text-white hover:bg-blue-800 transition"
-          >
-            + Add User
-          </button>
-        </div>
+      <div className="flex flex-col justify-between sm:flex-row gap-3 w-full mb-6 sm:w-auto">
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="px-3 py-2 rounded-lg bg-neutral-400 dark:bg-neutral-500 text-white border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
+        />
+        <button
+          onClick={() => navigate("/add-user")}
+          className="bg-blue-900 px-4 py-2 rounded-lg text-white hover:bg-blue-800 transition"
+        >
+          + Add User
+        </button>
       </div>
+      {/* </div> */}
 
       {/* Table for larger screens */}
       <div className="hidden rounded-2xl md:block overflow-x-auto">
-        <table className="w-full   bg-gray-100/90 dark:bg-neutral-900  ">
-          <thead className="bg-neutral-800/80   uppercase  text-gray-300">
+        <table className="w-full    dark:bg-neutral-900  ">
+          <thead className="   uppercase  ">
             <tr className="text-left text-sm   font-semibold">
-              <th className="p-3">Name</th>
-              <th className="p-3">Position</th>
-              <th className="p-3">Role</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Joined Date</th>
-              <th className="p-3">Actions</th>
+              <th className="p-3">
+                Name{" "}
+                <span>
+                  <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                </span>
+              </th>
+              <th className="p-3">
+                Position{" "}
+                <span>
+                  <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                </span>
+              </th>
+              <th className="p-3">
+                Role{" "}
+                <span>
+                  <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                </span>
+              </th>
+              <th className="p-3">
+                Status{" "}
+                <span>
+                  <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                </span>
+              </th>
+              <th className="p-3">
+                Joined Date{" "}
+                <span>
+                  <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                </span>
+              </th>
+              <th className="p-3">
+                Actions{" "}
+                <span>
+                  <TbSwitchVertical className="inline ml-1 cursor-pointer" />
+                </span>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -124,7 +155,7 @@ const UserPage = () => {
                   className="border-t border-gray-700 hover:bg-neutral-800/70 transition"
                 >
                   <td className="p-3">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-left gap-3">
                       <img
                         src={
                           user.profilePhoto?.trim()
@@ -135,7 +166,9 @@ const UserPage = () => {
                         className="w-8 h-8 rounded-full object-cover"
                       />
                       <div>
-                        <p className="font-semibold">{user.name || "No Name"}</p>
+                        <p className="font-semibold">
+                          {user.name || "No Name"}
+                        </p>
                         <p className="text-sm text-gray-400">
                           {user.email || "No Email"}
                         </p>

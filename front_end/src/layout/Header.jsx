@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FaUser, FaSignOutAlt, FaLock } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import DarkmodeToggle from "./DarkmodeToggle";
+import DarkmodeToggle from "../components/DarkmodeToggle";
 
 const Header = () => {
   const location = useLocation();
@@ -53,18 +53,16 @@ const Header = () => {
     <>
       <ToastContainer />
       <div className="max-w-full flex items-center justify-between px-6 py-4 rounded-md 
-        bg-[#d9e0e8] text-gray-800 shadow-md  
+        bg-[#f2f4f5] text-gray-800 shadow-md  
         dark:bg-neutral-900 dark:text-white dark:border-neutral-700 
-        container mx-auto mb-6 transition-colors duration-300">
+        container mx-auto mb-2 transition-colors duration-300">
         
         {/* Left side - User name */}
         <div className="text-xl text-gray-700 dark:text-gray-200 font-semibold pl-4">Welcome, {userName}</div>
 
         {/* Profile Dropdown */}
         <div className="relative flex gap-3" ref={dropdownRef}>
-          <div>
-            <DarkmodeToggle />
-          </div>
+         
           <div
             onClick={() => setOpen(!open)}
             className="w-9 h-9 rounded-full overflow-hidden border border-gray-300 

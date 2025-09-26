@@ -79,26 +79,7 @@ const Sign_in = () => {
                 <h1 className="text-xl mx-10 font-bold justify-start">
                   Sign In
                 </h1>
-                {/* <p className="text-slate-600 mx-10">
-                  Don't have an account?
-                  <a classNamLoge="font-semibold text-white">&nbsp;Sign Up</a>
-                </p> */}
               </div>
-
-              {/* {showNotification && (
-                <div className="bg-neutral-800 text-sm p-4 rounded-md flex justify-between items-center mb-6 mt-3 ml-10 mr-8">
-                  <span>
-                    Welcome to Tailwise demo! Simply click Sign In to explore
-                    and access our documentation.
-                  </span>
-                  <button
-                    onClick={() => setShowNotification(false)}
-                    className="ml-4 text-gray-400 hover:text-white"
-                  >
-                    ✕
-                  </button>
-                </div>
-              )} */}
             </div>
 
             <form className="container px-10 mx-auto" onSubmit={handleLogin}>
