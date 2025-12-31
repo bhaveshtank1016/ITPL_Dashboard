@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../context/AuthContext";
-
+import bg from "./sign.jpeg";
 import { API_URL } from "../../src/config";
 
 const Sign_in = () => {
@@ -67,9 +67,9 @@ const Sign_in = () => {
   return (
     <div>
       <ToastContainer />
-      <div className="w-full h-min-screen mx-auto bg-gradient-to-r from-blue-600 to-blue-800 flex min-h-screen">
-        <div className="w-full lg:w-1/2 bg-neutral-900 text-white flex flex-col lg:items-end justify-center lg:rounded-l-xs rounded-4xl sm:mx-18 mx-8 my-15 lg:m-0">
-          <div className="container px-2 bg-neutral-900 lg:pl-33 w-full mx-0 sm:py-32 py-2 rounded-4xl">
+      <div className="w-full h-min-screen mx-auto flex min-h-screen">
+        <div className="w-full lg:w-1/2 bg-[#f1eeee7f] flex flex-col lg:items-end justify-center lg:rounded-l-xs rounded-4xl sm:mx-18 mx-8 my-15 lg:m-0">
+          <div className="container px-2 bg-[#f1eeee7f] lg:pl-33 w-full mx-0 sm:py-32 py-2 rounded-4xl">
             <div className="px-1 container mx-auto">
               <div className="mx-10 w-32 h-32 rounded-md pt-4">
                 <img src="./logo.png" />
@@ -133,7 +133,7 @@ const Sign_in = () => {
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 py-2 rounded-full border-1 font-semibold mt-4 hover:opacity-90 mb-4"
+                className="w-full text-white bg-gradient-to-r from-blue-600 to-blue-800 py-2 rounded-full border-1 font-semibold mt-4 hover:opacity-90 mb-4"
               >
                 Sign In
               </button>
@@ -142,30 +142,39 @@ const Sign_in = () => {
         </div>
 
         {/* Right Section */}
-        <div className="hidden lg:flex w-full lg:w-1/2 bg-gradient-to-r from-blue-800 to-blue-200 text-white p-12 flex-col justify-center">
-          <h1 className="text-4xl font-bold leading-tight mb-4">
-            Innovate your imagination <br /> into Reality
-          </h1>
-          <p className="text-lg max-w-md text-blue-100">
-            Unlock the potential of Tailwise. Build stunning, structured
-            dashboards using Tailwind & React.
-          </p>
-          <div className="mt-6 flex items-center gap-3">
-            <div className="flex -space-x-2">
-              <img
-                className="w-8 h-8 rounded-full border-2 border-white"
-                src="https://randomuser.me/api/portraits/women/1.jpg"
-              />
-              <img
-                className="w-8 h-8 rounded-full border-2 border-white"
-                src="https://randomuser.me/api/portraits/women/2.jpg"
-              />
-              <img
-                className="w-8 h-8 rounded-full border-2 border-white"
-                src="https://randomuser.me/api/portraits/men/1.jpg"
-              />
+        <div
+          className="hidden lg:flex w-full lg:w-1/2 bg-cover bg-center text-center p-12 flex-col justify-center  relative"
+          style={{ backgroundImage: `url(${bg})` }}
+        >
+          {/* Blue gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-200 via-neutral-500 to-neutral-600 opacity-50"></div>
+
+          {/* Content */}
+          <div className="relative z-10 space-y-10">
+            <h1 className="text-4xl max-w-2xl font-bold leading-tight mb-4 text-gray-800">
+              Innovate your imagination <br /> into Reality
+            </h1>
+            <p className="text-lg max-w-2xl text-gray-800">
+              Unlock the potential of Tailwise. Build stunning, structured
+              dashboards using Tailwind & React.
+            </p>
+            <div className="mt-6 max-w-2xl flex text-center justify-center gap-3">
+              <div className="flex -space-x-2">
+                <img
+                  className="w-8 h-8 rounded-full border-2 text-gray-800"
+                  src="https://randomuser.me/api/portraits/women/1.jpg"
+                />
+                <img
+                  className="w-8 h-8 rounded-full border-2 border-white"
+                  src="https://randomuser.me/api/portraits/women/2.jpg"
+                />
+                <img
+                  className="w-8 h-8 rounded-full border-2 border-white"
+                  src="https://randomuser.me/api/portraits/men/1.jpg"
+                />
+              </div>
+              <p className="text-sm text-gray-800">Over 7k+ strong and growing!</p>
             </div>
-            <p className="text-sm">Over 7k+ strong and growing!</p>
           </div>
         </div>
       </div>
